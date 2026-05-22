@@ -16,116 +16,43 @@ using System.Web.Http.Description;
 namespace Manilal_V5NG
 {
     /// <summary>
-    /// Wraps the default Swashbuckle provider. Before generating the doc,
-    /// removes any ApiDescription whose parameter types would cause a
-    /// "Invalid type owner for DynamicMethod" crash (raw T[] or interface types).
+    /// Overrides DefaultContractResolver to prevent the "Invalid type owner for DynamicMethod"
+    /// crash that occurs when Newtonsoft.Json tries to call GetDefaultCreator on a raw T[] type.
+    /// Arrays cannot own DynamicMethods in .NET Framework — they don't have constructors anyway.
+    /// This resolver catches that specific crash and safely initialises the array contract manually.
     /// </summary>
-    public class SafeSwaggerProvider : ISwaggerProvider
+    public class SafeContractResolver : Newtonsoft.Json.Serialization.DefaultContractResolver
     {
-        private static readonly System.Diagnostics.TraceSource Log =
-            new System.Diagnostics.TraceSource("SwaggerSafeProvider");
-
-        private readonly ISwaggerProvider _inner;
-        private readonly HttpConfiguration _config;
-
-        public SafeSwaggerProvider(ISwaggerProvider inner, HttpConfiguration config)
+        protected override Newtonsoft.Json.Serialization.JsonArrayContract CreateArrayContract(Type objectType)
         {
-            _inner = inner;
-            _config = config;
-        }
+            if (!objectType.IsArray)
+                return base.CreateArrayContract(objectType); // non-array collections work fine
 
-        public SwaggerDocument GetSwagger(string rootUrl, string apiVersion)
-        {
-            var apiExplorer = _config.Services.GetApiExplorer();
-            var toRemove = new List<ApiDescription>();
-
-            System.Diagnostics.Debug.WriteLine("[SwaggerSafe] Scanning " + apiExplorer.ApiDescriptions.Count + " API descriptions...");
-
-            foreach (var desc in apiExplorer.ApiDescriptions)
-            {
-                foreach (var param in desc.ParameterDescriptions)
-                {
-                    var t = param.ParameterDescriptor?.ParameterType;
-                    if (t == null) continue;
-                    if (IsProblematic(t))
-                    {
-                        var msg = string.Format(
-                            "[SwaggerSafe] SKIP — {0} {1} | param '{2}' type '{3}' (IsArray={4} IsInterface={5})",
-                            desc.HttpMethod, desc.RelativePath,
-                            param.Name, t.FullName, t.IsArray, t.IsInterface);
-
-                        System.Diagnostics.Debug.WriteLine(msg);
-                        System.Diagnostics.Trace.WriteLine(msg);
-
-                        toRemove.Add(desc);
-                        break;
-                    }
-                }
-            }
-
-            if (toRemove.Count == 0)
-            {
-                System.Diagnostics.Debug.WriteLine("[SwaggerSafe] No problematic operations found.");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("[SwaggerSafe] Removing " + toRemove.Count + " problematic operation(s) before schema gen.");
-                foreach (var desc in toRemove)
-                    apiExplorer.ApiDescriptions.Remove(desc);
-            }
+            // Raw T[] types: InitializeContract calls GetDefaultCreator(T[]) which crashes
+            // because array types cannot own a DynamicMethod in .NET Framework.
+            var contract = new Newtonsoft.Json.Serialization.JsonArrayContract(objectType);
 
             try
             {
-                return _inner.GetSwagger(rootUrl, apiVersion);
+                InitializeContract(contract); // may crash for T[]
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                // Still crashed after filtering — log full details
-                var err = "[SwaggerSafe] CRASH after filter: " + ex.GetType().Name + " — " + ex.Message + "\n" + ex.StackTrace;
-                System.Diagnostics.Debug.WriteLine(err);
-                System.Diagnostics.Trace.WriteLine(err);
-                throw; // re-throw so Swagger UI shows the real error
-            }
-        }
-
-        // Recursively check type AND all public properties for raw T[] or interface types
-        // that crash Newtonsoft DynamicMethod owner check
-        private static bool IsProblematic(Type t, HashSet<Type> visited = null)
-        {
-            if (t == null) return false;
-            if (visited == null) visited = new HashSet<Type>();
-            if (!visited.Add(t)) return false; // prevent infinite recursion on circular refs
-
-            // Raw array type (T[]) = invalid DynamicMethod owner
-            if (t.IsArray)
-            {
-                System.Diagnostics.Debug.WriteLine("[SwaggerSafe] Problematic (IsArray): " + t.FullName);
-                return true;
-            }
-            // Interface type = cannot instantiate
-            if (t.IsInterface)
-            {
-                System.Diagnostics.Debug.WriteLine("[SwaggerSafe] Problematic (IsInterface): " + t.FullName);
-                return true;
+                System.Diagnostics.Debug.WriteLine(
+                    "[SafeContractResolver] Caught DynamicMethod crash for array type: "
+                    + objectType.FullName + " — " + ex.Message);
+                // Safe to swallow: arrays have no default constructor anyway
             }
 
-            // Recurse into generic type arguments (e.g. List<BadType[]>)
-            if (t.IsGenericType)
-            {
-                foreach (var arg in t.GetGenericArguments())
-                    if (IsProblematic(arg, visited)) return true;
-            }
+            // Ensure Swashbuckle can read the element type for schema generation
+            contract.CollectionItemType = objectType.GetElementType();
+            contract.IsMultidimensionalArray = objectType.GetArrayRank() > 1;
 
-            // Recurse into public instance properties of the type
-            // (Swashbuckle generates schemas for nested model properties too)
-            try
-            {
-                foreach (var prop in t.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                    if (IsProblematic(prop.PropertyType, visited)) return true;
-            }
-            catch { /* reflection on some framework types throws — safe to ignore */ }
+            System.Diagnostics.Debug.WriteLine(
+                "[SafeContractResolver] Safe array contract created for: " + objectType.FullName
+                + " (element type: " + (contract.CollectionItemType?.FullName ?? "null") + ")");
 
-            return false;
+            return contract;
         }
     }
 
@@ -141,42 +68,33 @@ namespace Manilal_V5NG
     {
         public static void Register()
         {
-            var thisAssembly = typeof(SwaggerConfig).Assembly;
+            // ROOT FIX: replace the JSON contract resolver with one that doesn't crash
+            // on raw T[] types. Swashbuckle reads this resolver from the JSON formatter.
+            // SafeContractResolver extends DefaultContractResolver — only difference is
+            // CreateArrayContract catches the DynamicMethod crash for T[] types.
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter
+                .SerializerSettings.ContractResolver = new SafeContractResolver();
 
             GlobalConfiguration.Configuration
                 .EnableSwagger(c =>
                 {
-                    // 1. Basic Info
                     c.SingleApiVersion("v1", "Manilal V5NG - Finance API");
 
                     var xmlFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "Manilal_V5NG.xml");
                     if (File.Exists(xmlFile))
-                    {
                         c.IncludeXmlComments(xmlFile);
-                    }
 
-                    // 2. Bearer Token Authorization button
                     c.ApiKey("Bearer")
                         .Description("JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"")
                         .Name("Authorization")
                         .In("header");
 
-                    // 3. Fix conflicting routes
                     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
-                    // 4. Map complex ADO.NET types to plain object
                     c.MapType<System.Data.DataSet>(() => new Schema { type = "object", description = "ADO.NET DataSet (JSON)" });
                     c.MapType<System.Data.DataTable>(() => new Schema { type = "object", description = "ADO.NET DataTable (JSON)" });
-                    c.MapType<System.Collections.IEnumerable>(() => new Schema { type = "array" });
-                    c.MapType<Manilal_V5NG.Models.FillTable[]>(() => new Schema { type = "array", items = new Schema { @ref = "#/definitions/FillTable" } });
 
-                    // 5. Safety filters
                     c.OperationFilter<SafeOperationFilter>();
-
-                    // 6. Wrap default provider — strips any operation with T[]/interface params
-                    //    before schema generation runs, preventing DynamicMethod crash
-                    c.CustomProvider((defaultProvider) =>
-                        new SafeSwaggerProvider(defaultProvider, GlobalConfiguration.Configuration));
                 })
                 .EnableSwaggerUi(c =>
                 {
