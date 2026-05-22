@@ -55,10 +55,12 @@ namespace Manilal_V5NG
                     // 4. Fix for conflicting routes (common in Web API 2)
                     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
-                    // 5. Map complex ADO.NET types to plain object so schema gen doesn't crash
+                    // 5. Map complex/problematic types so schema gen doesn't crash
                     c.MapType<System.Data.DataSet>(() => new Schema { type = "object", description = "ADO.NET DataSet result (serialized as JSON)" });
                     c.MapType<System.Data.DataTable>(() => new Schema { type = "object", description = "ADO.NET DataTable result (serialized as JSON)" });
                     c.MapType<System.Collections.IEnumerable>(() => new Schema { type = "array" });
+                    // Direct array types crash DynamicMethod owner check — map them explicitly
+                    c.MapType<Manilal_V5NG.Models.FillTable[]>(() => new Schema { type = "array", items = new Schema { @ref = "#/definitions/FillTable" } });
 
                     // 6. Skip any operation whose schema generation throws
                     c.OperationFilter<SafeOperationFilter>();
