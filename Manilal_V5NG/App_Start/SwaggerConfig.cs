@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web.Http.Description;
 
 //[assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
@@ -87,10 +88,43 @@ namespace Manilal_V5NG
             }
         }
 
-        private static bool IsProblematic(Type t)
+        // Recursively check type AND all public properties for raw T[] or interface types
+        // that crash Newtonsoft DynamicMethod owner check
+        private static bool IsProblematic(Type t, HashSet<Type> visited = null)
         {
-            if (t.IsArray) return true;
-            if (t.IsInterface) return true;
+            if (t == null) return false;
+            if (visited == null) visited = new HashSet<Type>();
+            if (!visited.Add(t)) return false; // prevent infinite recursion on circular refs
+
+            // Raw array type (T[]) = invalid DynamicMethod owner
+            if (t.IsArray)
+            {
+                System.Diagnostics.Debug.WriteLine("[SwaggerSafe] Problematic (IsArray): " + t.FullName);
+                return true;
+            }
+            // Interface type = cannot instantiate
+            if (t.IsInterface)
+            {
+                System.Diagnostics.Debug.WriteLine("[SwaggerSafe] Problematic (IsInterface): " + t.FullName);
+                return true;
+            }
+
+            // Recurse into generic type arguments (e.g. List<BadType[]>)
+            if (t.IsGenericType)
+            {
+                foreach (var arg in t.GetGenericArguments())
+                    if (IsProblematic(arg, visited)) return true;
+            }
+
+            // Recurse into public instance properties of the type
+            // (Swashbuckle generates schemas for nested model properties too)
+            try
+            {
+                foreach (var prop in t.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                    if (IsProblematic(prop.PropertyType, visited)) return true;
+            }
+            catch { /* reflection on some framework types throws — safe to ignore */ }
+
             return false;
         }
     }
