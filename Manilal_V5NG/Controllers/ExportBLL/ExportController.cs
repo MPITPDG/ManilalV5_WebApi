@@ -4493,7 +4493,7 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         /// <summary>Insert or update Export containerCLP Pallets records.</summary>
         /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
-        public IHttpActionResult Export_containerCLP_Pallets_IU(List<CLPPallet> Pallet)
+        public IHttpActionResult Export_containerCLP_Pallets_IU([FromBody]List<CLPPallet> Pallet)
         {
             DataSet ds = new DataSet();
             DAL objDal = new DAL();

@@ -4792,14 +4792,14 @@ namespace Manilal_V5NG.Controllers.ImportBLL
         /// <param name="obj">Request body model containing the record fields.</param>
         /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
-        public IHttpActionResult filltables([FromBody]FillTable[] obj)
+        public IHttpActionResult filltables([FromBody]System.Collections.Generic.List<FillTable> obj)
         {
             DataSet tempDs = new DataSet();
             DataSet finalDs = new DataSet();
             DAL objDal = new DAL();
             try
             {
-                for (int i = 0; i < obj.Length; i++)
+                for (int i = 0; i < obj.Count; i++)
                 {
                     tempDs = objDal.ExecuteDataset(ConnectionString.getConnString(),
                         CommandType.StoredProcedure,

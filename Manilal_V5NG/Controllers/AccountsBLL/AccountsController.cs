@@ -79,6 +79,7 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
             return result;
         }
+        [System.Web.Http.Description.ApiExplorerSettings(IgnoreApi = true)]
         public string ZipExcelFiles(List<string> filePaths, string zipFilePath)
         {
             using (FileStream zipToOpen = new FileStream(zipFilePath, FileMode.Create))
