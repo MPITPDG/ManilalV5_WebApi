@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Web.Http.Description;
 
 //[assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
@@ -23,36 +22,26 @@ namespace Manilal_V5NG
     /// </summary>
     public class SafeContractResolver : Newtonsoft.Json.Serialization.DefaultContractResolver
     {
-        protected override Newtonsoft.Json.Serialization.JsonArrayContract CreateArrayContract(Type objectType)
+        // Cache fallback contracts so they're built only once per type
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, Newtonsoft.Json.Serialization.JsonContract> _fallback
+            = new System.Collections.Concurrent.ConcurrentDictionary<Type, Newtonsoft.Json.Serialization.JsonContract>();
+
+        public override Newtonsoft.Json.Serialization.JsonContract ResolveContract(Type type)
         {
-            if (!objectType.IsArray)
-                return base.CreateArrayContract(objectType); // non-array collections work fine
-
-            // Raw T[] types: InitializeContract calls GetDefaultCreator(T[]) which crashes
-            // because array types cannot own a DynamicMethod in .NET Framework.
-            var contract = new Newtonsoft.Json.Serialization.JsonArrayContract(objectType);
-
             try
             {
-                InitializeContract(contract); // may crash for T[]
+                return base.ResolveContract(type);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException ex) when (ex.Message.Contains("Invalid type owner"))
             {
                 System.Diagnostics.Debug.WriteLine(
-                    "[SafeContractResolver] Caught DynamicMethod crash for array type: "
-                    + objectType.FullName + " — " + ex.Message);
-                // Safe to swallow: arrays have no default constructor anyway
+                    "[SafeContractResolver] DynamicMethod crash for: " + type.FullName
+                    + " — returning fallback contract.");
+
+                // Minimal array contract — Swashbuckle will use 'object' as item type
+                return _fallback.GetOrAdd(type,
+                    t => new Newtonsoft.Json.Serialization.JsonArrayContract(t));
             }
-
-            // Ensure Swashbuckle can read the element type for schema generation
-            contract.CollectionItemType = objectType.GetElementType();
-            contract.IsMultidimensionalArray = objectType.GetArrayRank() > 1;
-
-            System.Diagnostics.Debug.WriteLine(
-                "[SafeContractResolver] Safe array contract created for: " + objectType.FullName
-                + " (element type: " + (contract.CollectionItemType?.FullName ?? "null") + ")");
-
-            return contract;
         }
     }
 
