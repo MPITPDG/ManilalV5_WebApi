@@ -1,0 +1,2215 @@
+<?xml version="1.0" encoding="utf-8"?><w:wordDocument w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve" xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:ve="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:wsp="http://schemas.microsoft.com/office/word/2003/wordml/sp2" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:user="urn:my-scripts" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+	<w:ignoreSubtree w:val="http://schemas.microsoft.com/office/word/2003/wordml/sp2" />
+	<o:DocumentProperties>
+		 <o:Title>MANILAL PATEL GROUP</o:Title> 
+		
+	</o:DocumentProperties>
+	<w:fonts><w:defaultFonts w:ascii="Times New Roman" w:fareast="Times New Roman" w:h-ansi="Times New Roman" w:cs="Times New Roman" />
+	<w:font w:name="Times New Roman">
+		<w:panose-1 w:val="02020603050405020304" />
+		<w:charset w:val="00" />
+		<w:family w:val="Roman" />
+		<w:pitch w:val="variable" />
+			<w:sig w:usb-0="20002A87" w:usb-1="80000000" w:usb-2="00000008" w:usb-3="00000000" w:csb-0="000001FF" w:csb-1="00000000" />
+	</w:font>
+		<w:font w:name="Arial"><w:panose-1 w:val="020B0604020202020204" />
+			<w:charset w:val="00" />
+			<w:family w:val="Swiss" />
+			<w:pitch w:val="variable" />
+				<w:sig w:usb-0="20002A87" w:usb-1="80000000" w:usb-2="00000008" w:usb-3="00000000" w:csb-0="000001FF" w:csb-1="00000000" />
+			</w:font>
+		<w:font w:name="Cambria Math">
+				<w:panose-1 w:val="02040503050406030204" />
+				<w:charset w:val="01" />
+			<w:family w:val="Roman" />
+				<w:notTrueType />
+			<w:pitch w:val="variable" />
+				<w:sig w:usb-0="00000000" w:usb-1="00000000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="00000000" w:csb-1="00000000" />
+			</w:font>
+		<w:font w:name="Verdana">
+				<w:panose-1 w:val="020B0604030504040204" />
+				<w:charset w:val="00" />
+				<w:family w:val="Swiss" />
+				<w:pitch w:val="variable" />
+				<w:sig w:usb-0="20000287" w:usb-1="00000000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="0000019F" w:csb-1="00000000" />
+			</w:font>
+	</w:fonts>
+	<w:styles>
+		<w:versionOfBuiltInStylenames w:val="7" />
+		<w:latentStyles w:defLockedState="off" w:latentStyleCount="267">
+			<w:lsdException w:name="Normal" />
+			<w:lsdException w:name="heading 1" />
+			<w:lsdException w:name="heading 2" />
+			<w:lsdException w:name="heading 3" />
+			<w:lsdException w:name="heading 4" />
+			<w:lsdException w:name="heading 5" />
+			<w:lsdException w:name="heading 6" />
+			<w:lsdException w:name="heading 7" />
+			<w:lsdException w:name="heading 8" />
+			<w:lsdException w:name="heading 9" />
+			<w:lsdException w:name="toc 1" />
+			<w:lsdException w:name="toc 2" />
+			<w:lsdException w:name="toc 3" />
+			<w:lsdException w:name="toc 4" />
+			<w:lsdException w:name="toc 5" />
+			<w:lsdException w:name="toc 6" />
+			<w:lsdException w:name="toc 7" />
+			<w:lsdException w:name="toc 8" />
+			<w:lsdException w:name="toc 9" />
+			<w:lsdException w:name="caption" />
+			<w:lsdException w:name="Title" />
+			<w:lsdException w:name="Default Paragraph Font" />
+			<w:lsdException w:name="Subtitle" />
+			<w:lsdException w:name="Strong" />
+			<w:lsdException w:name="Emphasis" />
+			<w:lsdException w:name="Table Grid" />
+			<w:lsdException w:name="Placeholder Text" />
+			<w:lsdException w:name="No Spacing" />
+			<w:lsdException w:name="Light Shading" />
+			<w:lsdException w:name="Light List" />
+			<w:lsdException w:name="Light Grid" />
+			<w:lsdException w:name="Medium Shading 1" />
+			<w:lsdException w:name="Medium Shading 2" />
+			<w:lsdException w:name="Medium List 1" />
+			<w:lsdException w:name="Medium List 2" />
+			<w:lsdException w:name="Medium Grid 1" />
+			<w:lsdException w:name="Medium Grid 2" />
+			<w:lsdException w:name="Medium Grid 3" />
+			<w:lsdException w:name="Dark List" />
+			<w:lsdException w:name="Colorful Shading" />
+			<w:lsdException w:name="Colorful List" />
+			<w:lsdException w:name="Colorful Grid" />
+			<w:lsdException w:name="Light Shading Accent 1" />
+			<w:lsdException w:name="Light List Accent 1" />
+			<w:lsdException w:name="Light Grid Accent 1" />
+			<w:lsdException w:name="Medium Shading 1 Accent 1" />
+			<w:lsdException w:name="Medium Shading 2 Accent 1" />
+			<w:lsdException w:name="Medium List 1 Accent 1" />
+			<w:lsdException w:name="Revision" />
+			<w:lsdException w:name="List Paragraph" />
+			<w:lsdException w:name="Quote" />
+			<w:lsdException w:name="Intense Quote" />
+			<w:lsdException w:name="Medium List 2 Accent 1" />
+			<w:lsdException w:name="Medium Grid 1 Accent 1" />
+			<w:lsdException w:name="Medium Grid 2 Accent 1" />
+			<w:lsdException w:name="Medium Grid 3 Accent 1" />
+			<w:lsdException w:name="Dark List Accent 1" />
+			<w:lsdException w:name="Colorful Shading Accent 1" />
+			<w:lsdException w:name="Colorful List Accent 1" />
+			<w:lsdException w:name="Colorful Grid Accent 1" />
+			<w:lsdException w:name="Light Shading Accent 2" />
+			<w:lsdException w:name="Light List Accent 2" />
+			<w:lsdException w:name="Light Grid Accent 2" />
+			<w:lsdException w:name="Medium Shading 1 Accent 2" />
+			<w:lsdException w:name="Medium Shading 2 Accent 2" />
+			<w:lsdException w:name="Medium List 1 Accent 2" />
+			<w:lsdException w:name="Medium List 2 Accent 2" />
+			<w:lsdException w:name="Medium Grid 1 Accent 2" />
+			<w:lsdException w:name="Medium Grid 2 Accent 2" />
+			<w:lsdException w:name="Medium Grid 3 Accent 2" />
+			<w:lsdException w:name="Dark List Accent 2" />
+			<w:lsdException w:name="Colorful Shading Accent 2" />
+			<w:lsdException w:name="Colorful List Accent 2" />
+			<w:lsdException w:name="Colorful Grid Accent 2" />
+			<w:lsdException w:name="Light Shading Accent 3" />
+			<w:lsdException w:name="Light List Accent 3" />
+			<w:lsdException w:name="Light Grid Accent 3" />
+			<w:lsdException w:name="Medium Shading 1 Accent 3" />
+			<w:lsdException w:name="Medium Shading 2 Accent 3" />
+			<w:lsdException w:name="Medium List 1 Accent 3" />
+			<w:lsdException w:name="Medium List 2 Accent 3" />
+			<w:lsdException w:name="Medium Grid 1 Accent 3" />
+			<w:lsdException w:name="Medium Grid 2 Accent 3" />
+			<w:lsdException w:name="Medium Grid 3 Accent 3" />
+			<w:lsdException w:name="Dark List Accent 3" />
+			<w:lsdException w:name="Colorful Shading Accent 3" />
+			<w:lsdException w:name="Colorful List Accent 3" />
+			<w:lsdException w:name="Colorful Grid Accent 3" />
+			<w:lsdException w:name="Light Shading Accent 4" />
+			<w:lsdException w:name="Light List Accent 4" />
+			<w:lsdException w:name="Light Grid Accent 4" />
+			<w:lsdException w:name="Medium Shading 1 Accent 4" />
+			<w:lsdException w:name="Medium Shading 2 Accent 4" />
+			<w:lsdException w:name="Medium List 1 Accent 4" />
+			<w:lsdException w:name="Medium List 2 Accent 4" />
+			<w:lsdException w:name="Medium Grid 1 Accent 4" />
+			<w:lsdException w:name="Medium Grid 2 Accent 4" />
+			<w:lsdException w:name="Medium Grid 3 Accent 4" />
+			<w:lsdException w:name="Dark List Accent 4" />
+			<w:lsdException w:name="Colorful Shading Accent 4" />
+			<w:lsdException w:name="Colorful List Accent 4" />
+			<w:lsdException w:name="Colorful Grid Accent 4" />
+			<w:lsdException w:name="Light Shading Accent 5" />
+			<w:lsdException w:name="Light List Accent 5" />
+			<w:lsdException w:name="Light Grid Accent 5" />
+			<w:lsdException w:name="Medium Shading 1 Accent 5" />
+			<w:lsdException w:name="Medium Shading 2 Accent 5" />
+			<w:lsdException w:name="Medium List 1 Accent 5" />
+			<w:lsdException w:name="Medium List 2 Accent 5" />
+			<w:lsdException w:name="Medium Grid 1 Accent 5" />
+			<w:lsdException w:name="Medium Grid 2 Accent 5" />
+			<w:lsdException w:name="Medium Grid 3 Accent 5" />
+			<w:lsdException w:name="Dark List Accent 5" />
+			<w:lsdException w:name="Colorful Shading Accent 5" />
+			<w:lsdException w:name="Colorful List Accent 5" />
+			<w:lsdException w:name="Colorful Grid Accent 5" />
+			<w:lsdException w:name="Light Shading Accent 6" />
+			<w:lsdException w:name="Light List Accent 6" />
+			<w:lsdException w:name="Light Grid Accent 6" />
+			<w:lsdException w:name="Medium Shading 1 Accent 6" />
+			<w:lsdException w:name="Medium Shading 2 Accent 6" />
+			<w:lsdException w:name="Medium List 1 Accent 6" />
+			<w:lsdException w:name="Medium List 2 Accent 6" />
+			<w:lsdException w:name="Medium Grid 1 Accent 6" />
+			<w:lsdException w:name="Medium Grid 2 Accent 6" />
+			<w:lsdException w:name="Medium Grid 3 Accent 6" />
+			<w:lsdException w:name="Dark List Accent 6" />
+			<w:lsdException w:name="Colorful Shading Accent 6" />
+			<w:lsdException w:name="Colorful List Accent 6" />
+			<w:lsdException w:name="Colorful Grid Accent 6" />
+			<w:lsdException w:name="Subtle Emphasis" />
+			<w:lsdException w:name="Intense Emphasis" />
+			<w:lsdException w:name="Subtle Reference" />
+			<w:lsdException w:name="Intense Reference" />
+			<w:lsdException w:name="Book Title" />
+			<w:lsdException w:name="Bibliography" />
+			<w:lsdException w:name="TOC Heading" />
+			</w:latentStyles><w:style w:type="paragraph" w:default="on" w:styleId="Normal">
+			<w:name w:val="Normal" />
+			<w:rPr>
+				<wx:font wx:val="Times New Roman" />
+				<w:color w:val="000000" />
+				<w:sz w:val="24" />
+				<w:sz-cs w:val="24" />
+				<w:lang w:val="EN-US" w:fareast="EN-US" w:bidi="AR-SA" />
+			</w:rPr>
+		</w:style>
+		<w:style w:type="character" w:default="on" w:styleId="DefaultParagraphFont">
+			<w:name w:val="Default Paragraph Font" />
+		</w:style>
+		<w:style w:type="table" w:default="on" w:styleId="TableNormal">
+			<w:name w:val="Normal Table" />
+			<wx:uiName wx:val="Table Normal" />
+			<w:rPr>
+				<wx:font wx:val="Times New Roman" />
+				<w:lang w:val="EN-US" w:fareast="EN-US" w:bidi="AR-SA" />
+			</w:rPr>
+			<w:tblPr>
+			<w:tblInd w:w="0" w:type="dxa" />
+			<w:tblCellMar>
+			<w:top w:w="0" w:type="dxa" />
+			<w:left w:w="0" w:type="dxa" />
+			<w:bottom w:w="0" w:type="dxa" />
+			<w:right w:w="0" w:type="dxa" />
+			</w:tblCellMar>
+			</w:tblPr>
+		</w:style>
+		<w:style w:type="list" w:default="on" w:styleId="NoList">
+			<w:name w:val="No List" />
+		</w:style>
+		<w:style w:type="character" w:styleId="Strong">
+			<w:name w:val="Strong" />
+			<w:basedOn w:val="DefaultParagraphFont" />
+			<w:rPr>
+				<w:b />
+				<w:b-cs />
+			</w:rPr>
+		</w:style>
+	</w:styles>
+	<w:shapeDefaults>
+		<o:shapedefaults v:ext="edit" spidmax="2050" />
+		<o:shapelayout v:ext="edit">
+			<o:idmap v:ext="edit" data="1" />
+		</o:shapelayout>
+	</w:shapeDefaults>
+	<w:bgPict>
+		<w:background w:bgcolor="white" />
+	</w:bgPict>
+	<w:docPr>
+		<w:view w:val="web" />
+		<w:zoom w:percent="90" />
+		<w:doNotEmbedSystemFonts />
+		<w:defaultTabStop w:val="50" />
+		<w:characterSpacingControl w:val="DontCompress" />
+		<w:optimizeForBrowser />
+		<w:validateAgainstSchema />
+		<w:saveInvalidXML w:val="off" />
+		<w:ignoreMixedContent w:val="off" />
+		<w:alwaysShowPlaceholderText w:val="off" />
+		<w:compat>
+		<w:breakWrappedTables />
+		<w:snapToGridInCell />
+			<w:wrapTextWithPunct />
+			<w:useAsianBreakRules />
+			<w:dontGrowAutofit />
+		</w:compat><wsp:rsids>
+			<wsp:rsidRoot wsp:val="00CF7AD9" />
+			<wsp:rsid wsp:val="00AF044A" />
+			<wsp:rsid wsp:val="00CF7AD9" />
+		</wsp:rsids>
+	</w:docPr>
+	<w:body>
+		<w:tbl>
+			<w:tblPr>
+				<w:tblW w:w="4800" w:type="pct" />
+				<w:tblCellSpacing w:w="15" w:type="dxa" />
+				<w:tblBorders>
+					<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+					<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+					<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+					<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+				</w:tblBorders>
+				<w:tblCellMar>
+					<w:top w:w="10" w:type="dxa" />
+					<w:left w:w="10" w:type="dxa" />
+					<w:bottom w:w="10" w:type="dxa" />
+					<w:right w:w="10" w:type="dxa" />
+				</w:tblCellMar>
+				<w:tblLook w:val="04A0" />
+			</w:tblPr>
+			<w:tblGrid>
+				<w:gridCol w:w="9690" />
+			</w:tblGrid>
+			<w:tr wsp:rsidR="00000000">
+				<w:trPr>
+					<w:trHeight w:val="5" />
+					<w:tblCellSpacing w:w="15" w:type="dxa" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="0" w:type="auto" />
+						<w:tcBorders>
+							<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+						</w:tcBorders>
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+						<w:pPr>
+							<w:jc w:val="center" />
+						</w:pPr>
+					<w:r>
+						<w:rPr>
+							<w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial" />
+							<wx:font wx:val="Arial" />
+							<w:b />
+							<w:b-cs />
+							<w:sz w:val="27" />
+							<w:sz-cs w:val="27" />
+						</w:rPr>
+									
+		
+						
+						<w:t>
+							MANILAL PATEL - MADRAS                                  		
+						</w:t>
+					
+					</w:r>
+					<w:r>
+						<w:rPr>
+							<w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial" />
+							<wx:font wx:val="Arial" />
+							<w:b />
+							<w:b-cs />
+							<w:sz w:val="27" />
+							<w:sz-cs w:val="27" />
+						</w:rPr>
+					<w:br />
+					</w:r>
+					<w:r>
+						<w:rPr>
+							<w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial" />
+							<wx:font wx:val="Arial" />
+							<w:b />
+							<w:b-cs />
+							<w:sz w:val="27" />
+							<w:sz-cs w:val="27" />
+						</w:rPr>
+						<w:br />
+					</w:r>
+					<w:r>
+						<w:rPr>
+							<w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial" />
+							<wx:font wx:val="Arial" />
+						</w:rPr>
+						<w:t>
+							AIR FREIGHT - PREALERT
+						</w:t>
+					</w:r>
+					<w:r>
+						<w:t>
+							
+						</w:t>
+					</w:r>
+				</w:p>
+				</w:tc>
+			</w:tr>
+			
+			
+			<w:tr wsp:rsidR="00000000">
+				<w:trPr>
+					<w:trHeight w:val="5" />
+					<w:tblCellSpacing w:w="15" w:type="dxa" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="0" w:type="auto" />
+					
+						<w:tcBorders>
+							<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+						</w:tcBorders>
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:tbl>
+						<w:tblPr>
+							<w:tblW w:w="4700" w:type="pct" />
+							<w:tblCellSpacing w:w="15" w:type="dxa" />
+							<w:tblCellMar>
+								<w:top w:w="25" w:type="dxa" />
+								<w:left w:w="25" w:type="dxa" />
+								<w:bottom w:w="25" w:type="dxa" />
+								<w:right w:w="25" w:type="dxa" />
+							</w:tblCellMar>
+							<w:tblLook w:val="04A0" />
+						</w:tblPr>
+						<w:tblGrid>
+							<w:gridCol w:w="60" />
+							<w:gridCol w:w="60" />
+							<w:gridCol w:w="60" />
+							<w:gridCol w:w="60" />
+							<w:gridCol w:w="60" />
+							<w:gridCol w:w="60" />
+						</w:tblGrid>
+						
+						<w:tr wsp:rsidR="00000000">
+							<w:trPr>
+								
+								<w:tblCellSpacing w:w="7" w:type="dxa" />
+							</w:trPr>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="200" w:type="pct" />
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial" />
+											<wx:font wx:val="Arial" /><w:b /><w:b-cs /><w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											TO
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="1500" w:type="pct" />
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:t>
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="350" w:type="pct" />
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial" />
+											<wx:font wx:val="Arial" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>ATTN</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+								<w:tcW w:w="1700" w:type="pct" />
+								<w:vAlign w:val="center" />
+							</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:t> 
+									</w:t>
+								</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="350" w:type="pct" />
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+										<w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial" />
+										<wx:font wx:val="Arial" />
+											<w:b />
+											<w:b-cs />
+										<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											DATE
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							
+						</w:tr>
+						
+					</w:tbl>
+					<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+					<w:pPr>
+						<w:spacing w:line="1" w:line-rule="at-least" />
+					</w:pPr>
+						<wx:allowEmptyCollapse />
+					</w:p>
+				</w:tc>
+			</w:tr>
+			
+			
+			<w:tr wsp:rsidR="00000000">
+				<w:trPr>
+					<w:tblCellSpacing w:w="1" w:type="dxa" />
+			</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="0" w:type="auto" />
+						<w:tcBorders>
+							<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+						</w:tcBorders>
+						<w:vAlign w:val="center" />
+					</w:tcPr>					
+						
+			<w:tbl>
+				
+					<w:tblPr>
+						<w:tblW w:w="4700" w:type="pct" />
+						<w:tblCellSpacing w:w="1" w:type="dxa" />
+						<w:tblBorders>
+							<w:top w:val="outset" w:sz="1" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:left w:val="outset" w:sz="1" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:bottom w:val="outset" w:sz="1" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:right w:val="outset" w:sz="1" wx:bdrwidth="15" w:space="0" w:color="auto" />
+						</w:tblBorders>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa" />
+							<w:left w:w="0" w:type="dxa" />
+							<w:bottom w:w="0" w:type="dxa" />
+							<w:right w:w="0" w:type="dxa" />
+						</w:tblCellMar>
+						<w:tblLook w:val="04A0" />
+					</w:tblPr>
+					<w:tblGrid>
+						<w:gridCol w:w="10" />
+						<w:gridCol w:w="10" />
+						<w:gridCol w:w="10" />
+						<w:gridCol w:w="10" />
+						<w:gridCol w:w="10" />
+						<w:gridCol w:w="10" />
+					</w:tblGrid>
+					<w:tr wsp:rsidR="00000000">
+						<w:trPr>
+							<w:trHeight w:val="5" />
+							<w:tblCellSpacing w:w="1" w:type="dxa" />
+						</w:trPr>
+            
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="547" w:type="pct" />
+							<w:tcBorders>
+								<w:top w:val="outset" w:sz="1" wx:bdrwidth="5" w:space="0" w:color="auto" />
+								<w:left w:val="outset" w:sz="1" wx:bdrwidth="5" w:space="0" w:color="auto" />
+								<w:bottom w:val="outset" w:sz="1" wx:bdrwidth="5" w:space="0" w:color="auto" />
+								<w:right w:val="outset" w:sz="1" wx:bdrwidth="5" w:space="0" w:color="auto" />
+							</w:tcBorders>
+							
+						</w:tcPr>
+						<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+									<wx:font wx:val="Verdana" />
+									<w:b />
+									<w:b-cs />
+									<w:sz w:val="15" />
+									<w:sz-cs w:val="15" />
+								</w:rPr>
+								<w:t>
+									MAWB NO
+								</w:t>
+								</w:r>
+						</w:p>
+						</w:tc>			
+            
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="1300" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="1" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="1" wx:bdrwidth="5" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="1" wx:bdrwidth="5" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="1" wx:bdrwidth="5" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+								
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											15741761974-23/01/2019											
+										</w:t>
+									</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+              
+							<w:tcPr>
+								<w:tcW w:w="474" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="5" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="5" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="5" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:b />
+										<w:b-cs />
+										<w:sz w:val="15" />
+										<w:sz-cs w:val="15" />
+									</w:rPr>
+									<w:t>
+										FLT NO.
+									</w:t>
+								</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="1230" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="1" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="1" wx:bdrwidth="5" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="1" wx:bdrwidth="5" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="1" wx:bdrwidth="5" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />								
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											QR8621-24/01/2019											
+										</w:t>
+									</w:r>
+							</w:p>
+						</w:tc>
+						
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="325" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="1" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="1" wx:bdrwidth="0" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="1" wx:bdrwidth="0" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="1" wx:bdrwidth="0" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:b />
+										<w:b-cs />
+										<w:sz w:val="15" />
+										<w:sz-cs w:val="15" />
+									</w:rPr>
+									<w:t>
+										CONX FLT
+									</w:t>
+								</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="1010" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="0" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="0" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="0" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" /><w:sz w:val="20" />
+										<w:sz-cs w:val="20" />
+									</w:rPr>
+									<w:t>
+										QR027               										 
+									</w:t>
+									</w:r>
+							</w:p>
+						</w:tc>
+					</w:tr>			
+					
+					
+					<w:tr wsp:rsidR="00000000">
+						<w:trPr>
+							<w:tblCellSpacing w:w="0" w:type="dxa" />
+						</w:trPr>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="25" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:b />
+										<w:b-cs />
+										<w:sz w:val="15" />
+										<w:sz-cs w:val="15" />
+									</w:rPr>
+									<w:t>
+										TOTAL PKGS
+									</w:t>
+								</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="20" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders><w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:sz w:val="20" />
+										<w:sz-cs w:val="20" />
+									</w:rPr>
+									<w:t>									
+										57.00										
+									</w:t>
+									</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="20" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+							<w:r>
+								<w:rPr>
+								<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+									<wx:font wx:val="Verdana" />
+									<w:b />
+									<w:b-cs />
+									<w:sz w:val="15" />
+									<w:sz-cs w:val="15" />
+								</w:rPr>
+								<w:t>
+									GROSS WT.
+								</w:t>
+							</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="20" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:sz w:val="20" />
+										<w:sz-cs w:val="20" />
+									</w:rPr>
+									<w:t>										
+										182										
+									</w:t>
+								</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="20" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:b />
+										<w:b-cs />
+										<w:sz w:val="15" />
+										<w:sz-cs w:val="15" />
+									</w:rPr>
+									<w:t>
+										CHBL WT
+									</w:t>
+							</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="20" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:sz w:val="20" />
+										<w:sz-cs w:val="20" />
+									</w:rPr>
+									<w:t>										
+										182										
+									</w:t>
+								</w:r>
+							</w:p>
+						</w:tc>
+					</w:tr>
+					<w:tr wsp:rsidR="00000000">
+						<w:trPr>
+							<w:tblCellSpacing w:w="0" w:type="dxa" />
+						</w:trPr>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="35" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="top" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:b />
+										<w:b-cs />
+										<w:sz w:val="15" />
+										<w:sz-cs w:val="15" />
+									</w:rPr>
+									<w:t>
+										MAWB FRT
+									</w:t>
+								</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="10" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="top" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:sz w:val="20" />
+										<w:sz-cs w:val="20" />
+									</w:rPr>
+									<w:t>										
+										PREPAID										
+									</w:t>
+								</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="45" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+								<wx:font wx:val="Verdana" />
+										<w:b />
+										<w:b-cs />
+										<w:sz w:val="15" />
+										<w:sz-cs w:val="15" />
+									</w:rPr>
+									<w:t>
+										CUSTOM CLRD ON
+									</w:t>
+								</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="20" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:sz w:val="20" />
+										<w:sz-cs w:val="20" />
+									</w:rPr>
+									<w:t>										
+										23/01/2019										
+									</w:t>
+								</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="35" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:b />
+										<w:b-cs />
+										<w:sz w:val="15" />
+										<w:sz-cs w:val="15" />
+									</w:rPr>
+									<w:t>
+										MAWB DEST
+									</w:t>
+								</w:r>
+							</w:p>
+						</w:tc>
+						<w:tc>
+							<w:tcPr>
+								<w:tcW w:w="20" w:type="pct" />
+								<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								</w:tcBorders>
+								<w:vAlign w:val="left" />
+							</w:tcPr>
+							<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+								<w:r>
+									<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+										<wx:font wx:val="Verdana" />
+										<w:sz w:val="20" />
+										<w:sz-cs w:val="20" />
+									</w:rPr>
+									<w:t>										
+										MILAN                                   										
+									</w:t>
+									 
+								</w:r>
+							</w:p>
+						</w:tc>
+					</w:tr>
+					
+			</w:tbl>	
+				
+			<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+				<wx:allowEmptyCollapse />
+			</w:p>
+		</w:tc>
+		</w:tr>
+			
+			
+			<w:tr wsp:rsidR="00000000">
+				<w:trPr>
+					<w:tblCellSpacing w:w="15" w:type="dxa" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="0" w:type="auto" />
+						<w:tcBorders>
+							<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+						</w:tcBorders>
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:tbl>
+						<w:tblPr>
+							<w:tblW w:w="4700" w:type="pct" />
+							<w:tblCellSpacing w:w="0" w:type="dxa" />
+							<w:tblBorders>
+								<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							</w:tblBorders>
+							<w:tblCellMar>
+								<w:top w:w="0" w:type="dxa" />
+								<w:left w:w="0" w:type="dxa" />
+								<w:bottom w:w="0" w:type="dxa" />
+								<w:right w:w="0" w:type="dxa" />
+							</w:tblCellMar>
+							<w:tblLook w:val="04A0" />
+						</w:tblPr>
+						<w:tblGrid>
+							<w:gridCol w:w="1248" />
+							<w:gridCol w:w="2213" />
+							<w:gridCol w:w="1751" />
+							<w:gridCol w:w="1564" />
+							<w:gridCol w:w="1097" />
+							<w:gridCol w:w="1471" />
+						</w:tblGrid>
+						<w:tr wsp:rsidR="00000000">
+							  <w:trPr>
+								  <w:tblCellSpacing w:w="0" w:type="dxa" />
+							  </w:trPr><w:tc>
+								  <w:tcPr>
+									  <w:tcW w:w="650" w:type="pct" />
+									  <w:tcBorders>
+										  <w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										  <w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										  <w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										  <w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									  </w:tcBorders>
+									  <w:vAlign w:val="center" />
+								  </w:tcPr>
+								  <w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									  <w:r>
+										  <w:rPr>
+											  <w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											  <wx:font wx:val="Verdana" />
+											  <w:b />
+											  <w:b-cs />
+											  <w:sz w:val="15" />
+											  <w:sz-cs w:val="15" />
+										  </w:rPr>
+										  <w:t>
+											  HAWB NO
+										  </w:t>
+									  </w:r>
+								  </w:p>
+							  </w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="60" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											1031900056-23/01/2019
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="1000" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											HAWB DEST 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+								<w:tcW w:w="900" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											MILAN                                   
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="650" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											HAWB FRT
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="850" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											COLLECT
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+						</w:tr>
+						<w:tr wsp:rsidR="00000000">
+							<w:trPr>
+								<w:tblCellSpacing w:w="0" w:type="dxa" />
+							</w:trPr>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="650" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											TOTAL CTNS
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="950" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											57.00
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="1000" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+										<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											GROSS WT.
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="900" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											182.000
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="650" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											CHBL WT
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="850" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											182.000
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+						</w:tr>
+						<w:tr wsp:rsidR="00000000">
+							<w:trPr>
+								<w:tblCellSpacing w:w="0" w:type="dxa" />
+							</w:trPr>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="650" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											NO OF PCS
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="950" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											342.000 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="1000" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A" />
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="900" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t> 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="650" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A" />
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="850" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+						</w:tr>
+						<w:tr wsp:rsidR="00000000">
+							<w:trPr>
+								<w:tblCellSpacing w:w="0" w:type="dxa" />
+							</w:trPr>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="650" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											CONSIGNEE
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="0" w:type="auto" />
+									<w:gridSpan w:val="5" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											SICEM INTERNATIONAL SRL 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+						</w:tr>
+						<w:tr wsp:rsidR="00000000">
+							<w:trPr>
+								<w:tblCellSpacing w:w="0" w:type="dxa" />
+							</w:trPr>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="100" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											SHIPPER
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="10" w:type="auto" />
+									<w:gridSpan w:val="5" />
+									<w:tcBorders>
+									<w:top w:val="outset" w:sz="6" wx:bdrwidth="1" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="1" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="1" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="1" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="left" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											WE SAFE IMPEX 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+						</w:tr>
+						<w:tr wsp:rsidR="00000000">
+							<w:trPr>
+								<w:tblCellSpacing w:w="0" w:type="dxa" />
+							</w:trPr>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="100" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />											
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											COMMODITY
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="0" w:type="auto" />
+									<w:gridSpan w:val="5" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="left" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											100%COTTON KNITTED LADIESPYJAMA SET 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+						</w:tr>
+					</w:tbl>
+					<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A" />
+					
+			
+					<w:tbl>
+						<w:tblPr>
+							<w:tblW w:w="4700" w:type="pct" />
+							<w:tblCellSpacing w:w="0" w:type="dxa" />
+							<w:tblBorders>
+								<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+								<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							</w:tblBorders>
+							<w:tblCellMar>
+								<w:top w:w="0" w:type="dxa" />
+								<w:left w:w="0" w:type="dxa" />
+								<w:bottom w:w="0" w:type="dxa" />
+								<w:right w:w="0" w:type="dxa" />
+							</w:tblCellMar>
+							<w:tblLook w:val="04A0" />
+						</w:tblPr>
+						<w:tblGrid>
+							<w:gridCol w:w="100" />
+							<w:gridCol w:w="100" />
+							<w:gridCol w:w="100" />
+							<w:gridCol w:w="100" />
+							<w:gridCol w:w="100" />
+							<w:gridCol w:w="100" />
+							<w:gridCol w:w="100" />
+						</w:tblGrid>
+						<w:tr wsp:rsidR="00000000">
+							<w:trPr>
+								<w:tblCellSpacing w:w="0" w:type="dxa" />
+							</w:trPr>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											P/O NO
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											STY NO
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" /></w:tcBorders><w:vAlign w:val="center" /></w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+										<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+											<w:t>
+												CTNS
+											</w:t>
+											</w:r>
+										</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />											
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											DOCS RECD
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+										<w:tcBorders>
+											<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+											<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+											<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+											<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+								</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											CGO RECD
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											DESTINATION DOCS RECD
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:b />
+											<w:b-cs />
+											<w:sz w:val="15" />
+											<w:sz-cs w:val="15" />
+										</w:rPr>
+										<w:t>
+											NO.OF PCS
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+						</w:tr>
+						
+						
+						
+							<w:tr wsp:rsidR="00000000">
+							<w:trPr>
+								<w:tblCellSpacing w:w="0" w:type="dxa" />
+							</w:trPr>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											PO00005154-1 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											B2PU45079ESX6 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											57 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											23/01/2019 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders><w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											23/01/2019 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+									</w:tcBorders>
+									<w:vAlign w:val="center" />
+								</w:tcPr>
+								<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+									<w:pPr>
+										<w:jc w:val="center" />
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+										<w:t>
+											 
+										</w:t>
+									</w:r>
+								</w:p>
+							</w:tc>
+							<w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" /><w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" /></w:tcBorders><w:vAlign w:val="center" /></w:tcPr><w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A"><w:pPr><w:jc w:val="center" /></w:pPr><w:r><w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+											<w:t>
+												342 
+											</w:t>
+										</w:r>
+										</w:p>
+							</w:tc>
+						</w:tr>
+						
+						
+					</w:tbl>
+					
+					<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+						<wx:allowEmptyCollapse />
+					</w:p>
+				</w:tc>
+			</w:tr>
+				
+			<w:tr wsp:rsidR="00000000">
+				<w:trPr>
+					<w:tblCellSpacing w:w="15" w:type="dxa" />
+				</w:trPr>
+				 
+        <w:tc>
+								<w:tcPr>
+									<w:tcW w:w="150" w:type="pct" />
+									<w:tcBorders>
+										<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+										<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+                    <w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+                  </w:tcBorders>
+                  <w:vAlign w:val="left" /></w:tcPr><w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+                    <w:pPr>
+                      <w:jc w:val="left" />
+                    </w:pPr>
+                    <w:r>
+                      <w:rPr>
+											<w:rFonts w:ascii="Verdana" w:h-ansi="Verdana" />
+											<wx:font wx:val="Verdana" />
+                        	<w:b />
+											<w:sz w:val="20" />
+											<w:sz-cs w:val="20" />
+										</w:rPr>
+											<w:t>
+												NOTE:- ORIGINAL GSP IS ATTACHED IN DESTINATION POUCH WITH MAWB 
+											</w:t>
+										</w:r>
+										</w:p>
+							</w:tc>
+          
+				
+			</w:tr>
+			<w:tr wsp:rsidR="00000000">
+				<w:trPr>
+					<w:tblCellSpacing w:w="15" w:type="dxa" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="0" w:type="auto" />
+						<w:tcBorders>
+							<w:top w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:left w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:bottom w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+							<w:right w:val="outset" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="auto" />
+						</w:tcBorders>
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p wsp:rsidR="00000000" wsp:rsidRDefault="00AF044A">
+						<w:r>
+							<w:t>
+								</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+		</w:tbl>
+		<w:p wsp:rsidR="00AF044A" wsp:rsidRDefault="00AF044A">
+			<w:pPr>
+				<w:rPr>
+					<w:color w:val="auto" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:sectPr wsp:rsidR="00AF044A">
+			<w:pgSz w:w="12240" w:h="15840" />
+			<w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0" />
+			<w:cols w:space="720" />
+			<w:docGrid w:line-pitch="360" />
+		</w:sectPr>
+	</w:body>
+</w:wordDocument>

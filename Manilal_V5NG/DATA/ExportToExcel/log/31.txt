@@ -1,0 +1,8 @@
+24-01-2022 18:19:32 ~#~ Description : START ~#~ Function name : OnStart
+24-01-2022 18:19:32 ~#~ Description : Log Id:31 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+24-01-2022 18:19:32 ~#~ Description : ERROR:Login failed for user 'jolly_a'. ~#~ Function name : Expo
+24-01-2022 18:19:32 ~#~ Description : Log Id:31 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+27-01-2022 14:56:56 ~#~ Description : START ~#~ Function name : OnStart
+27-01-2022 14:56:56 ~#~ Description : Log Id:31 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+27-01-2022 14:56:56 ~#~ Description : ERROR:Login failed for user 'jolly_a'. ~#~ Function name : Expo
+27-01-2022 14:56:56 ~#~ Description : Log Id:31 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart

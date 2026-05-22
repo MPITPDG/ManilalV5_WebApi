@@ -1,0 +1,9 @@
+<table cellspacing="0" rules="all" border="1" style="border-collapse:collapse;">
+	<tr align="center" style="font-weight:bold;">
+		<td>DOC NO</td><td>DOC DATE</td><td>DOCUMENT TYPE</td><td>CLIENT NAME</td><td>SUPTYPE</td><td>CLIENT GST No</td><td>OUR GST No</td><td>BRANCH</td><td>EINVOICE STATUS</td><td>JSON FILE</td><td>UPLOAD FILE</td><td>IRNNO</td><td>ACKNO</td><td>ACKDATE</td>
+	</tr><tr>
+		<td>11022203700001</td><td>29/03/2022</td><td>CRT</td><td>SALUJA EXPORTS</td><td>B2B</td><td>07AVEPS5853N1ZU</td><td>07AAACM3908L2ZD</td><td>New Delhi                               </td><td>FILE UPLOADED</td><td>CFDL_20220330182732.json</td><td>CFDL_20220330182732.xlsx</td><td>d6e46492bb5f4a5cb9387d2d2320abba49356fc76418c9dbdaaf4c0e1816dac8</td><td>172211104314216</td><td>2022-03-30 18:32:00</td>
+	</tr><tr>
+		<td>11012203700001</td><td>23/03/2022</td><td>CRT</td><td>NAVKAR WOOLLENS PVT. LTD.</td><td>B2B</td><td>08AABCN9287G1Z1</td><td>27AAACM3908L1ZC</td><td>MUMBAI                                  </td><td>JSON GENERATED</td><td>CFMH_20220329131104.json</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+	</tr>
+</table>

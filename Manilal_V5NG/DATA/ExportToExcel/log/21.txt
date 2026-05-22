@@ -1,0 +1,14 @@
+4/29/2021 1:53:04 PM ~#~ Description : START ~#~ Function name : OnStart
+4/29/2021 1:53:04 PM ~#~ Description : Log Id:21 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/29/2021 1:53:05 PM ~#~ Description : Log Id:21 SQLQUERY_SP : USP_ACCT_RPT_TRIALBALANCE_DATEWISE_LOG ~#~ Function name : Expo
+4/29/2021 1:53:05 PM ~#~ Description : Log Id:21 SQLQUERY_PARA : '01/04/2021','31/03/2022','01/04/2021','31/03/2022','01','101' ~#~ Function name : Expo
+4/29/2021 1:53:05 PM ~#~ Description : Log Id:21 SQLQUERY_TEXT : USP_ACCT_RPT_TRIALBALANCE_DATEWISE_LOG '21', '01/04/2021','31/03/2022','01/04/2021','31/03/2022','01','101' ~#~ Function name : Expo
+4/29/2021 1:53:05 PM ~#~ Description : Log Id:21 XSLTRANSFORM : ACC_RPT_TRAILBALANCE_DATEWISE ~#~ Function name : Expo
+4/29/2021 1:53:05 PM ~#~ Description : Log Id:21 FILENAME : ACC_RPT_TRAILBALANCE_DATEWISE_202104291352_1885.XLS ~#~ Function name : Expo
+4/29/2021 1:53:05 PM ~#~ Description : Log Id:21 Fatching Data form Database Started ~#~ Function name : Expo
+4/29/2021 1:54:22 PM ~#~ Description : Log Id:21 Fatching Data form Database Completed ~#~ Function name : Expo
+4/29/2021 1:54:22 PM ~#~ Description : Log Id:21 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/29/2021 1:54:23 PM ~#~ Description : Log Id:21 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/29/2021 1:54:23 PM ~#~ Description : Log Id:21 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/29/2021 1:54:24 PM ~#~ Description : Log Id:21 Ziping Excel File Completed ~#~ Function name : ConvertToExcel
+4/29/2021 1:54:25 PM ~#~ Description : Log Id:21 -------------------------------  END  ------------------------------------------- ~#~ Function name : OnStart

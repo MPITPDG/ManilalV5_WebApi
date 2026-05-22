@@ -1,0 +1,12 @@
+23-03-2021 17:05:03 ~#~ Description : START ~#~ Function name : OnStart
+23-03-2021 17:05:03 ~#~ Description : Log Id: -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+23-03-2021 17:05:05 ~#~ Description : ERROR:There is no row at position 0. ~#~ Function name : Expo
+23-03-2021 17:05:05 ~#~ Description : Log Id: ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+23-03-2021 17:18:07 ~#~ Description : START ~#~ Function name : OnStart
+23-03-2021 17:18:07 ~#~ Description : Log Id: -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+23-03-2021 17:18:07 ~#~ Description : ERROR:There is no row at position 0. ~#~ Function name : Expo
+23-03-2021 17:18:07 ~#~ Description : Log Id: ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+24-01-2022 19:05:41 ~#~ Description : START ~#~ Function name : OnStart
+24-01-2022 19:05:41 ~#~ Description : Log Id: -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+24-01-2022 19:05:42 ~#~ Description : ERROR:Login failed for user 'jolly_a'. ~#~ Function name : Expo
+24-01-2022 19:05:42 ~#~ Description : Log Id: ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart

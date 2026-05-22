@@ -1,0 +1,701 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A3B2607B-D6F1-48C7-A6D0-EC0F576FCFAE}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Manilal_V5NG</RootNamespace>
+    <AssemblyName>Manilal_V5NG</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Manilal_V5NG.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EPPlus, Version=7.0.2.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.7.0.2\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=6.1.1.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.Interfaces.6.1.1\lib\net35\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.System.Drawing, Version=6.1.1.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.System.Drawing.6.1.1\lib\net35\EPPlus.System.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.Cors, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.6\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.6\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Manilal_V5NG.dll" />
+    <Content Include="Global.asax" />
+    <Content Include="Include\css\xsltStyle.css" />
+    <Content Include="Include\img\Create-ticket.png" />
+    <Content Include="Include\img\image001.gif" />
+    <Content Include="Include\img\image001.png" />
+    <Content Include="Include\img\image002.gif" />
+    <Content Include="Include\img\image002.png" />
+    <Content Include="Include\img\image003.gif" />
+    <Content Include="Include\img\image003.png" />
+    <Content Include="Include\img\image004.gif" />
+    <Content Include="Include\img\image004.png" />
+    <Content Include="Include\img\image005.gif" />
+    <Content Include="Include\img\image005.png" />
+    <Content Include="Include\img\image006.gif" />
+    <Content Include="Include\img\image006.png" />
+    <Content Include="Include\img\image007.gif" />
+    <Content Include="Include\img\image007.png" />
+    <Content Include="Include\img\image008.gif" />
+    <Content Include="Include\img\image008.png" />
+    <Content Include="Include\img\image009.gif" />
+    <Content Include="Include\img\image009.png" />
+    <Content Include="Include\img\image010.gif" />
+    <Content Include="Include\img\image010.png" />
+    <Content Include="Include\img\image011.png" />
+    <Content Include="Include\img\image012.png" />
+    <Content Include="Include\img\image013.png" />
+    <Content Include="Include\img\image014.png" />
+    <Content Include="Include\img\image015.png" />
+    <Content Include="Include\img\image016.png" />
+    <Content Include="Include\img\image017.png" />
+    <Content Include="Include\img\image018.png" />
+    <Content Include="Include\img\image019.png" />
+    <Content Include="Include\img\image020.png" />
+    <Content Include="Include\img\image021.png" />
+    <Content Include="Include\img\image022.png" />
+    <Content Include="Include\img\image023.png" />
+    <Content Include="Include\template\clp_template.html" />
+    <Content Include="Include\template\EPCopy_Statemnt_template.html" />
+    <Content Include="Include\template\Ep_Copy_Air_tbl_template.html" />
+    <Content Include="Include\template\Exp_rpt_DSR_template.html" />
+    <Content Include="Include\template\Exp_rpt_EpCopy_exptExl_template.html" />
+    <Content Include="Include\template\Exp_rpt_Shipment_status.html" />
+    <Content Include="Include\test_xml\test.xml" />
+    <Content Include="Include\xml\AccountsFra\Xsl_Accfra_Rpt_Brand_Origin_Tonnage_Summary.xsl" />
+    <Content Include="Include\xml\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_XL.xsl" />
+    <Content Include="Include\xml\AccountsFra\xsl_AccFra_Rpt_ExportSummary_XL.xsl" />
+    <Content Include="Include\xml\Accounts\xsl_acc_bankreconcillation_list.xsl">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Include\xml\Admin\xsl_Admin_enquirylist.xsl" />
+    <Content Include="Include\xml\Export\xsl_Expo_Rpt_Shipment_Status.xsl" />
+    <Content Include="Include\xml\Export\xsl_Expo_Rpt_Shipment_Status_Air.xsl" />
+    <Content Include="Include\xml\Export\xsl_Exp_Rpt_Air_CargoOnHand.xsl" />
+    <Content Include="Include\xml\Export\xsl_Exp_Rpt_Air_CargoOnHand_Sea.xsl" />
+    <Content Include="Include\xml\Export\xsl_Exp_Rpt_Tracking_Air_Shipment_XL.xsl" />
+    <Content Include="Include\xml\Export\xsl_Exp_Rpt_Tracking_Air_Shipment_XL_EPHIGIA.xsl" />
+    <Content Include="Include\xml\Export\xsl_Exp_Rpt_Tracking_Air_Shipment_XL_JULES.xsl" />
+    <Content Include="Include\xml\Export\xsl_Exp_Rpt_Tracking_Air_Shipment_XL_KIABI.xsl" />
+    <Content Include="Include\xml\Export\xsl_Exp_Rpt_Tracking_Air_Shipment_XL_PIMPKIE.xsl" />
+    <Content Include="Include\xml\Importfra\xsl_Expo_Rpt_Print_Dossier.xsl" />
+    <Content Include="Include\xml\Importfra\xsl_Impfra_clientTransitime.xsl" />
+    <Content Include="Include\xml\Importfra\xsl_Impfra_Print_Dossier.xsl">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Include\xml\Import\xsl_import_shipmentwise_stockstatus.xsl">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Include\xml\Import\xsl_import_shipmentwise_stockstatus_all.xsl">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Include\xml\Import\xsl_import_shipmentwise_stockstatus_all_mrpqty.xsl" />
+    <Content Include="Include\xml\Import\xsl_import_shipmentwise_stockstatus_monthwise.xsl">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Include\xml\Import\xsl_import_wms_clientpo.xsl">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Include\xml\Import\xsl_import_wms_clientpo_2.xsl" />
+    <Content Include="Include\xml\Import\xsl_import_wms_goodsissue.xsl">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Include\xml\Import\xsl_import_wms_goodsreturnlist.xsl" />
+    <Content Include="Include\xml\Import\xsl_import_wms_grnlist.xsl" />
+    <Content Include="Include\xml\Import\xsl_import_wms_item_stock_report.xsl" />
+    <Content Include="Include\xml\Import\xsl_import_wms_item_stock_report_backup_20240205.xsl">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Include\xml\Import\xsl_import_wms_item_stock_report__backup_20240118.xsl" />
+    <Content Include="packages\ExcelDataReader.2.1.2\lib\net20\Excel.dll" />
+    <Content Include="packages\ExcelDataReader.2.1.2\lib\net20\Excel.pdb" />
+    <Content Include="packages\ExcelDataReader.2.1.2\lib\net45\Excel.dll" />
+    <Content Include="packages\ExcelDataReader.2.1.2\lib\net45\Excel.pdb" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="xslFiles\AccountsFra\xsl_Accfra_CreditNote_fillBillNo.xsl" />
+    <Content Include="xslFiles\AccountsFra\Xsl_AccFra_Invoice_Rate.xsl" />
+    <Content Include="xslFiles\AccountsFra\Xsl_AccFra_Invoice_Rate_Dtls.xsl" />
+    <Content Include="xslFiles\AccountsFra\Xsl_Accfra_Rpt_Brand_Origin_Tonnage_Summary.xsl" />
+    <Content Include="xslFiles\AccountsFra\Xsl_AccFra_Rpt_Client_nd_Origin_wise_Turnover_Summary.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_Console.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_ConsoleNo.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_Display.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_Display_Summary.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_Job.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_Job_DOSSIER.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_Loss.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_Profit.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_View_Imp.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_XL - backup_20160726.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ConsoleSummary_XL.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_Console_View.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_Console_View_Delivery.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_Console_View_Delivery_Appointment.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_Console_View_Delivery_Job.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_Console_View_Job.xsl" />
+    <Content Include="xslFiles\AccountsFra\Xsl_Accfra_Rpt_Delivery_NotInvoiced - Copy_BAK20180131.xsl" />
+    <Content Include="xslFiles\AccountsFra\Xsl_Accfra_Rpt_Delivery_NotInvoiced.xsl" />
+    <Content Include="xslFiles\AccountsFra\Xsl_Accfra_Rpt_DelvJob_NotInvoiced.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ExportSummary.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ExportSummary_Loss.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ExportSummary_Profit.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Rpt_ExportSummary_XL.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_Accfra_Rpt_General_Account_TurnOver.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Credit_Fill_Charge.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Credit_Fill_Enclosure.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Credit_Fill_JOB.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Invoice_Auto_Account.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Invoice_Auto_Enclosure.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Invoice_Auto_Job.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Invoice_Fill_Charge.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Invoice_Fill_Enclosure.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Invoice_Fill_JOB.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Provision.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Purchase.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Purchase_Excel.xsl" />
+    <Content Include="xslFiles\AccountsFra\XSL_AccFra_Tran_Purchase_Exl_RPT.xsl" />
+    <Content Include="xslFiles\AccountsFra\XSL_AccFra_Tran_Purchase_Exl_RPT_bak20140517.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Purchase_JobNo.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Purchase_Print.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_AccFra_Tran_Purchase_Print1.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_Acc_Mst_Invoice_ExchRate.xsl" />
+    <Content Include="xslFiles\AccountsFra\xsl_Acc_Mst_Invoice_ExchRate_Daily.xsl" />
+    <Content Include="xslFiles\Accounts\ACC_MIS_OUTSTANDING_CLIENT_LEDGER.xsl" />
+    <Content Include="xslFiles\Accounts\ACC_MIS_OUTSTANDING_SUPPLIER_LEDGER.xsl" />
+    <Content Include="xslFiles\Accounts\Acc_Tran_BRBPCRCPCE_Dtls.xsl" />
+    <Content Include="xslFiles\Accounts\frm_Acc_MIS_MAWB_Freight_Report_Excel.xsl" />
+    <Content Include="xslFiles\Accounts\frm_Acc_MIS_MAWB_Freight_Report_Freight.xsl" />
+    <Content Include="xslFiles\Accounts\frm_Acc_MIS_MAWB_Freight_Report_Freight_Invoice.xsl" />
+    <Content Include="xslFiles\Accounts\frm_Acc_MIS_MAWB_Freight_Report_Invoice.xsl" />
+    <Content Include="xslFiles\Accounts\frm_Acc_MIS_MAWB_Freight_Report_Invoice_PaymentRecd.xsl" />
+    <Content Include="xslFiles\Accounts\frm_Acc_MIS_MAWB_Freight_Report_JobNo.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acct_Rpt_MIS_CO_Ageing.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acct_Rpt_MIS_CO_Ageing_Excel.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Client_Outstanding_Remark_Document.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_CompCheq_BPRequest_Reject_View.xsl" />
+    <Content Include="xslFiles\Accounts\Xsl_Acc_CompCheq_Request_BP_View.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_MIS_HAWB_CC_FRT.xsl" />
+    <Content Include="xslFiles\Accounts\Xsl_Acc_Rpt_AirFrtInvoice.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Rpt_Container_Job_Profit.xsl" />
+    <Content Include="xslFiles\Accounts\XSL_Acc_Trans_CilentStatus_Followup.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Authorisation_Fill_To_Generate.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_BRBPCRCPCE_Dtls.xsl">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_BRBPCRCPCE_Dtls_AccNetTotal.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_BRBPCRCPCE_Dtls_CE.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_BRBPCRCPCE_Dtls_Orignal.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_CPJVPI_Request_Authorisation.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_CP_Dtls_View.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_CreditNote_Step1_Dtls.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Invoice_CN_MAWB_Airfreight_Auto_view_ConsPur.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Invoice_CN_MAWB_Airfreight_Auto_view_ConsPur_bak20151230.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Invoice_CN_MAWB_Airfreight_Auto_view_ConsPur_bak_20171025.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Invoice_View.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Invoice_View_bak_20151117_2009.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_JV_Authorisation.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_JV_Dtls.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_JV_Dtls_AccNetTotal.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_JV_Dtls_Original.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_JV_Dtls_View.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_JV_Fill_To_Generate.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Provision.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Provision_Authorisation.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Provision_BI.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Provision_MAWB_Authorisation_Fill_To_Generate.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Provision_MAWB_View_Dtls.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Purchase.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_PURCHASE_Dtls.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_PURCHASE_Dtls_AccNetTotal.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_PURCHASE_Dtls_Orignal.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_PURCHASE_Dtls_View.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_PURCHASE_MAWB_Authorisation_Fill_To_Generate.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Purchase_MultiContainer.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_PURCHASE_MULTICONTAINER_Dtls.xsl" />
+    <Content Include="xslFiles\Accounts\xsl_Acc_Tran_Request_Authorisation.xsl" />
+    <Content Include="xslFiles\Booking\xsl_Booking_Online_Export_OrderNo.xsl" />
+    <Content Include="xslFiles\Booking\xsl_Booking_Online_Export_Order_UploadDoc.xsl" />
+    <Content Include="xslFiles\Booking\xsl_Booking_Online_list.xsl" />
+    <Content Include="xslFiles\Booking\xsl_Booking_OrderDtls.xsl" />
+    <Content Include="xslFiles\Booking\xsl_Booking_UploadDoc.xsl" />
+    <Content Include="xslFiles\EDI\xsl_AccFra_EDI_Invoice_Report_Download.xsl" />
+    <Content Include="xslFiles\EDI\xsl_AccFra_EDI_Invoice_Report_InProcess.xsl" />
+    <Content Include="xslFiles\EDI\xsl_EDI_Auchan_Integration_Log.xsl" />
+    <Content Include="xslFiles\EDI\Xsl_EDI_Auchan_Search_Status.xsl" />
+    <Content Include="xslFiles\EDI\XSL_Edi_Happychic_Booking.xsl" />
+    <Content Include="xslFiles\EDI\XSL_EDI_Happychic_Cont_Mawbno_Pending_List.xsl" />
+    <Content Include="xslFiles\EDI\xsl_EDI_HAPPYCHIC_FORWARDER_SHIPMENT_APPROVAL.xsl" />
+    <Content Include="xslFiles\EDI\Xsl_EDI_HappyChic_LogFile.xsl" />
+    <Content Include="xslFiles\EDI\xsl_EDI_HAPPYCHIC_ORDER_FOLLOWUP_LRD_DUE.xsl" />
+    <Content Include="xslFiles\EDI\Xsl_EDI_HappyChic_Search_Status.xsl" />
+    <Content Include="xslFiles\EDI\xsl_EDI_JULES_EXPORT_LOG.xsl" />
+    <Content Include="xslFiles\EDI\xsl_EDI_XML_3SLBP_FFNOTIFICATION_INTEGRATION_LIST.xsl" />
+    <Content Include="xslFiles\EDI\xsl_EDI_XML_3SLBP_FFN_INTEGRATION_INCOMING_COMP_LIST.xsl" />
+    <Content Include="xslFiles\EDI\xsl_EDI_XML_Conforama_container_Pending_List.xsl" />
+    <Content Include="xslFiles\EDI\xsl_EDI_XML_Conforama_container_Pending_List_bak_20121205.xsl" />
+    <Content Include="xslFiles\EDI\xsl_EDI_XML_LBP3S_MAWB_ADL_GENERATED_LIST.xsl" />
+    <Content Include="xslFiles\EDI\xsl_EDI_XML_LBP3S_MAWB_ADL_PENDING_LIST.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Consg_HAWB_Club_Job.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Consg_HAWB_Club_Job_Unclub.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Consg_HAWB_Remove_All.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Consg_HAWB_Remove_Job.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Consg_HBL_Club_Job.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Consg_HBL_Club_Job_Unclub.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Consg_MAWB_Club_Job.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Consg_MAWB_Club_Job_Unclub.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Consg_MAWB_Remove_All.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Consg_MAWB_Remove_Job.xsl" />
+    <Content Include="xslFiles\Export\XSL_Exp_Generate_Prealert_For_ASP.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Booking_OrderNo.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Booking_OrderNo_bak20160315.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Booking_OrderNo_Download.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_MstInvAdd.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_PrintDoc_PreparePrealert_Air.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_PrintDoc_SendAutoPrealert_Air.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Step5_ITC.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Step5_ITC_View.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Step6_OrderNo.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Step6_OrderNo_View.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Step7_Package.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Step7_Package_View.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Step8_Marks.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_Step8_Marks_View.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_View_Consignment_Clp.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_View_Consignment_Delivery.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_View_Consignment_ITC.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_View_Consignment_OrderNo.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Export_View_Consignment_PkgNo.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Prealert_History.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Prealert_History_AlertType.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Prealert_History_Log.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_Prealert_Inprocess.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Mst_supplier_MstInvAdd.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Rpt_Air_CargoOnHand.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Rpt_Air_CargoOnHand_Sea.xsl" />
+    <Content Include="xslFiles\Export\Xsl_Exp_Rpt_Cargo_Received.xsl" />
+    <Content Include="xslFiles\Export\Xsl_Exp_Rpt_Exporter_Shipment.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Rpt_Tracking_Air_Shipment_XL.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Rpt_Tracking_Air_Shipment_XL_EPHIGIA.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Rpt_Tracking_Air_Shipment_XL_JULES.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Rpt_Tracking_Air_Shipment_XL_KIABI.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_Rpt_Tracking_Air_Shipment_XL_PIMPKIE.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_SP_Container_Step2_View.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_SP_Dimenssion_Dtls_IU.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_SP_Dimenssion_OrderDtls.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_SP_Pending_Shipment_Container_Update.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_SP_Receipt_Of_Cargo.xsl" />
+    <Content Include="xslFiles\Export\xsl_Exp_SP_Receipt_Of_Cargo_Expt.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_ImpFra_Auchan_France_CarrierSplit.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_Impfra_clientTransitime.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_CONTAINER_VIEW.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_Imp_fra_Console_Custom_Dox.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_DELIVERY_VIEW.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_DOSSIERMAIN_VIEW.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_DOSSIER_JOB_VIEW.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_GET.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_IMPORT.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_JOB_DTLS.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_LIST.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_ORDER_DTLS.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONS_View.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONS_View_bak_20150116.xsl" />
+    <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_MIS_AIRSHIPMENT.xsl" />
+    <Content Include="xslFiles\Import\xsl_imp_invoice_console_Rate_Pending.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Air_JobDtls_Excel.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Air_JobDtls_Job.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Air_JobDtls_Job_Bizbee.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Air_JobDtls_Job_USD.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Air_JobDtls_Jules_MAWB_XL.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Air_JobDtls_Jules_XL.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Air_JobDtls_Kiabi_MAWB_XL.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Air_JobDtls_Kiabi_XL.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Air_JobDtls_Other_XL.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Air_JobDtls_Validate.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Sea_Grid_XL.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Sea_Grp.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Sea_Grp_Biz.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Sea_Grp_Valid.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Invoice_Step2_Sea_Grp_XL.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Mst_Import_BOE_Dtls.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Mst_Import_DateOfROD_Dtls.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Mst_Import_Delivery_Dtls.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Mst_Import_DocCallForUs_Dtls.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Mst_Import_Duty_Dtls.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Mst_Import_Good_Dtls.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Mst_Import_Invoice_Dtls.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Mst_Import_Octroi_Dtls.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Mst_Import_Port_Dtls.xsl" />
+    <Content Include="xslFiles\Import\xsl_Imp_Mst_Import_SteAgentCharge_Dtls.xsl" />
+    <Content Include="xslFiles\Order\XSL_Ord_Order_List.xsl" />
+    <Content Include="xslFiles\Report\xsl_Report.xsl" />
+    <Content Include="xslFiles\Report\xsl_Report_Batch.xsl" />
+    <Content Include="xslFiles\Report\xsl_Report_Batch_Log.xsl" />
+    <Content Include="xslFiles\Report\xsl_Report_Log.xsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\SwaggerConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="BasicAuth\BasicAuthenticationAttribute.cs" />
+    <Compile Include="Controllers\AccountsBLL\AccountsController.cs" />
+    <Compile Include="Controllers\AccountsFraBLL\AccountsFraController.cs" />
+    <Compile Include="Controllers\Admin\AdminController.cs" />
+    <Compile Include="Controllers\Admin\CompanyController.cs" />
+    <Compile Include="Controllers\BaseBLL\ConnectionString.cs" />
+    <Compile Include="Controllers\BaseBLL\DAL.cs" />
+    <Compile Include="Controllers\BaseBLL\ErrorLog.cs" />
+    <Compile Include="Controllers\BranchBLL\BranchController.cs" />
+    <Compile Include="Controllers\EdiBLL\EdiController.cs" />
+    <Compile Include="Controllers\ImportBLL\ImportController.cs" />
+    <Compile Include="Controllers\ImportfraBLL\ImportfraController.cs" />
+    <Compile Include="Controllers\MasterBLL\Employee.cs" />
+    <Compile Include="Controllers\MasterBLL\MasterController.cs" />
+    <Compile Include="Models\AccountsFra.cs" />
+    <Compile Include="Models\Admin.cs" />
+    <Compile Include="Models\Branch.cs" />
+    <Compile Include="Controllers\CommonBLL\Class_Common.cs" />
+    <Compile Include="Controllers\CommonBLL\CommonController.cs" />
+    <Compile Include="Controllers\CommonBLL\CommonFunction.cs" />
+    <Compile Include="Controllers\ExportBLL\ExportController.cs" />
+    <Compile Include="Models\Accounts.cs" />
+    <Compile Include="Models\common_attri.cs" />
+    <Compile Include="Models\Import.cs" />
+    <Compile Include="Models\Importfra.cs" />
+    <Compile Include="Models\Login.cs" />
+    <Compile Include="Controllers\LoginBLL\LoginController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Export.cs" />
+    <Compile Include="Models\Master.cs" />
+    <Compile Include="Models\Company.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\UserServices.cs" />
+    <Compile Include="Utils\DataAccessLayer.cs" />
+    <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Utils\ExtractObject.cs" />
+    <Compile Include="Utils\GenericMapper.cs" />
+    <Compile Include="Utils\HttpResponseMessageApi.cs" />
+    <Compile Include="Utils\OwnClaimTypes.cs" />
+    <Compile Include="Utils\RetrieveClaimsPrinciple.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Include\json\menulist.json" />
+    <Content Include="Include\test_xml\clp.XLS" />
+    <Content Include="Include\test_xml\clp_test.xlsx" />
+    <Content Include="DATA\WMS\itemmaster\MPCargo_Dataset_2023-12-12 %281%29.xlsx" />
+    <Content Include="DATA\WMS\itemmaster\PRODUCT DATA FILE WITH QTY_1.xlsx" />
+    <Content Include="DATA\WMS\itemmaster\PRODUCT DATA FILE WITH QTY_2.xlsx" />
+    <None Include="packages.config" />
+    <Content Include="packages\ExcelDataReader.2.1.2\.signature.p7s" />
+    <Content Include="packages\ExcelDataReader.2.1.2\ExcelDataReader.2.1.2.nupkg" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <Content Include="xslFiles\EDI\EDI_HAPPYCHIC_SEARCH_AND_PENDINGLIST_BAK_20171025.rar" />
+    <Content Include="xslFiles\EDI\vssver.scc" />
+    <Content Include="xslFiles\EDI\Xsl_EDI_Auchan_Search_Status_bak20171026.rar" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="DATA\ACCOUNT_FRA\" />
+    <Folder Include="DATA\Acc_OpBal_CF_Batch\" />
+    <Folder Include="DATA\BHEL\" />
+    <Folder Include="DATA\CHEQUE_REPORT\" />
+    <Folder Include="DATA\CONSOLE_PURCHASE\" />
+    <Folder Include="DATA\EDI\log\" />
+    <Folder Include="DATA\EDI\output\" />
+    <Folder Include="DATA\EDI\xsl\" />
+    <Folder Include="DATA\EDI_3SBP_XML_NOTIFICATION\" />
+    <Folder Include="DATA\EDI_3SUISSE_XML\" />
+    <Folder Include="DATA\EDI_3SUISSE_XML_NOTIFICATION\Testing_Backup_Incoming\" />
+    <Folder Include="DATA\EDI_3SUISSE_XML_OUTBOUNDPO\" />
+    <Folder Include="DATA\EDI_3SUISSE_XML_OUTPUT\TFU-MP-2011-10-28\" />
+    <Folder Include="DATA\EDI_3SUISSE_XML_OUTPUT_BACK\3suisses_PSR_TEST_AUTO_GENERATE\" />
+    <Folder Include="DATA\EDI_3SUISSE_XML_OUTPUT_BACK\3s_Test_PartnershipmentReceipt_ADL_EVNT\TFU-MP-2011-10-28\" />
+    <Folder Include="DATA\EDI_3SUISSE_XML_OUTPUT_TEST\" />
+    <Folder Include="DATA\EDI_3SUISSE_XML_PSADL_OUTPUT_LOG\" />
+    <Folder Include="DATA\EDI_3SUISSE_XML_PSR_OUTPUT_LOG\" />
+    <Folder Include="DATA\EDI_BECQUET_XML_OUTPUT\" />
+    <Folder Include="DATA\EDI_BECQUET_XML_PSR_OUTPUT_LOG\" />
+    <Folder Include="DATA\EDI_BPORTE_XML_NOTIFICATION\" />
+    <Folder Include="DATA\EDI_BPORTE_XML_OUTPUT\" />
+    <Folder Include="DATA\EDI_BPORTE_XML_OUTPUT_TEST\" />
+    <Folder Include="DATA\EDI_BPORTE_XML_PSADL_OUTPUT_LOG\" />
+    <Folder Include="DATA\EDI_BPORTE_XML_PSR_OUTPUT_LOG\" />
+    <Folder Include="DATA\EDI_CONFORAMA\" />
+    <Folder Include="DATA\EDI_FLUXBECQUET_XML_NOTIFICATION\" />
+    <Folder Include="DATA\EDI_HAPPYCHIC\" />
+    <Folder Include="DATA\EDI_HAPPYCHIC_TRACKING_OUTPUT\" />
+    <Folder Include="DATA\EDI_Jules\" />
+    <Folder Include="DATA\EDI_Jules_Out\" />
+    <Folder Include="DATA\EDI_LAHALLE\" />
+    <Folder Include="DATA\EDI_MOVITEX_Out\" />
+    <Folder Include="DATA\EDI_XML\" />
+    <Folder Include="DATA\Edoc\" />
+    <Folder Include="DATA\erpTaskScheduler1\xsl\" />
+    <Folder Include="DATA\erpTaskScheduler\Backup\erpTaskScheduler_201011031143\" />
+    <Folder Include="DATA\erpTaskScheduler\erpTaskScheduler\" />
+    <Folder Include="DATA\erpTaskScheduler\log\" />
+    <Folder Include="DATA\erpTaskScheduler\output\" />
+    <Folder Include="DATA\erpTaskScheduler\xsl\" />
+    <Folder Include="DATA\erpTaskScheduler_x86\Backup\erpTaskScheduler_201011031143\" />
+    <Folder Include="DATA\erpTaskScheduler_x86\erpTaskScheduler\" />
+    <Folder Include="DATA\erpTaskScheduler_x86\log\" />
+    <Folder Include="DATA\erpTaskScheduler_x86\output\" />
+    <Folder Include="DATA\erpTaskScheduler_x86\xsl\" />
+    <Folder Include="DATA\ERP\log\" />
+    <Folder Include="DATA\ERP\output\Export\PREALERT\" />
+    <Folder Include="DATA\ERP\xsl\Export\PREALERT\" />
+    <Folder Include="DATA\ERP\xsl\PREALERT\" />
+    <Folder Include="DATA\ExportToExcelBatch\batch\" />
+    <Folder Include="DATA\ExportToExcelBatch\log\" />
+    <Folder Include="DATA\ExportToExcelBatch\output\" />
+    <Folder Include="DATA\ExportToExcelBatch\xls\" />
+    <Folder Include="DATA\ExportToExcel\batch\" />
+    <Folder Include="DATA\ExportToExcel\log\" />
+    <Folder Include="DATA\ExportToExcel\output\" />
+    <Folder Include="DATA\ExportToExcel\xls\" />
+    <Folder Include="DATA\EXPORT\" />
+    <Folder Include="DATA\EXPORT_AIR_TRACKING_REPORT\" />
+    <Folder Include="DATA\IMPORTDOC\" />
+    <Folder Include="DATA\Mawb_Provision_Auto_Batch\" />
+    <Folder Include="DATA\MIS\" />
+    <Folder Include="DATA\MPAlertScheduler\log\" />
+    <Folder Include="DATA\MPAlertScheduler\output\PREALERT\" />
+    <Folder Include="DATA\MPAlertScheduler\PREALERT\" />
+    <Folder Include="DATA\New Folder\" />
+    <Folder Include="DATA\SendMail\xsl\SendMail\Mail\" />
+    <Folder Include="DATA\Temp\" />
+    <Folder Include="DATA\Utility\EDI\EDI\bin\Debug\log\" />
+    <Folder Include="DATA\Utility\EDI\EDI\bin\Debug\output\" />
+    <Folder Include="DATA\Utility\EDI\EDI\bin\Debug\xsl\" />
+    <Folder Include="DATA\Utility\EDI\EDI\bin\Release\" />
+    <Folder Include="DATA\Utility\EDI\EDI\bin\x64\Release\" />
+    <Folder Include="DATA\Utility\EDI\EDI\My Project\" />
+    <Folder Include="DATA\Utility\EDI\EDI\obj\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\EDI\EDI\obj\Release\TempPE\" />
+    <Folder Include="DATA\Utility\EDI\EDI\obj\x64\Release\TempPE\" />
+    <Folder Include="DATA\Utility\erpTaskScheduler\Backup\erpTaskScheduler_201011031143\" />
+    <Folder Include="DATA\Utility\erpTaskScheduler\erpTaskScheduler\bin\Debug\LOG\" />
+    <Folder Include="DATA\Utility\erpTaskScheduler\erpTaskScheduler\My Project\" />
+    <Folder Include="DATA\Utility\erpTaskScheduler\erpTaskScheduler\obj\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\erpTaskScheduler\log\" />
+    <Folder Include="DATA\Utility\erpTaskScheduler\output\" />
+    <Folder Include="DATA\Utility\erpTaskScheduler\xsl\" />
+    <Folder Include="DATA\Utility\ERP\ERP\bin\Debug\log\" />
+    <Folder Include="DATA\Utility\ERP\ERP\bin\Debug\output\" />
+    <Folder Include="DATA\Utility\ERP\ERP\bin\Debug\xsl\" />
+    <Folder Include="DATA\Utility\ERP\ERP\bin\Release\log\" />
+    <Folder Include="DATA\Utility\ERP\ERP\bin\Release\output\Export\PREALERT\" />
+    <Folder Include="DATA\Utility\ERP\ERP\bin\Release\xsl\Export\PREALERT\" />
+    <Folder Include="DATA\Utility\ERP\ERP\My Project\" />
+    <Folder Include="DATA\Utility\ERP\ERP\obj\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\ERP\ERP\obj\Debug\xls\" />
+    <Folder Include="DATA\Utility\ERP\ERP\obj\Release\TempPE\" />
+    <Folder Include="DATA\Utility\ERP_EXPORT\ERP_EXPORT\bin\Debug\log\" />
+    <Folder Include="DATA\Utility\ERP_EXPORT\ERP_EXPORT\bin\Debug\output\" />
+    <Folder Include="DATA\Utility\ERP_EXPORT\ERP_EXPORT\bin\Debug\xls\" />
+    <Folder Include="DATA\Utility\ERP_EXPORT\ERP_EXPORT\bin\Release\log\" />
+    <Folder Include="DATA\Utility\ERP_EXPORT\ERP_EXPORT\bin\Release\output\" />
+    <Folder Include="DATA\Utility\ERP_EXPORT\ERP_EXPORT\bin\Release\Release_201003261001\" />
+    <Folder Include="DATA\Utility\ERP_EXPORT\ERP_EXPORT\bin\Release\xls\" />
+    <Folder Include="DATA\Utility\ERP_EXPORT\ERP_EXPORT\My Project\" />
+    <Folder Include="DATA\Utility\ERP_EXPORT\ERP_EXPORT\obj\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\ERP_EXPORT\ERP_EXPORT\obj\Release\TempPE\" />
+    <Folder Include="DATA\Utility\ExportToExcelBatch\ExportToExcelBatch\bin\Debug\" />
+    <Folder Include="DATA\Utility\ExportToExcelBatch\ExportToExcelBatch\bin\Release\log\" />
+    <Folder Include="DATA\Utility\ExportToExcelBatch\ExportToExcelBatch\bin\Release\output\" />
+    <Folder Include="DATA\Utility\ExportToExcelBatch\ExportToExcelBatch\bin\Release\xls\" />
+    <Folder Include="DATA\Utility\ExportToExcelBatch\ExportToExcelBatch\log\" />
+    <Folder Include="DATA\Utility\ExportToExcelBatch\ExportToExcelBatch\My Project\" />
+    <Folder Include="DATA\Utility\ExportToExcelBatch\ExportToExcelBatch\obj\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\ExportToExcelBatch\ExportToExcelBatch\obj\Release\TempPE\" />
+    <Folder Include="DATA\Utility\ExportToExcelBatch\ExportToExcelBatch\xls\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\Debug\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\Release\log\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\Release\output\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\Release\xls\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\x64\Debug\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\x64\Release\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\x86\Debug\log\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\x86\Debug\output\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\x86\Debug\xls\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\x86\Release\log\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\x86\Release\output\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\bin\x86\Release\xls\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\log\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\My Project\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\obj\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\obj\Release\TempPE\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\obj\x64\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\obj\x64\Release\TempPE\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\obj\x86\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\obj\x86\Release\TempPE\" />
+    <Folder Include="DATA\Utility\ExportToExcel\ExportToExcel\xls\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\log\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\MAWBARRAIVAL\bin\Debug\log\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\MAWBARRAIVAL\bin\Debug\output\PREALERT\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\MAWBARRAIVAL\bin\Debug\PREALERT\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\MAWBARRAIVAL\bin\Release\log\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\MAWBARRAIVAL\bin\Release\output\PREALERT\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\MAWBARRAIVAL\bin\Release\PREALERT\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\MAWBARRAIVAL\My Project\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\MAWBARRAIVAL\obj\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\MAWBARRAIVAL\obj\Release\TempPE\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\output\PREALERT\" />
+    <Folder Include="DATA\Utility\MAWBARRAIVAL\PREALERT\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\bin\Debug\log\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\bin\Debug\output\PREALERT\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\bin\Debug\PREALERT\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\bin\Release\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\bin\x86\Release\log\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\bin\x86\Release\output\PREALERT\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\bin\x86\Release\PREALERT\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\My Project\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\obj\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\obj\Release\TempPE\" />
+    <Folder Include="DATA\Utility\MPAlertScheduler\MPAlertScheduler\obj\x86\Release\TempPE\" />
+    <Folder Include="DATA\Utility\Scheduler\erpScheduler\Backup\erpScheduler\" />
+    <Folder Include="DATA\Utility\Scheduler\erpScheduler\erpScheduler\bin\" />
+    <Folder Include="DATA\Utility\Scheduler\erpScheduler\erpScheduler\My Project\" />
+    <Folder Include="DATA\Utility\Scheduler\erpScheduler\erpScheduler\obj\Debug\TempPE\" />
+    <Folder Include="DATA\Utility\Scheduler\erpScheduler\erpScheduler\obj\Debug\temp\" />
+    <Folder Include="DATA\Utility\Scheduler\erpScheduler\erpScheduler\obj\Release\TempPE\" />
+    <Folder Include="DATA\Utility\Scheduler\erpScheduler\erpScheduler\obj\Release\temp\" />
+    <Folder Include="DATA\Utility\Scheduler\erpScheduler\_UpgradeReport_Files\" />
+    <Folder Include="DATA\WMS\ClientPo\" />
+    <Folder Include="DATA\WMS\GoodsReturn\" />
+    <Folder Include="DATA\XML_OUTPUT\" />
+    <Folder Include="Uploadfiles\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>53506</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:45896/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

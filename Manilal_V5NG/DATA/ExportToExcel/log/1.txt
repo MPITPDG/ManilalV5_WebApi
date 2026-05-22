@@ -1,0 +1,171 @@
+2/2/2021 10:58:33 AM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 10:58:33 AM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 10:58:38 AM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 10:58:38 AM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 10:58:38 AM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 10:58:38 AM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 10:58:38 AM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 10:58:38 AM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 11:02:57 AM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 11:02:58 AM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 11:05:41 AM ~#~ Description : ERROR:Exception of type 'System.OutOfMemoryException' was thrown. ~#~ Function name : ConvertToExcel
+2/2/2021 11:05:41 AM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+2/2/2021 11:05:41 AM ~#~ Description : Log Id:1 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+2/2/2021 11:07:16 AM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 11:07:16 AM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 11:07:27 AM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 11:07:27 AM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 11:07:27 AM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 11:07:28 AM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 11:07:28 AM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 11:07:30 AM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 11:11:01 AM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 11:11:01 AM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 11:11:08 AM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 11:11:08 AM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 11:11:09 AM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 11:11:09 AM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 11:11:11 AM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 11:11:13 AM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 11:14:53 AM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 11:16:07 AM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 11:18:45 AM ~#~ Description : ERROR:Exception of type 'System.OutOfMemoryException' was thrown. ~#~ Function name : ConvertToExcel
+2/2/2021 11:18:45 AM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+2/2/2021 11:18:45 AM ~#~ Description : Log Id:1 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+2/2/2021 11:20:09 AM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 11:20:09 AM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 11:20:27 AM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 11:20:27 AM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 11:20:27 AM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 11:20:28 AM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 11:20:28 AM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 11:20:28 AM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 11:24:13 AM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 11:24:18 AM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 1:37:14 PM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 1:37:14 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 1:37:56 PM ~#~ Description : ERROR:Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=582; handshake=14843;  ~#~ Function name : Expo
+2/2/2021 1:37:56 PM ~#~ Description : Log Id:1 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+2/2/2021 1:38:06 PM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 1:38:06 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 1:38:28 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 1:38:29 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 1:38:29 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 1:38:29 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 1:38:30 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 1:38:30 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 1:41:30 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 1:41:55 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 1:57:32 PM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 1:57:33 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 1:57:46 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 1:57:46 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 1:57:47 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 1:57:47 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 1:57:47 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 1:57:47 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 1:59:48 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 1:59:48 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 2:14:53 PM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 2:14:53 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 2:15:02 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 2:15:02 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 2:15:02 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 2:15:02 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 2:15:02 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 2:15:02 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 2:16:59 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 2:17:03 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 2:27:30 PM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 2:27:30 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 2:27:34 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 2:27:35 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 2:27:35 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 2:27:35 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 2:27:35 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 2:27:35 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 2:29:42 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 2:29:46 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 2:31:46 PM ~#~ Description : ERROR:Exception of type 'System.OutOfMemoryException' was thrown. ~#~ Function name : ConvertToExcel
+2/2/2021 2:31:46 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+2/2/2021 2:31:46 PM ~#~ Description : Log Id:1 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+2/2/2021 2:33:44 PM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 2:33:44 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 2:33:57 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 2:33:57 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 2:33:57 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 2:33:57 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 2:33:57 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 2:33:57 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 2:36:59 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 2:37:03 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 2:39:13 PM ~#~ Description : ERROR:Exception of type 'System.OutOfMemoryException' was thrown. ~#~ Function name : ConvertToExcel
+2/2/2021 2:39:13 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+2/2/2021 2:39:13 PM ~#~ Description : Log Id:1 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+2/2/2021 3:51:16 PM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 3:51:16 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 3:51:21 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 3:51:21 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 3:51:21 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 3:51:21 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 3:51:21 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 3:51:21 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 3:54:30 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 3:54:33 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 4:41:01 PM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 4:41:02 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 4:41:04 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 4:41:04 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 4:41:04 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 4:41:04 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 4:41:04 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 4:41:04 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 4:43:49 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 4:43:53 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 4:45:27 PM ~#~ Description : ERROR:The process cannot access the file 'E:\ExportToExcel\ExportToExcel\bin\x86\Debug\output\ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLSX' because it is being used by another process. ~#~ Function name : ConvertToExcel
+2/2/2021 4:45:28 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+2/2/2021 4:45:28 PM ~#~ Description : Log Id:1 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+2/2/2021 4:46:25 PM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 4:46:25 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 4:46:26 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 4:46:26 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 4:46:26 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 4:46:26 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 4:46:26 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 4:46:26 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 4:49:11 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 4:49:15 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/2/2021 4:54:21 PM ~#~ Description : START ~#~ Function name : OnStart
+2/2/2021 4:54:21 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/2/2021 4:54:22 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/2/2021 4:54:22 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 4:54:22 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '1', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/2/2021 4:54:22 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/2/2021 4:54:22 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102021051_1885.XLS ~#~ Function name : Expo
+2/2/2021 4:54:22 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/2/2021 4:56:11 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/2/2021 4:56:16 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/3/2021 6:35:42 PM ~#~ Description : START ~#~ Function name : OnStart
+2/3/2021 6:35:42 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/3/2021 6:35:43 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_RPT_OUTSTANDING_CLIENTBILL_35_BRANCH_LOG ~#~ Function name : Expo
+2/3/2021 6:35:43 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : 'E103291','01' ~#~ Function name : Expo
+2/3/2021 6:35:43 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_RPT_OUTSTANDING_CLIENTBILL_35_BRANCH_LOG '1', 'E103291','01' ~#~ Function name : Expo
+2/3/2021 6:35:43 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_REC_CLIENT_ONE_BRANCH ~#~ Function name : Expo
+2/3/2021 6:35:43 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_REC_CLIENT_ONE_BRANCH_202102031032_2145.XLS ~#~ Function name : Expo
+2/3/2021 6:35:43 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/3/2021 6:35:52 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/3/2021 6:35:52 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/3/2021 6:38:34 PM ~#~ Description : Log Id:1 Export to Excel Completed ~#~ Function name : ConvertToExcel
+2/3/2021 6:38:34 PM ~#~ Description : Log Id:1 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+2/3/2021 6:38:34 PM ~#~ Description : Log Id:1 Ziping Excel File Completed ~#~ Function name : ConvertToExcel
+2/3/2021 6:38:38 PM ~#~ Description : Log Id:1 -------------------------------  END  ------------------------------------------- ~#~ Function name : OnStart
+2/3/2021 6:40:28 PM ~#~ Description : START ~#~ Function name : OnStart
+2/3/2021 6:40:28 PM ~#~ Description : Log Id:1 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/3/2021 6:40:29 PM ~#~ Description : Log Id:1 SQLQUERY_SP : USP_ACCT_RPT_OUTSTANDING_CLIENTBILL_35_BRANCH_LOG ~#~ Function name : Expo
+2/3/2021 6:40:29 PM ~#~ Description : Log Id:1 SQLQUERY_PARA : 'E103291','01' ~#~ Function name : Expo
+2/3/2021 6:40:29 PM ~#~ Description : Log Id:1 SQLQUERY_TEXT : USP_ACCT_RPT_OUTSTANDING_CLIENTBILL_35_BRANCH_LOG '1', 'E103291','01' ~#~ Function name : Expo
+2/3/2021 6:40:29 PM ~#~ Description : Log Id:1 XSLTRANSFORM : ACC_RPT_REC_CLIENT_ONE_BRANCH ~#~ Function name : Expo
+2/3/2021 6:40:29 PM ~#~ Description : Log Id:1 FILENAME : ACC_RPT_REC_CLIENT_ONE_BRANCH_202102031032_2145.XLS ~#~ Function name : Expo
+2/3/2021 6:40:29 PM ~#~ Description : Log Id:1 Fatching Data form Database Started ~#~ Function name : Expo
+2/3/2021 6:40:34 PM ~#~ Description : Log Id:1 Fatching Data form Database Completed ~#~ Function name : Expo
+2/3/2021 6:40:34 PM ~#~ Description : Log Id:1 Export to Excel Started ~#~ Function name : ConvertToExcel

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Manilal_V5NG</name>
+    </assembly>
+    <members>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_INV_VIEW(System.String,System.String)">
+            *FRT INVOICE DETAIL RESET*/
+        </member>
+    </members>
+</doc>

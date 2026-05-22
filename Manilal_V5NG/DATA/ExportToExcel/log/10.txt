@@ -1,0 +1,14 @@
+25-03-2021 16:34:39 ~#~ Description : START ~#~ Function name : OnStart
+25-03-2021 16:34:39 ~#~ Description : Log Id:10 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+25-03-2021 16:34:41 ~#~ Description : Log Id:10 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+25-03-2021 16:34:41 ~#~ Description : Log Id:10 SQLQUERY_PARA : '01/01/2020','31/01/2020','01/04/2020','31/03/2021','01','101' ~#~ Function name : Expo
+25-03-2021 16:34:41 ~#~ Description : Log Id:10 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '10', '01/01/2020','31/01/2020','01/04/2020','31/03/2021','01','101' ~#~ Function name : Expo
+25-03-2021 16:34:41 ~#~ Description : Log Id:10 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+25-03-2021 16:34:41 ~#~ Description : Log Id:10 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202103251634_1885.XLS ~#~ Function name : Expo
+25-03-2021 16:34:41 ~#~ Description : Log Id:10 Fatching Data form Database Started ~#~ Function name : Expo
+25-03-2021 16:51:35 ~#~ Description : Log Id:10 Fatching Data form Database Completed ~#~ Function name : Expo
+25-03-2021 16:51:36 ~#~ Description : Log Id:10 Export to Excel Started ~#~ Function name : ConvertToExcel
+25-03-2021 16:51:46 ~#~ Description : Log Id:10 Export to Excel Completed ~#~ Function name : ConvertToExcel
+25-03-2021 16:51:46 ~#~ Description : Log Id:10 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+25-03-2021 16:51:47 ~#~ Description : Log Id:10 Ziping Excel File Completed ~#~ Function name : ConvertToExcel
+25-03-2021 16:51:49 ~#~ Description : Log Id:10 -------------------------------  END  ------------------------------------------- ~#~ Function name : OnStart

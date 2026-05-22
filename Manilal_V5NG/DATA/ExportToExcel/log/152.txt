@@ -1,0 +1,13 @@
+2/3/2021 6:19:36 PM ~#~ Description : START ~#~ Function name : OnStart
+2/3/2021 6:19:36 PM ~#~ Description : Log Id:152 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/3/2021 6:19:37 PM ~#~ Description : Log Id:152 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/3/2021 6:19:37 PM ~#~ Description : Log Id:152 SQLQUERY_PARA : '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/3/2021 6:19:37 PM ~#~ Description : Log Id:152 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '152', '01/10/2019','01/02/2021','01/10/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/3/2021 6:19:37 PM ~#~ Description : Log Id:152 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/3/2021 6:19:37 PM ~#~ Description : Log Id:152 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102031818_1885.XLS ~#~ Function name : Expo
+2/3/2021 6:19:37 PM ~#~ Description : Log Id:152 Fatching Data form Database Started ~#~ Function name : Expo
+2/3/2021 6:21:12 PM ~#~ Description : Log Id:152 Fatching Data form Database Completed ~#~ Function name : Expo
+2/3/2021 6:21:12 PM ~#~ Description : Log Id:152 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/3/2021 6:24:15 PM ~#~ Description : ERROR:The process cannot access the file 'E:\ExportToExcel\ExportToExcel\bin\x86\Debug\output\ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102031818_1885.XLSX' because it is being used by another process. ~#~ Function name : ConvertToExcel
+2/3/2021 6:24:16 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+2/3/2021 6:24:16 PM ~#~ Description : Log Id:152 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1231
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manilal_V5NG", "Manilal_V5NG\Manilal_V5NG.csproj", "{A3B2607B-D6F1-48C7-A6D0-EC0F576FCFAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{1A209C70-4CBE-49CC-8F86-816747417CB6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3B2607B-D6F1-48C7-A6D0-EC0F576FCFAE}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{A3B2607B-D6F1-48C7-A6D0-EC0F576FCFAE}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{A3B2607B-D6F1-48C7-A6D0-EC0F576FCFAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3B2607B-D6F1-48C7-A6D0-EC0F576FCFAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A209C70-4CBE-49CC-8F86-816747417CB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A209C70-4CBE-49CC-8F86-816747417CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A209C70-4CBE-49CC-8F86-816747417CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A209C70-4CBE-49CC-8F86-816747417CB6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {55FCF720-01CC-4243-AC40-302D42195365}
+	EndGlobalSection
+EndGlobal

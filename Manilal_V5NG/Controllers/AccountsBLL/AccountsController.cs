@@ -1,0 +1,7580 @@
+﻿using Manilal_V5NG.BaseBLL;
+using Manilal_V5NG.Models;
+using Manilal_V5NG.Controllers.CommonBLL;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Net;
+using System.Web.Http;
+using System.Web.Mail;
+using System.Text;
+using System.Web;
+using System.IO;
+using System.Xml.Xsl;
+using System.Xml;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Data.OleDb;
+using System.Data.SqlClient;
+using Manilal_V5NG.Utils;
+using Newtonsoft.Json;
+//using OfficeOpenXml;
+using ExcelDataReader;
+using Microsoft.VisualBasic.FileIO;
+using System.IO.Compression;
+
+namespace Manilal_V5NG.Controllers.AccountsBLL
+{
+   
+    public class AccountsController : ApiController
+    {
+        [HttpGet]
+        public IHttpActionResult ACC_MIS_INVOICE_PENDING_JOB(String FROMDATE, String TODATE, String MODE, String CMPCODE, String CITYCODE, string CITYCODE1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_MIS_INVOICE_PENDING_JOB", FROMDATE, TODATE, MODE, CMPCODE, CITYCODE, CITYCODE1);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_MIS_INVOICE_PENDING_JOB");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        [Route("DownloadZip")]
+        public HttpResponseMessage DownloadZip(string fileName)
+        {
+            var filePath = HttpContext.Current.Server.MapPath("~/DATA/MIS/" + fileName + ".zip");
+
+            if (!File.Exists(filePath))
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound, "File not found.");
+            }
+
+            var result = new HttpResponseMessage(HttpStatusCode.OK);
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            result.Content = new StreamContent(stream);
+            result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
+            {
+                FileName = fileName + ".zip"
+            };
+            result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/zip");
+
+            return result;
+        }
+        public string ZipExcelFiles(List<string> filePaths, string zipFilePath)
+        {
+            using (FileStream zipToOpen = new FileStream(zipFilePath, FileMode.Create))
+            using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
+            {
+                foreach (string filePath in filePaths)
+                {
+                    string fileName = Path.GetFileName(filePath);
+                    ZipArchiveEntry entry = archive.CreateEntry(fileName);
+                    using (Stream entryStream = entry.Open())
+                    using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                    {
+                        fileStream.CopyTo(entryStream);
+                    }
+                }
+            }
+
+            return zipFilePath;
+        }
+
+        [HttpPost]
+        public IHttpActionResult GenerateConsigneeJobProfit([FromBody] consigneejobprofit obj
+      )
+        {
+            var sb = new StringBuilder();
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            string strHeader = "";
+
+            try
+            {
+                strHeader += $"<tr><td style='font-family:Calibri; font-size:normal;' >Timeline :</td><td width='700px' style='font-family:Calibri; font-size:normal;'>{obj.headerfromdt} - {obj.headertodt} [{obj.Mode}]</td></tr>";
+                strHeader += $"<tr style='font-family:Calibri; font-size:normal;'><td width='700px'>Consignee - {obj.consgname}</td></tr>";
+                strHeader = $"<table border='0' cellpadding='0' cellspacing='0' width='800px'>{strHeader}</table>";
+
+                ds = objDal.ExecuteDataset(
+                    ConnectionString.getConnString(), CommandType.StoredProcedure,
+                    "USP_ACC_RPT_JOBPROFITS_NEW",
+                   obj.FromDate, obj.ToDate, obj.JobNoFrom, obj.JobNoTo, obj.SearchType, obj.DateType,
+                    obj.Mode, obj.citycode1, obj.citycode, obj.cmpcode, obj.concode
+                );
+
+                if (ds.Tables[0].Rows[0][0].ToString() == "100")
+                {
+                    // Add additional header rows
+                    string strStringStart = "<table border='1' cellpadding='0' cellspacing='0'><tr>" +
+                        "<td colspan='3' style='font-family:Calibri;font-weight:bold; font-size:normal;' align='center'>[G100236] CUSTOM DUTY</td>" +
+                        "<td></td><td></td><td></td>" +
+                        "<td colspan='3' style='font-family:Calibri;font-weight:bold; font-size:normal;' align='center'>TOTAL</td>";
+
+                    string STRSTRING = "";
+
+                    foreach (DataRow row in ds.Tables[5].Rows)
+                    {
+                        STRSTRING += $"<td colspan='3' style='font-family:Calibri; font-weight:bold;font-size:normal;' width='100%' align='center'>{row["ACCTCODENAME"]}</td>";
+                    }
+
+                    STRSTRING += "</tr></table>";
+
+                    strHeader += strStringStart + STRSTRING;
+
+                    if (ds.Tables.Count > 2)
+                    {
+                        string fileKey = $"{obj.FromDate.Substring(6, 4) + obj.FromDate.Substring(3, 2) + obj.FromDate.Substring(0, 2)}_{obj.ToDate.Substring(6, 4) + obj.ToDate.Substring(3, 2) + obj.ToDate.Substring(0, 2)}";
+                        Generate_ExcelFile("2", ds.Tables[2], fileKey, strHeader, obj.username);
+                        string excelPath = HttpContext.Current.Server.MapPath(@"..\..\") + @"DATA\MIS\" + obj.username + "_JOBPROFIT_" + fileKey + "_" + "2" + "_" + "CONSIGNEE_JOB_TANS_SUMMARY" + "_RPT.xls";
+                        var filesToZip = new List<string> { excelPath };
+                        string zipPath = HttpContext.Current.Server.MapPath(@"..\..\") + @"DATA\MIS\" + fileKey + "_" + obj.username + "_CONSIGNEEJOBPROFIT" + ".zip";
+                        ZipExcelFiles(filesToZip, zipPath);
+                        string flname = fileKey + "_" + obj.username + "_CONSIGNEEJOBPROFIT";
+                        // ✅ Return download path to Angular
+                        string downloadUrl = HttpContext.Current.Server.MapPath(@"..\..\") + @"DATA\MIS\" + fileKey + ".zip";
+                        return Ok(new { status = "success", downloadUrl, flname });
+                    }
+                }
+                else
+                {
+                    sb.Append("No data found for the specified parameters.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/GenerateConsigneeJobProfit");
+                sb.Append("An error occurred while generating the report.");
+            }
+
+            return Ok(new { status = "no_data", message = "No data found for the specified parameters." });
+        }
+
+        public string Generate_ExcelFile(string iFiles, DataTable dt, string sDate, string strHeader, string username)
+        {
+            string vDepartment = string.Empty;
+            string vUSER = username;
+
+            switch (iFiles)
+            {
+                case "0":
+                    vDepartment = "CONSIGNEE_SUMMARY";
+                    break;
+                case "1":
+                    vDepartment = "CONSIGNEE_JOB_SUMMARY";
+                    break;
+                case "2":
+                    vDepartment = "CONSIGNEE_JOB_TANS_SUMMARY";
+                    break;
+                case "3":
+                    vDepartment = "CONSIGNEE_JOB_DETAILS";
+                    break;
+            }
+
+            string strFileName = "\\" + vUSER + "_JOBPROFIT_" + sDate + "_" + iFiles + "_" + vDepartment + "_RPT.xls";
+            // string strFilePath = System.Web.HttpContext.Current.Server.MapPath("~/") +
+            //       System.Configuration.ConfigurationManager.AppSettings["PATH_EXPORTTOXL"] +
+            //     "/MIS/" + strFileName;
+            string strFilePath = HttpContext.Current.Server.MapPath(@"..\..\") + @"DATA\MIS\" + strFileName;
+
+
+            StringBuilder sb = new StringBuilder();
+
+            // Add header
+            sb.Append(strHeader);
+
+            // Start HTML table
+            sb.Append("<table border='1' cellpadding='0' cellspacing='0' style='font-family:Calibri;' >");
+
+            // Add column headers
+            sb.Append("<tr>");
+            foreach (DataColumn col in dt.Columns)
+            {
+                sb.Append($"<td style='font-family:Calibri; font-size:normal;'>{col.ColumnName}</td>");
+            }
+            sb.Append("</tr>");
+
+            // Add rows
+            foreach (DataRow row in dt.Rows)
+            {
+                sb.Append("<tr>");
+                foreach (var cell in row.ItemArray)
+                {
+                    sb.Append($"<td>{cell}</td>");
+                }
+                sb.Append("</tr>");
+            }
+
+            // End table
+            sb.Append("</table>");
+
+            // Write to file
+            File.WriteAllText(strFilePath, sb.ToString(), Encoding.UTF8);
+
+            return strFileName;
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CREDITNOTE_VIEW_OLDENTRY(String CREDITNOTENO, String CMPCODE, String CITYCODE, String CMPID, String VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_N_CreditNote_Print_35_ng", CREDITNOTENO, CMPCODE, CITYCODE, CMPID, VGUID);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CREDITNOTE_VIEW_OLDENTRY");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CRTNOTE_RESET_INVOICE(string CMPID, string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRNOTE_INVDTLS_OLDENTRY_RESET", CMPID, VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_RESET_INVOICE");
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_CRTNOTE_INVOICE_IU([FromBody]creditnote obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_Invoicet_IU_OldEntry", (obj.CMPID == null) ? "" : obj.CMPID, (obj.CRT_NO == null) ? "" : obj.CRT_NO, (obj.MAKERIP == null) ? "" : obj.MAKERIP, (obj.VGUID == null) ? "" : obj.VGUID);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_INVOICE_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_CashBook_BankRecousillationAsOnDate(string _ourbank, string _FromDt, string _ToDt, string cmpcode, string citycode, string citycode1, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CashBook_BankRecousillation_AsOndate", _ourbank, _FromDt, _ToDt, cmpcode, citycode, citycode1, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CashBook_BankRecousillationAsOnDate");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_CashBook_BankRecousillation_UpdateNew(string _reconsillationstr, string OURBANK, string FROMDATE, string TODATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_Acc_CashBook_BankRecousillation_UpdateNew", _reconsillationstr,  OURBANK, FROMDATE, TODATE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/Acc_CashBook_BankRecousillation_UpdateNew");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CREDITNOTE_GETINVOICE_BALAMOUNT(string invno, string crtno)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_acc_creditnote_getInvoiceamt", invno, (crtno != null) ? crtno : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CREDITNOTE_GETINVOICE_BALAMOUNT");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_ECREDITNOTERESETDATA_FORJSON(string JSONFILEID, string CRNOTEID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_ECREDITNOTE_RESETJSON_UPDATEGSTIRN_NG", JSONFILEID, CRNOTEID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_ECREDITNOTERESETDATA_FORJSON");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_ECreditNote_ResetJsonList(string FINSTARTDT, string CMPCODE, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_ECREDITNOTE_RESET_JSONDATA", FINSTARTDT, CMPCODE, CITYCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_ECreditNote_ResetJsonList");
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult UploadBnkReconcilFile()
+        {
+            //HttpResponseMessage response = null;
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+            // DataRow drow = new DataRow;
+            DataRow drow = dtbl.NewRow();
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            var cmpid = HttpContext.Current.Request.Params["cmpid"];
+            var vguid = HttpContext.Current.Request.Params["vguid"];
+            var makerip = HttpContext.Current.Request.Params["makerip"];
+            var cmpcode = HttpContext.Current.Request.Params["cmpcode"];
+            var citycode = HttpContext.Current.Request.Params["citycode"];
+            var citycode1 = HttpContext.Current.Request.Params["citycode1"];
+            var ourbank = HttpContext.Current.Request.Params["ourbank"];
+            var fromdt = HttpContext.Current.Request.Params["fromdt"];
+            var todt = HttpContext.Current.Request.Params["todt"];
+            try
+            {
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = Path.GetFileName(file.FileName);
+                    var filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~") + "\\DATA\\BankReconcil\\", fileName);
+
+                    if (File.Exists(filePath) == true)
+                    {
+                        dtbl.Columns.Add("STATUS", typeof(string));
+                        dtbl.Columns.Add("MSG", typeof(string));
+                        drow = dtbl.NewRow();
+                        drow[0] = "104";
+                        drow[1] = fileName + " already exists";
+                        dtbl.Rows.Add(drow);
+                        ds1.Merge(dtbl);
+                    }
+                    else
+                    {
+
+
+                        file.SaveAs(filePath);
+                        string strExtension;
+                        strExtension = Path.GetExtension(fileName);
+                        //ds1 = fN_upload_BankreconcilExcelFile(fileName, cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt);
+                        //  ds1 = UploadBankReconcilFile(fileName, cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt);
+                        if (strExtension == ".xlsx")
+                        {
+                            ds1 = UploadBankReconcilFilexlsx(fileName, cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt);
+                        }
+                        else if (strExtension == ".xls")
+                        {
+                            ds1 = UploadBankReconcilFilexls(fileName, cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt);
+                        }
+                        else if (strExtension == ".csv")
+                        {
+                            ds1 = UploadBankReconcilFilecsv(fileName, cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt);
+                        }
+
+
+                        if (ds1.Tables.Count > 0 &&  //&& ds1.Tables[0].Rows.Count > 0
+                                         ds1.Tables[0].Columns.Count > 0)
+                        {
+                            // Access the first column of the first row in the first table
+                            if (ds1.Tables[0].Rows[0][0].ToString() == "104")
+                            {
+                                if (File.Exists(filePath))
+                                {
+                                    File.Delete(filePath);
+                                    //Console.WriteLine($"File {filePath} deleted successfully.");
+                                }
+                            }
+
+                            else
+                            {
+                                dtbl.Columns.Add("STATUS", typeof(string));
+                                dtbl.Columns.Add("MSG", typeof(string));
+                                drow = dtbl.NewRow();
+                                drow[0] = "100";
+                                drow[1] = fileName + " uploaded successfully";
+                                // drow[0] = fileName + " uploaded successfully";
+                                dtbl.Rows.Add(drow);
+                                ds1.Merge(dtbl);
+                            }
+                        }
+
+
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/UploadBnkReconcilFile");
+            }
+            return Ok(ds1);
+
+        }
+        public DataSet UploadBankReconcilFilecsv(string strFileName, string CMPID, string VGUID, string MAKERIP, string CMPCODE, string CITYCODE, string CITYCODE1, string OURBANK, string FROMDT, string TODT)
+        {
+            DataSet dsupdate = new DataSet();
+            string uploadedfromdate = "";
+            string uploadedtodate = "";
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            try
+            {
+
+                string strFilePath;
+                strFilePath = Path.Combine(HttpContext.Current.Server.MapPath("~"), "DATA", "BankReconcil", strFileName);
+                file.SaveAs(strFilePath);
+
+
+                // if (strExtension.ToLower() == ".csv")
+                //{
+                //// Handle CSV file
+                using (var reader = new StreamReader(strFilePath))
+                {
+                    // Skip the first two lines (assuming the third line contains the dates)
+                    for (int i = 0; i < 2; i++)
+                    {
+                        reader.ReadLine();
+                    }
+
+                    // Read the third line to extract uploaded from date and to date
+                    var thirdLine = reader.ReadLine();
+                    string[] lineParts = thirdLine.Split(',');
+                    var datestr = lineParts[1];
+
+                    //string[] dates = thirdLine.Split(new string[] { "To" }, StringSplitOptions.RemoveEmptyEntries);
+                    //if (dates.Length == 2)
+                    //{
+                    //    string fromDatePart = dates[0].Substring(dates[0].IndexOf(',') + 1).Trim(); // Extract from date
+                    //    string toDatePart = dates[1].Trim().TrimEnd(','); // Extract to date
+
+                    //    // Parse the dates
+                    //    DateTime parsedFromDate, parsedToDate;
+                    //    if (DateTime.TryParse(fromDatePart, out parsedFromDate) &&
+                    //        DateTime.TryParse(toDatePart, out parsedToDate))
+                    //    {
+                    //        uploadedfromdate = parsedFromDate.ToString("dd/MM/yyyy");
+                    //        uploadedtodate = parsedToDate.ToString("dd/MM/yyyy");
+                    //    }
+                    //    else
+                    //    {
+                    //        Console.WriteLine("Invalid date format in the cell.");
+                    //        // Handle the error as needed
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    Console.WriteLine("Invalid date format in the cell.");
+                    //    // Handle the error as needed
+                    //}
+
+                    // Initialize a DataTable to store the CSV data
+                    DataTable csvData = new DataTable();
+
+                    for (int i = 0; i < 1; i++)
+                    {
+                        reader.ReadLine();
+                    }
+
+                    // Read the header line to determine column names
+                    var headerLine = reader.ReadLine();
+                    headerLine = headerLine.Replace("\"", "");
+                    Console.WriteLine($"Header line: {headerLine}");
+                    var headers = headerLine.Split(',');
+
+                    // Remove any empty or whitespace entries in the headers
+                    headers = headers.Where(h => !string.IsNullOrWhiteSpace(h)).ToArray();
+
+                    // Add columns to the DataTable based on the header line
+                    foreach (var header in headers)
+                    {
+                        csvData.Columns.Add(header.Trim()); // Trim to remove leading/trailing spaces
+                    }
+
+
+                    // Use TextFieldParser to properly parse CSV data
+                    using (var parser = new TextFieldParser(reader))
+                    {
+                        parser.TextFieldType = FieldType.Delimited;
+                        parser.SetDelimiters(",");
+
+                        int lineCount = 0;
+                        // Read the CSV data line by line
+                        while (!parser.EndOfData)
+                        {
+                            // Read current line and parse it
+                            string[] fields = parser.ReadFields();
+                            // Increment line count
+                            //lineCount++;
+
+                            // Skip last three lines
+                            //if (lineCount > (totalLines - 3))
+                            //{
+                            //    continue;
+                            //}
+                            // Create a new DataRow
+                            DataRow row = csvData.NewRow();
+
+                            // Assign values to each column in the DataRow
+                            for (int i = 0; i < fields.Length; i++)
+                            {
+                                row[headers[i].Trim()] = fields[i].Trim(); // Use column names from headers
+                            }
+
+                            // Add the DataRow to the DataTable
+                            csvData.Rows.Add(row);
+                        }
+                    }
+
+                    if (csvData.Rows.Count >= 3)
+                    {
+                        // Remove the last three rows
+                        for (int i = 0; i < 3; i++)
+                        {
+                            csvData.Rows.RemoveAt(csvData.Rows.Count - 1);
+                        }
+                    }
+                    else
+                    {
+                        // Handle the case where there are less than three rows in the DataTable
+                        Console.WriteLine("DataTable does not have enough rows to remove.");
+                    }
+                    // Now you have the CSV data in the DataTable (csvData)
+                    // Process the DataTable as needed, e.g., insert into the database
+                    DataSet dsupload = new DataSet();
+                    DAL objDal = new DAL();
+                    dsupload = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_UPLOAD_BANKRECONCILXL_UPDATELOG", CMPID, MAKERIP, VGUID, strFileName, strFilePath, "BANKRECONCIL", datestr);
+                    string status = dsupload.Tables[0].Rows[0]["STATUS"].ToString();
+                    if (status == "100")
+                    {
+                        string logid = dsupload.Tables[0].Rows[0]["LOGID"].ToString();
+
+                        // Process the DataTable and insert into the database
+                        using (SqlConnection connection = new SqlConnection(ConnectionString.getConnString()))
+                        {
+                            connection.Open();
+                            foreach (DataRow row in csvData.Rows)
+                            {
+                                // Access data from each row and insert into the database
+                                string insertQuery = "INSERT INTO ACC_BANKRECONCIL_UPLOADSTATEMENT_TMP (FK_LOGID,DATE, BTRANSACTION, CURRENCY, DEPOSIT, WITHDRAWAL, RUNNINGBAL, UPLOADEDBY, UPLOADEDDATE) " +
+                                                     "VALUES (@logid,@Date, @Transaction, @Currency, @Deposit, @Withdrawal, @RunningBalance, @UPLOADEDBY, @UPLOADEDDATE)";
+                                SqlCommand command = new SqlCommand(insertQuery, connection);
+                                if (int.TryParse(logid.Trim('"'), out int parsedlogid))
+                                {
+                                    // Add the parsed CMPID as a parameter
+                                    command.Parameters.AddWithValue("@logid", parsedlogid);
+                                }
+                                else
+                                {
+                                    // Handle the error if parsing fails
+                                    Console.WriteLine("Error: Unable to parse logid to integer.");
+                                }
+                                //  command.Parameters.AddWithValue("@logid", logid);
+                                command.Parameters.AddWithValue("@Date", row["Date"].ToString());
+                                command.Parameters.AddWithValue("@Transaction", row["Transaction"].ToString());
+                                command.Parameters.AddWithValue("@Currency", row["Currency"].ToString());
+                                //string depositString = row["Deposit"].ToString();
+                                //decimal depositValue;
+                                //if (decimal.TryParse(depositString.Replace(",", ""), out depositValue))
+                                //{
+                                //    // Successfully parsed the deposit value without commas
+                                //    // Now you can insert depositValue into the database
+                                //    command.Parameters.AddWithValue("@Deposit", depositValue);
+                                //}
+                                //else
+                                //{
+                                //   Console.WriteLine("Failed to parse deposit value: " + depositString);
+                                //}
+                                // Assuming row["Deposit"] is a string containing the Deposit value
+                                // Assuming row["Deposit"] is a string containing the Deposit value
+                                string DepositString = row["Deposit"].ToString();
+
+                                // Check if the Deposit value is not empty
+                                if (!string.IsNullOrWhiteSpace(DepositString))
+                                {
+                                    // Remove commas from the Deposit value
+                                    decimal DepositValue;
+                                    if (decimal.TryParse(DepositString.Replace(",", ""), out DepositValue))
+                                    {
+                                        // Successfully parsed the Deposit value without commas
+                                        // Now you can insert DepositValue into the database
+                                        command.Parameters.AddWithValue("@Deposit", DepositValue);
+                                    }
+                                    else
+                                    {
+                                        // Failed to parse the Deposit value
+                                        // Handle the error or insert a default value as needed
+                                        // For example:
+                                        // command.Parameters.AddWithValue("@Deposit", DBNull.Value); // Insert NULL value
+                                        // or
+                                        // Log an error message
+                                        Console.WriteLine("Failed to parse Deposit value: " + DepositString);
+                                    }
+                                }
+                                else
+                                {
+                                    // The Deposit value is empty, so you can handle it accordingly
+                                    // For example, you can insert a default value or NULL into the database
+                                    // Here, I'm inserting NULL into the database
+                                    command.Parameters.AddWithValue("@Deposit", DBNull.Value);
+                                }
+                                // Assuming row["Withdrawal"] is a string containing the withdrawal value
+                                string withdrawalString = row["Withdrawal"].ToString();
+
+                                // Check if the withdrawal value is not empty
+                                if (!string.IsNullOrWhiteSpace(withdrawalString))
+                                {
+                                    // Remove commas from the withdrawal value
+                                    decimal withdrawalValue;
+                                    if (decimal.TryParse(withdrawalString.Replace(",", ""), out withdrawalValue))
+                                    {
+                                        // Successfully parsed the withdrawal value without commas
+                                        // Now you can insert withdrawalValue into the database
+                                        command.Parameters.AddWithValue("@Withdrawal", withdrawalValue);
+                                    }
+                                    else
+                                    {
+                                        // Failed to parse the withdrawal value
+                                        // Handle the error or insert a default value as needed
+                                        // For example:
+                                        // command.Parameters.AddWithValue("@Withdrawal", DBNull.Value); // Insert NULL value
+                                        // or
+                                        // Log an error message
+                                        Console.WriteLine("Failed to parse withdrawal value: " + withdrawalString);
+                                    }
+                                }
+                                else
+                                {
+                                    // The withdrawal value is empty, so you can handle it accordingly
+                                    // For example, you can insert a default value or NULL into the database
+                                    // Here, I'm inserting NULL into the database
+                                    command.Parameters.AddWithValue("@Withdrawal", DBNull.Value);
+                                }
+                                string RunningBalanceString = row["Running Balance"].ToString();
+                                decimal RunningBalanceValue;
+                                if (decimal.TryParse(RunningBalanceString.Replace(",", ""), out RunningBalanceValue))
+                                {
+                                    // Successfully parsed the deposit value without commas
+                                    // Now you can insert depositValue into the database
+                                    command.Parameters.AddWithValue("@RunningBalance", RunningBalanceValue);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Failed to parse RunningBalance value: " + RunningBalanceString);
+                                }
+                                // command.Parameters.AddWithValue("@Deposit", row["Deposit"].ToString());
+                                // command.Parameters.AddWithValue("@Withdrawal", row["Withdrawal"].ToString());
+                                // command.Parameters.AddWithValue("@RunningBalance", row["Running Balance"].ToString()); // Use the exact column name from headers
+                                if (int.TryParse(CMPID.Trim('"'), out int parsedCMPID))
+                                {
+                                    // Add the parsed CMPID as a parameter
+                                    command.Parameters.AddWithValue("@UPLOADEDBY", parsedCMPID);
+                                }
+                                else
+                                {
+                                    // Handle the error if parsing fails
+                                    Console.WriteLine("Error: Unable to parse CMPID to integer.");
+                                }
+                                // command.Parameters.AddWithValue("@UPLOADEDBY", CMPID);
+                                command.Parameters.AddWithValue("@UPLOADEDDATE", DateTime.Now);
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                        dsupdate = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT", OURBANK, FROMDT, TODT, logid);
+                    }
+                    else
+                    {
+                        DataTable dtbl = new DataTable();
+                        dtbl.Columns.Add("STATUS", typeof(string));
+                        dtbl.Columns.Add("MSG", typeof(string));
+
+                        DataRow drow = dtbl.NewRow();
+                        drow["STATUS"] = "104";
+
+                        if (dsupload.Tables.Count > 0 && dsupload.Tables[0].Columns.Contains("STATUSTEXT"))
+                        {
+                            drow["MSG"] = dsupload.Tables[0].Rows[0]["STATUSTEXT"].ToString();
+                        }
+                        else
+                        {
+                            // Handle the case when "STATUSTEXT" column is not found in dsupload.Tables[0]
+                            drow["MSG"] = "Status text not available";
+                        }
+
+                        dtbl.Rows.Add(drow);
+
+                        if (dsupdate.Tables.Contains("Table"))
+                        {
+                            dtbl.TableName = "Table"; // Set the table name explicitly
+                            dsupdate.Tables.Add(dtbl.Copy());
+                        }
+                        else
+                        {
+                            dsupdate.Tables.Add(dtbl); // Add the table without setting its name
+                        }
+                    }
+                }
+            }
+
+
+            // Remaining code for processing and database operations...
+
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fN_upload_BankreconcilFile");
+            }
+            return dsupdate;
+        }
+        public DataSet UploadBankReconcilFilexls(string strFileName, string CMPID, string VGUID, string MAKERIP, string CMPCODE, string CITYCODE, string CITYCODE1, string OURBANK, string FROMDT, string TODT)
+        {
+            DataSet dsupdate = new DataSet();
+            string uploadedfromdate = "";
+            string uploadedtodate = "";
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            try
+            {
+                //strFileName = Path.GetFileName(strFileName);
+                //string strExtension;
+                //strExtension = Path.GetExtension(strFileName);
+                string strFilePath;
+                strFilePath = Path.Combine(HttpContext.Current.Server.MapPath("~"), "DATA", "BankReconcil", strFileName);
+                file.SaveAs(strFilePath);
+
+
+                //if (strExtension.ToLower() == ".xls")
+                //{
+                // Handle XLS file
+                using (var stream = File.Open(strFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (var reader = ExcelReaderFactory.CreateBinaryReader(stream))
+
+                    {
+                        var result = reader.AsDataSet();
+                        var sheet = result.Tables[0]; // Assuming data is in the first sheet
+
+                        // Extract the uploaded from date and to date from a specific cell
+                        string cellValue = sheet.Rows[2][1].ToString(); // Assuming the cell is at B3
+                        string[] dates = cellValue.Split(new string[] { " To " }, StringSplitOptions.RemoveEmptyEntries);
+                        //if (dates.Length == 2)
+                        //{
+                        //    // Assuming the date format is dd/MM/yyyy, parse the dates
+                        //    if (DateTime.TryParse(dates[0], out DateTime fromDate) && DateTime.TryParse(dates[1], out DateTime toDate))
+                        //    {
+                        //        Console.WriteLine($"From Date: {fromDate.ToString("dd/MM/yyyy")}");
+                        //        Console.WriteLine($"To Date: {toDate.ToString("dd/MM/yyyy")}");
+                        //        uploadedfromdate = fromDate.ToString("dd/MM/yyyy");
+                        //        uploadedtodate = toDate.ToString("dd/MM/yyyy");
+                        //    }
+                        //    else
+                        //    {
+                        //        Console.WriteLine("Invalid date format in the cell.");
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    Console.WriteLine("Unable to extract dates from the cell.");
+                        //}
+                        DataSet dsupload = new DataSet();
+                        DAL objDal = new DAL();
+                        dsupload = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_UPLOAD_BANKRECONCILXL_UPDATELOG", CMPID, MAKERIP, VGUID, strFileName, strFilePath, "BANKRECONCIL", cellValue);
+                        string status = dsupload.Tables[0].Rows[0]["STATUS"].ToString();
+                        if (status == "100")
+                        {
+                            string logid = dsupload.Tables[0].Rows[0]["LOGID"].ToString();
+                            using (SqlConnection connection = new SqlConnection(ConnectionString.getConnString()))
+                            {
+                                connection.Open();
+
+                                for (int rowIdx = 5; rowIdx < sheet.Rows.Count - 3; rowIdx++) // Assuming data starts from row 6
+                                {
+                                    var row = sheet.Rows[rowIdx];
+
+                                    // Access data from columns (adjust column indexes as needed)
+                                    // var dateValue = row[0].ToString();
+                                    string dateValue = row[0].ToString().Trim();
+                                    var transactionValue = row[1].ToString();
+                                    var currencyValue = row[2].ToString();
+                                    decimal depositValue, withdrawalValue, runbalValue;
+                                    if (!decimal.TryParse(row[3].ToString(), out depositValue)) depositValue = 0;
+                                    if (!decimal.TryParse(row[4].ToString(), out withdrawalValue)) withdrawalValue = 0;
+                                    if (!decimal.TryParse(row[5].ToString(), out runbalValue)) runbalValue = 0;
+                                    //var depositValue = row[3].ToString();
+                                    //var withdrawalValue = row[4].ToString();
+                                    //var runbalValue = row[5].ToString();
+
+                                    // Insert data into SQL Server table
+                                    string insertQuery = "INSERT INTO ACC_BANKRECONCIL_UPLOADSTATEMENT_TMP (FK_LOGID, DATE, BTRANSACTION, CURRENCY, DEPOSIT, WITHDRAWAL, RUNNINGBAL, UPLOADEDBY, UPLOADEDDATE) VALUES (@logid, @Date, @Transaction, @Currency, @Deposit, @Withdrawal, @RunningBalance, @UPLOADEDBY, @UPLOADEDDATE)";
+                                    SqlCommand command = new SqlCommand(insertQuery, connection);
+                                    command.Parameters.AddWithValue("@logid", logid);
+                                    command.Parameters.AddWithValue("@Date", dateValue);
+                                    command.Parameters.AddWithValue("@Transaction", transactionValue);
+                                    command.Parameters.AddWithValue("@Currency", currencyValue);
+                                    command.Parameters.AddWithValue("@Deposit", depositValue);
+                                    command.Parameters.AddWithValue("@Withdrawal", withdrawalValue);
+                                    command.Parameters.AddWithValue("@RunningBalance", runbalValue);
+                                    if (int.TryParse(CMPID.Trim('"'), out int parsedCMPID))
+                                    {
+                                        // Add the parsed CMPID as a parameter
+                                        command.Parameters.AddWithValue("@UPLOADEDBY", parsedCMPID);
+                                    }
+                                    else
+                                    {
+                                        // Handle the error if parsing fails
+                                        Console.WriteLine("Error: Unable to parse CMPID to integer.");
+                                    }
+                                    //command.Parameters.AddWithValue("@UPLOADEDBY", CMPID);
+                                    command.Parameters.AddWithValue("@UPLOADEDDATE", DateTime.Now);
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+                            dsupdate = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT", OURBANK, FROMDT, TODT, logid);
+                        }
+
+                        else
+                        {
+                            DataTable dtbl = new DataTable();
+                            dtbl.Columns.Add("STATUS", typeof(string));
+                            dtbl.Columns.Add("MSG", typeof(string));
+
+                            DataRow drow = dtbl.NewRow();
+                            drow["STATUS"] = "104";
+
+                            if (dsupload.Tables.Count > 0 && dsupload.Tables[0].Columns.Contains("STATUSTEXT"))
+                            {
+                                drow["MSG"] = dsupload.Tables[0].Rows[0]["STATUSTEXT"].ToString();
+                            }
+                            else
+                            {
+                                // Handle the case when "STATUSTEXT" column is not found in dsupload.Tables[0]
+                                drow["MSG"] = "Status text not available";
+                            }
+
+                            dtbl.Rows.Add(drow);
+
+                            if (dsupdate.Tables.Contains("Table"))
+                            {
+                                dtbl.TableName = "Table"; // Set the table name explicitly
+                                dsupdate.Tables.Add(dtbl.Copy());
+                            }
+                            else
+                            {
+                                dsupdate.Tables.Add(dtbl); // Add the table without setting its name
+                            }
+                        }
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fN_upload_BankreconcilFile");
+            }
+            return dsupdate;
+        }
+        public DataSet UploadBankReconcilFilexlsx(string strFileName, string CMPID, string VGUID, string MAKERIP, string CMPCODE, string CITYCODE, string CITYCODE1, string OURBANK, string FROMDT, string TODT)
+        {
+            DataSet dsupdate = new DataSet();
+            string uploadedfromdate = "";
+            string uploadedtodate = "";
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            try
+            {
+                //strFileName = Path.GetFileName(strFileName);
+                //string strExtension;
+                //strExtension = Path.GetExtension(strFileName);
+                string strFilePath;
+                strFilePath = Path.Combine(HttpContext.Current.Server.MapPath("~"), "DATA", "BankReconcil", strFileName);
+                file.SaveAs(strFilePath);
+
+                // if (strExtension.ToLower() == ".xlsx")
+                // {
+                // Handle XLS file
+                using (var stream = File.Open(strFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (var reader = ExcelReaderFactory.CreateOpenXmlReader(stream))
+                    {
+                        var result = reader.AsDataSet();
+                        var sheet = result.Tables[0]; // Assuming data is in the first sheet
+
+                        // Extract the uploaded from date and to date from a specific cell
+                        string cellValue = sheet.Rows[2][1].ToString(); // Assuming the cell is at B3
+                        string[] dates = cellValue.Split(new string[] { " To " }, StringSplitOptions.RemoveEmptyEntries);
+                        //if (dates.Length == 2)
+                        //{
+                        //    // Assuming the date format is dd/MM/yyyy, parse the dates
+                        //    if (DateTime.TryParse(dates[0], out DateTime fromDate) && DateTime.TryParse(dates[1], out DateTime toDate))
+                        //    {
+                        //        Console.WriteLine($"From Date: {fromDate.ToString("dd/MM/yyyy")}");
+                        //        Console.WriteLine($"To Date: {toDate.ToString("dd/MM/yyyy")}");
+                        //        uploadedfromdate = fromDate.ToString("dd/MM/yyyy");
+                        //        uploadedtodate = toDate.ToString("dd/MM/yyyy");
+                        //    }
+                        //    else
+                        //    {
+                        //        Console.WriteLine("Invalid date format in the cell.");
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    Console.WriteLine("Unable to extract dates from the cell.");
+                        //}
+                        DataSet dsupload = new DataSet();
+                        DAL objDal = new DAL();
+                        dsupload = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_UPLOAD_BANKRECONCILXL_UPDATELOG", CMPID, MAKERIP, VGUID, strFileName, strFilePath, "BANKRECONCIL", cellValue);
+                        string status = dsupload.Tables[0].Rows[0]["STATUS"].ToString();
+                        if (status == "100")
+                        {
+                            string logid = dsupload.Tables[0].Rows[0]["LOGID"].ToString();
+                            using (SqlConnection connection = new SqlConnection(ConnectionString.getConnString()))
+                            {
+                                connection.Open();
+
+                                for (int rowIdx = 5; rowIdx < sheet.Rows.Count - 3; rowIdx++) // Assuming data starts from row 6
+                                {
+                                    var row = sheet.Rows[rowIdx];
+
+                                    // Access data from columns (adjust column indexes as needed)
+                                    // var dateValue = row[0].ToString();
+                                    string dateValue = row[0].ToString().Trim();
+                                    var transactionValue = row[1].ToString();
+                                    var currencyValue = row[2].ToString();
+                                    decimal depositValue, withdrawalValue, runbalValue;
+                                    if (!decimal.TryParse(row[3].ToString(), out depositValue)) depositValue = 0;
+                                    if (!decimal.TryParse(row[4].ToString(), out withdrawalValue)) withdrawalValue = 0;
+                                    if (!decimal.TryParse(row[5].ToString(), out runbalValue)) runbalValue = 0;
+                                    //var depositValue = row[3].ToString();
+                                    //var withdrawalValue = row[4].ToString();
+                                    //var runbalValue = row[5].ToString();
+
+                                    // Insert data into SQL Server table
+                                    string insertQuery = "INSERT INTO ACC_BANKRECONCIL_UPLOADSTATEMENT_TMP (FK_LOGID, DATE, BTRANSACTION, CURRENCY, DEPOSIT, WITHDRAWAL, RUNNINGBAL, UPLOADEDBY, UPLOADEDDATE) VALUES (@logid, @Date, @Transaction, @Currency, @Deposit, @Withdrawal, @RunningBalance, @UPLOADEDBY, @UPLOADEDDATE)";
+                                    SqlCommand command = new SqlCommand(insertQuery, connection);
+                                    command.Parameters.AddWithValue("@logid", logid);
+                                    command.Parameters.AddWithValue("@Date", dateValue);
+                                    command.Parameters.AddWithValue("@Transaction", transactionValue);
+                                    command.Parameters.AddWithValue("@Currency", currencyValue);
+                                    command.Parameters.AddWithValue("@Deposit", depositValue);
+                                    command.Parameters.AddWithValue("@Withdrawal", withdrawalValue);
+                                    command.Parameters.AddWithValue("@RunningBalance", runbalValue);
+                                    if (int.TryParse(CMPID.Trim('"'), out int parsedCMPID))
+                                    {
+                                        // Add the parsed CMPID as a parameter
+                                        command.Parameters.AddWithValue("@UPLOADEDBY", parsedCMPID);
+                                    }
+                                    else
+                                    {
+                                        // Handle the error if parsing fails
+                                        Console.WriteLine("Error: Unable to parse CMPID to integer.");
+                                    }
+                                    //command.Parameters.AddWithValue("@UPLOADEDBY", CMPID);
+                                    command.Parameters.AddWithValue("@UPLOADEDDATE", DateTime.Now);
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+                            dsupdate = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT", OURBANK, FROMDT, TODT, logid);
+                        }
+                        else
+                        {
+                            DataTable dtbl = new DataTable();
+                            dtbl.Columns.Add("STATUS", typeof(string));
+                            dtbl.Columns.Add("MSG", typeof(string));
+
+                            DataRow drow = dtbl.NewRow();
+                            drow["STATUS"] = "104";
+
+                            if (dsupload.Tables.Count > 0 && dsupload.Tables[0].Columns.Contains("STATUSTEXT"))
+                            {
+                                drow["MSG"] = dsupload.Tables[0].Rows[0]["STATUSTEXT"].ToString();
+                            }
+                            else
+                            {
+                                // Handle the case when "STATUSTEXT" column is not found in dsupload.Tables[0]
+                                drow["MSG"] = "Status text not available";
+                            }
+
+                            dtbl.Rows.Add(drow);
+
+                            if (dsupdate.Tables.Contains("Table"))
+                            {
+                                dtbl.TableName = "Table"; // Set the table name explicitly
+                                dsupdate.Tables.Add(dtbl.Copy());
+                            }
+                            else
+                            {
+                                dsupdate.Tables.Add(dtbl); // Add the table without setting its name
+                            }
+                        }
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fN_upload_BankreconcilFile");
+            }
+            return dsupdate;
+        }
+        [HttpGet]
+        public IHttpActionResult MIS_REPORT_CLIENTJOBPROFIT(string Client, string SearchType, string Frmdt, string Todt, string Mode, string JobNoFrom, string JobNoTo, string FromVal, string ToVal, string CMP_CODE, string CITYCODE1, string CMPID, string rpttype)
+        {
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+            // DataRow drow = new DataRow;
+            DataRow drow = dtbl.NewRow();
+
+            DAL objDal = new DAL();
+            Report objRpt = new Report();
+            string SearchCTA, SqlQueryPARA, PKID;
+            try
+            {
+
+                {
+                    SearchCTA = objRpt.SEARCHCRITERIA("Client:" + Client, " Search Type:" + SearchType, " From:" + FromVal, " To:" + ToVal, " Mode:" + Mode);
+                    SqlQueryPARA = objRpt.SQLQUERY_PARA(Client, SearchType, Frmdt, Todt, Mode, (JobNoFrom != null) ? JobNoFrom : "", (JobNoTo != null) ? JobNoTo : "", CITYCODE1, CMP_CODE);
+                    if (rpttype == "CLIENT")
+                    {
+                        PKID = objRpt.REPORT_LOG_BATCH_CLIENTPROFIT("25", SearchCTA, SqlQueryPARA, CMPID, rpttype);
+                    }
+                    else
+                    {
+                        PKID = objRpt.REPORT_LOG_BATCH_CLIENTPROFIT("35", SearchCTA, SqlQueryPARA, CMPID, rpttype);
+                    }
+
+                }
+                dtbl.Columns.Add("PKID", typeof(string));
+
+                drow = dtbl.NewRow();
+                drow[0] = PKID;
+                dtbl.Rows.Add(drow);
+                ds1.Merge(dtbl);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/MIS_REPORT_CLIENTJOBPROFIT");
+            }
+            return Ok(ds1);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CLIENT_BR_GETLIST(string BILLNO, string CLIENT, string CMPCODE, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CLIENT_BR_GETLIST", BILLNO, CLIENT, CMPCODE, CITYCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CLIENT_BR_GETLIST");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_BRBP_GETBILLAMOUNT(string BILLNO, string ACC_CODE, string CMPCODE, string CITYCODE, string BANKDTLSID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBP_GETBILLAMOUNT", BILLNO, ACC_CODE, CMPCODE, CITYCODE, BANKDTLSID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BRBP_GETBILLAMOUNT");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_SUPPLIER_AS_AGENT()
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCT_SUPPLIER_AS_AGENT");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_SUPPLIER_AS_AGENT");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public HttpResponseMessage acc_bankreconcillation_exporttoxl(string OURBANK, string FROMDATE, string TODATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            string strSpName = string.Empty, strXslFilename = string.Empty;
+            string myString = string.Empty;
+
+
+            strXslFilename = "xsl_acc_bankreconcillation_list.xsl";
+
+
+            ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BANKRECONCIL_GETUPLOADDATA", (OURBANK != null) ? OURBANK : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "");
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(ds.GetXml());
+            myString = CommonFunction.ConvertToExcel_open("Accounts", strXslFilename, xmlDoc);
+
+            byte[] byteArray = Encoding.UTF8.GetBytes(Convert.ToString(myString));
+            MemoryStream stream = new MemoryStream(byteArray);
+            stream.WriteTo(HttpContext.Current.Response.OutputStream);
+
+            HttpResponseMessage httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK);
+            httpResponseMessage.Content = new StreamContent(stream);
+            httpResponseMessage.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            httpResponseMessage.Content.Headers.ContentDisposition.FileName = "reconcilledlist_" + FROMDATE + "_" + TODATE + ".xls";
+            httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+            return httpResponseMessage;
+
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_BANKRECONCILLATION_UPLOAD_GETDATA(string OURBANK, string FROMDATE, string TODATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BANKRECONCIL_GETUPLOADDATA", (OURBANK != null) ? OURBANK : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BANKRECONCILLATION_UPLOAD_GETDATA");
+            }
+            return Ok(ds);
+        }
+        public string GenerateCreditNoteJson(DataSet ds)
+        {
+
+            DAL objDal = new DAL();
+            var r = new EInvoice();
+            String crtno = "";
+            String dataString1 = "";
+            String dataString = "";
+            string strPath = "";
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                crtno = row["CRTNO"].ToString();
+                DataView dvtrans = new DataView(ds.Tables[1]);
+                DataView dvdoc = new DataView(ds.Tables[2]);
+                DataView dvSeller = new DataView(ds.Tables[3]);
+                DataView dvBuyer = new DataView(ds.Tables[4]);
+                DataView dvValue = new DataView(ds.Tables[5]);
+                DataView dvItem = new DataView(ds.Tables[6]);
+                dvtrans.RowFilter = "CRTNO = " + crtno;
+                dvdoc.RowFilter = "CRTNO = " + crtno;
+                dvSeller.RowFilter = "CRTNO = " + crtno;
+                dvBuyer.RowFilter = "CRTNO = " + crtno;
+                dvValue.RowFilter = "CRTNO = " + crtno;
+                dvItem.RowFilter = "CRTNO = " + crtno;
+                DataTable DtTrans;
+                DtTrans = dvtrans.ToTable();
+                DtTrans.Columns.Remove("CRTNO");
+
+                DataTable DtDoc;
+                DtDoc = dvdoc.ToTable();
+                DtDoc.Columns.Remove("CRTNO");
+
+                DataTable DtSeller;
+                DtSeller = dvSeller.ToTable();
+                DtSeller.Columns.Remove("CRTNO");
+
+                DataTable DtBuyer;
+                DtBuyer = dvBuyer.ToTable();
+                DtBuyer.Columns.Remove("CRTNO");
+
+                DataTable DtValue;
+                DtValue = dvValue.ToTable();
+                DtValue.Columns.Remove("CRTNO");
+
+                DataTable DtItem;
+                DtItem = dvItem.ToTable();
+                DtItem.Columns.Remove("CRTNO");
+
+                //object info = GenericMapper.GetItem(ds.Tables[0]);
+                object Transinfo = GenericMapper.GetItem(DtTrans);
+                object Docinfo = GenericMapper.GetItem(DtDoc);
+                object Sellerinfo = GenericMapper.GetItem(DtSeller);
+                object Buyerinfo = GenericMapper.GetItem(DtBuyer);
+                object Valinfo = GenericMapper.GetItem(DtValue);
+                object Iteminfo = GenericMapper.GetItem(DtItem);
+               
+                object regRevObject = ExtractObject.GetValFromObj(Transinfo, "RegRev");
+                string regRevValue = RemoveQuotesAndNull(Convert.ToString(regRevObject));
+
+                object ecmGstinObject = ExtractObject.GetValFromObj(Transinfo, "EcmGstin");
+                string ecmGstinValue = RemoveQuotesAndNull(Convert.ToString(ecmGstinObject));
+
+                r.TranDtls = new tranDtls
+                {
+                    TaxSch = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "TaxSch")),
+                    SupTyp = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "SupTyp")),
+                    IgstOnIntra = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "IgstOnIntra")),
+                    RegRev = regRevValue,//RemoveQuotes(Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "RegRev"))),
+                    EcmGstin = ecmGstinValue,//RemoveQuotes(Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "EcmGstin"))),
+
+                    //RegRev = regRevValue ?? (string)null, // Assign null explicitly to string property
+                    //EcmGstin = ecmGstinValue ?? (string)null 
+
+                };
+                r.DocDtls = new docDtls
+                {
+                    Typ = Convert.ToString(ExtractObject.GetValFromObj(Docinfo, "Typ")),
+                    No = Convert.ToString(ExtractObject.GetValFromObj(Docinfo, "No")),
+                    Dt = Convert.ToString(ExtractObject.GetValFromObj(Docinfo, "Dt")),
+                };
+                //  string pinValue = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Pin"));
+                r.SellerDtls = new sellerDtls
+                {
+                    Gstin = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Gstin")),
+                    LglNm = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "LglNm")),
+                    TrdNm = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "TrdNm")),
+                    Addr1 = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Addr1")),
+                    Addr2 = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Addr2")),
+                    Loc = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Loc")),
+                    //Pin = pinValue != null ? pinValue.Trim('"') : null,
+                    Pin = Convert.ToInt32(ExtractObject.GetValFromObj(Sellerinfo, "Pin")),
+                    // Pin = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Pin")),
+                    Stcd = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Stcd")),
+
+
+                };
+                //  string pinValuebuyer = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Pin"));
+                r.BuyerDtls = new buyerDtls
+                {
+                    Gstin = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Gstin")),
+                    LglNm = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "LglNm")),
+                    TrdNm = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "TrdNm")),
+                    Pos = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Pos")),
+                    Addr1 = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Addr1")),
+                    Addr2 = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Addr2")),
+                    Loc = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Loc")),
+                    Pin = Convert.ToInt32(ExtractObject.GetValFromObj(Buyerinfo, "Pin")),
+                    Stcd = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Stcd")),
+
+
+                };
+                r.Valdtls = new valDtls
+                {
+
+                    AssVal = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "AssVal")),
+                    IgstVal = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "IgstVal")),
+                    CgstVal = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "CgstVal")),
+                    SgstVal = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "SgstVal")),
+                    CesVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "CesVal")),
+                    StCesVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "StCesVal")),
+                    Discount = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "Discount")),
+                    OthChrg = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "OthChrg")),
+                    RndOffAmt = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "RndOffAmt")),
+                    TotInvVal = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "TotInvVal"))
+
+                };
+                r.ItemList = GetItemDtls(DtItem);
+                if (ds.Tables[0].Rows.Count == 1)
+                {
+                    dataString = JsonConvert.SerializeObject(r);
+                }
+                else
+                {
+
+                    dataString1 = JsonConvert.SerializeObject(r);
+                    if (dataString == "")
+                    {
+                        dataString = dataString1;
+                    }
+                    else
+                    {
+                        dataString = dataString + "," + dataString1;
+                    }
+                }
+                Console.WriteLine(dataString1);
+            }
+            // dataString = "[" + dataString + "]";
+            string output = "";
+            output = "[" + dataString + "]";
+            System.IO.StreamWriter oWrite;
+            strPath = HttpContext.Current.Server.MapPath(@"..\..\") + @"DATA\EInvoice\ECNJson\" + ds.Tables[7].Rows[0]["FileNameT"];
+            if (File.Exists(strPath))
+            {
+                File.Delete(strPath);
+            }
+            oWrite = File.CreateText(strPath);
+            oWrite.WriteLine(output);
+            oWrite.Close();
+            return dataString;
+            // Console.WriteLine(dataString1);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_ECREDITNOTEGETDATA_FORJSON(string CRTNO, string CMPCODE, string CITYCODE, string CMPID, string MAKERIP, string FINSTARTDT)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            var r = new EInvoice();
+            try
+            {
+             ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_ECREDITNOTE_JSON_GENERATE", CRTNO, CMPCODE, CITYCODE, CMPID, MAKERIP, FINSTARTDT);
+                GenerateCreditNoteJson(ds);
+            }
+
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_ECREDITNOTEGETDATA_FORJSON");
+            }
+            return Ok(ds);
+
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_ECreditNote_List(string FINSTARTDT, string CMPCODE, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_ECREDITNOTE_GETDATA", FINSTARTDT, CMPCODE, CITYCODE);
+             }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_ECreditNote_List");
+            }
+            return Ok(ds);
+        }
+        //public DataSet fN_upload_BankreconcilExcelFile(string strFileName, string CMPID, string VGUID, string MAKERIP, string CMPCODE, string CITYCODE, string CITYCODE1, string OURBANK, string FROMDT, string TODT)
+        //{
+
+        //    DataSet gstDS1 = new DataSet();
+        //    DataSet gstResust = new DataSet();
+        //    DataSet dsupdate = new DataSet();
+        //    string uploadedfromdate = "";
+        //    string uploadedtodate = "";
+        //    var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+        //    try
+        //    {
+        //        strFileName = Path.GetFileName(strFileName);
+        //        string strExtension;
+        //        strExtension = Path.GetExtension(strFileName);
+        //        string strFilePath;
+        //        strFilePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~") + "\\DATA\\BankReconcil\\" + strFileName);
+        //        file.SaveAs(strFilePath);
+        //        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        //        using (var package = new ExcelPackage(new System.IO.FileInfo(strFilePath)))
+        //        {
+        //            ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; // Access the first worksheet (index 0)
+
+        //            // Get the value from cell B3
+        //            string cellValue = worksheet.Cells["B3"].Text;
+
+        //            // Split the cell value by "To" to get the from date and to date
+        //            string[] dates = cellValue.Split(new string[] { " To " }, StringSplitOptions.RemoveEmptyEntries);
+
+        //            DateTime fromDate; // Declare fromDate outside the if block
+        //            DateTime toDate; // Declare toDate outside the if block
+
+        //            if (dates.Length == 2)
+        //            {
+        //                // Assuming the date format is dd/MM/yyyy, parse the dates
+        //                if (DateTime.TryParse(dates[0], out fromDate) && DateTime.TryParse(dates[1], out toDate))
+        //                {
+        //                    //Console.WriteLine($"From Date: {fromDate.ToString("dd/MM/yyyy")}");
+        //                    //Console.WriteLine($"To Date: {toDate.ToString("dd/MM/yyyy")}");
+        //                    uploadedfromdate = fromDate.ToString("dd/MM/yyyy");
+        //                    uploadedtodate = toDate.ToString("dd/MM/yyyy");
+        //                }
+        //                else
+        //                {
+        //                    Console.WriteLine("Invalid date format in the cell.");
+        //                }
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("Unable to extract dates from the cell.");
+        //            }
+        //        }
+
+
+        //        DataSet dsupload = new DataSet();
+        //        DAL objDal = new DAL();
+        //        dsupload = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_UPLOAD_BANKRECONCILXL_UPDATELOG", CMPID, MAKERIP, VGUID, strFileName, strFilePath, "BANKRECONCIL", uploadedfromdate, uploadedtodate);
+
+        //        string status = dsupload.Tables[0].Rows[0]["STATUS"].ToString();
+        //        if (status == "100")
+        //        {
+
+        //            string logid = dsupload.Tables[0].Rows[0]["LOGID"].ToString();
+        //            DataSet DS = new DataSet();
+        //            DataSet MP_DS = new DataSet();
+        //            OleDbDataAdapter Adapter = new OleDbDataAdapter();
+        //            OleDbConnection myExcelConn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + strFilePath + ";Extended Properties=\"Excel 12.0;HDR=No\"; ");
+
+        //            // string filePath = "YourExcelFile.xlsx";
+        //            // ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        //            // Load the Excel file using EPPlus
+        //            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        //            using (ExcelPackage package = new ExcelPackage(new FileInfo(strFilePath)))
+        //            {
+        //                // Get the first worksheet in the Excel file
+        //                // ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+        //                int worksheetCount = package.Workbook.Worksheets.Count;
+        //                try
+        //                {
+        //                    if (package.Workbook.Worksheets.Count > 0)
+        //                    {
+        //                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; // Accessing the first worksheet
+        //                        int startRow = 6;
+        //                        int rowCount = worksheet.Dimension.Rows;
+        //                        string connectionString = System.Configuration.ConfigurationManager.AppSettings["conString_Manilal"];
+        //                        using (SqlConnection connection = new SqlConnection(connectionString))
+        //                        {
+        //                            connection.Open();
+        //                            for (int row = startRow; row <= rowCount; row++)
+        //                            {
+        //                                // Access data from columns (adjust column indexes as needed)
+        //                                var cellValue = worksheet.Cells[row, 1].Value;
+        //                                string dateValue = cellValue != null ? cellValue.ToString() : string.Empty; // Assuming Date is in column 1
+
+
+
+        //                                cellValue = worksheet.Cells[row, 2].Value;
+        //                                string transactionValue = cellValue != null ? cellValue.ToString() : string.Empty; // Assuming Transaction is in column 2
+
+        //                                cellValue = worksheet.Cells[row, 3].Value;
+        //                                string currencyValue = cellValue != null ? cellValue.ToString() : string.Empty; // Assuming Currency is in column 3
+
+        //                                if (string.IsNullOrWhiteSpace(currencyValue))
+        //                                {
+        //                                    continue;
+        //                                }
+
+        //                                cellValue = worksheet.Cells[row, 4].Value;
+        //                                string depositValue = string.Empty;
+        //                                decimal depositDecimal = 0;
+        //                                if (cellValue != null && !string.IsNullOrWhiteSpace(cellValue.ToString()))
+        //                                {
+        //                                    if (decimal.TryParse(cellValue.ToString(), out depositDecimal))
+        //                                    {
+        //                                        // Conversion successful, assign the decimal value
+        //                                        depositValue = depositDecimal.ToString(); // or depositDecimal.ToString(CultureInfo.InvariantCulture); for invariant culture
+        //                                    }
+        //                                    else
+        //                                    {
+        //                                        // Conversion failed, handle the error or set a default value
+        //                                        // For example:
+        //                                        depositValue = string.Empty;  // Set a default value
+        //                                        // Log or handle the conversion error
+        //                                    }
+        //                                }
+
+
+
+
+        //                                cellValue = worksheet.Cells[row, 5].Value;
+        //                                string withdrawalValue = string.Empty;
+        //                                decimal withdrawalDecimal = 0;
+        //                                if (cellValue != null && !string.IsNullOrWhiteSpace(cellValue.ToString()))
+        //                                {
+        //                                    if (decimal.TryParse(cellValue.ToString(), out withdrawalDecimal))
+        //                                    {
+        //                                        // Conversion successful, assign the decimal value
+        //                                        withdrawalValue = withdrawalDecimal.ToString(); // or depositDecimal.ToString(CultureInfo.InvariantCulture); for invariant culture
+        //                                    }
+        //                                    else
+        //                                    {
+        //                                        // Conversion failed, handle the error or set a default value
+        //                                        // For example:
+        //                                        withdrawalValue = string.Empty;  // Set a default value
+        //                                        // Log or handle the conversion error
+        //                                    }
+        //                                }
+        //                                cellValue = worksheet.Cells[row, 6].Value;
+        //                                string runbalValue = string.Empty;
+        //                                decimal runbalDecimal = 0;
+
+        //                                if (cellValue != null && !string.IsNullOrWhiteSpace(cellValue.ToString()))
+        //                                {
+        //                                    if (decimal.TryParse(cellValue.ToString(), out runbalDecimal))
+        //                                    {
+        //                                        // Conversion successful, assign the decimal value
+        //                                        runbalValue = runbalDecimal.ToString(); // or depositDecimal.ToString(CultureInfo.InvariantCulture); for invariant culture
+        //                                    }
+        //                                    else
+        //                                    {
+        //                                        // Conversion failed, handle the error or set a default value
+        //                                        // For example:
+        //                                        runbalValue = string.Empty;  // Set a default value
+        //                                        // Log or handle the conversion error
+        //                                    }
+        //                                }
+
+        //                                // Insert data into SQL Server table
+        //                                string insertQuery = "INSERT INTO ACC_BANKRECONCIL_UPLOADSTATEMENT_TMP (FK_LOGID,DATE, BTRANSACTION, CURRENCY,DEPOSIT,WITHDRAWAL,RUNNINGBAL,UPLOADEDBY,UPLOADEDDATE) VALUES (@logid,@Date, @Transaction, @Currency,@Deposit,@Withdrawal,@RunningBalance,@UPLOADEDBY,@UPLOADEDDATE)";
+        //                                SqlCommand command = new SqlCommand(insertQuery, connection);
+        //                                command.Parameters.AddWithValue("@logid", logid);
+        //                                command.Parameters.AddWithValue("@Date", dateValue.Trim());
+        //                                command.Parameters.AddWithValue("@Transaction", transactionValue);
+        //                                command.Parameters.AddWithValue("@Currency", currencyValue);
+        //                                if (!string.IsNullOrWhiteSpace(depositValue))
+        //                                {
+        //                                    // Use depositValue if it's not empty
+        //                                    command.Parameters.AddWithValue("@Deposit", depositValue);
+        //                                }
+        //                                else
+        //                                {
+        //                                    // Use depositDecimal if depositValue is empty
+        //                                    command.Parameters.AddWithValue("@Deposit", depositDecimal);
+        //                                }
+        //                                if (!string.IsNullOrWhiteSpace(withdrawalValue))
+        //                                {
+        //                                    // Use withdrawalValue if it's not empty
+        //                                    command.Parameters.AddWithValue("@Withdrawal", withdrawalValue);
+        //                                }
+        //                                else
+        //                                {
+        //                                    // Use withdrawalDecimal if withdrawalValue is empty
+        //                                    command.Parameters.AddWithValue("@Withdrawal", withdrawalDecimal);
+        //                                }
+        //                                if (!string.IsNullOrWhiteSpace(runbalValue))
+        //                                {
+        //                                    // Use depositValue if it's not empty
+        //                                    command.Parameters.AddWithValue("@RunningBalance", runbalValue);
+        //                                }
+        //                                else
+        //                                {
+        //                                    // Use depositDecimal if depositValue is empty
+        //                                    command.Parameters.AddWithValue("@RunningBalance", runbalDecimal);
+        //                                }
+        //                                command.Parameters.AddWithValue("@UPLOADEDBY", CMPID);
+        //                                command.Parameters.AddWithValue("@UPLOADEDDATE", DateTime.Now);
+        //                                command.ExecuteNonQuery();
+        //                            }
+        //                        }
+        //                        // Use the 'worksheet' object as needed
+        //                    }
+        //                    else
+        //                    {
+        //                        // Handle case when there are no worksheets in the workbook
+        //                        Console.WriteLine("No worksheets found in the workbook.");
+        //                    }
+
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Console.WriteLine("Error accessing worksheet: " + ex.Message);
+        //                }
+        //                // Start reading from the 6th row (index 5)
+
+
+
+        //            }
+        //            dsupdate = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT", OURBANK, FROMDT, TODT, logid);
+        //        }
+        //        else
+        //        {
+        //            DataTable dtbl = new DataTable();
+        //            // DataRow drow = new DataRow;
+        //            DataRow drow = dtbl.NewRow();
+        //            dtbl.Columns.Add("STATUS", typeof(string));
+        //            dtbl.Columns.Add("MSG", typeof(string));
+        //            drow = dtbl.NewRow();
+        //            drow[0] = "104";
+        //            drow[1] = dsupload.Tables[0].Rows[0]["STATUSTEXT"].ToString();
+        //            dtbl.Rows.Add(drow);
+        //            dsupdate.Merge(dtbl);
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLog.Error(ex, "Accounts/fN_upload_BankreconcilExcelFile");
+        //    }
+        //    return dsupdate;
+
+        //}
+        //[HttpPost]
+        //public IHttpActionResult UploadBnkReconcilFile()
+        //{
+        //    //HttpResponseMessage response = null;
+        //    DataSet ds = new DataSet();
+        //    DataSet ds1 = new DataSet();
+        //    DataTable dtbl = new DataTable();
+        //    // DataRow drow = new DataRow;
+        //    DataRow drow = dtbl.NewRow();
+        //    var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+        //    var cmpid = HttpContext.Current.Request.Params["cmpid"];
+        //    var vguid = HttpContext.Current.Request.Params["vguid"];
+        //    var makerip = HttpContext.Current.Request.Params["makerip"];
+        //    var cmpcode = HttpContext.Current.Request.Params["cmpcode"];
+        //    var citycode = HttpContext.Current.Request.Params["citycode"];
+        //    var citycode1 = HttpContext.Current.Request.Params["citycode1"];
+        //    var ourbank = HttpContext.Current.Request.Params["ourbank"];
+        //    var fromdt = HttpContext.Current.Request.Params["fromdt"];
+        //    var todt = HttpContext.Current.Request.Params["todt"];
+        //    try
+        //    {
+        //        if (file != null && file.ContentLength > 0)
+        //        {
+        //            string fileName = Path.GetFileName(file.FileName);
+        //            var filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~") + "\\DATA\\BankReconcil\\", fileName);
+
+        //            if (File.Exists(filePath) == true)
+        //            {
+        //                dtbl.Columns.Add("STATUS", typeof(string));
+        //                dtbl.Columns.Add("MSG", typeof(string));
+        //                drow = dtbl.NewRow();
+        //                drow[0] = "104";
+        //                drow[1] = fileName + " already exists";
+        //                dtbl.Rows.Add(drow);
+        //                ds1.Merge(dtbl);
+        //            }
+        //            else
+        //            {
+
+
+        //                file.SaveAs(filePath);
+        //                ds1 = fN_upload_BankreconcilExcelFile(fileName, cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt);
+        //                dtbl.Columns.Add("STATUS", typeof(string));
+        //                dtbl.Columns.Add("MSG", typeof(string));
+        //                drow = dtbl.NewRow();
+        //                drow[0] = "100";
+        //                drow[1] = fileName + " uploaded successfully";
+        //                // drow[0] = fileName + " uploaded successfully";
+        //                dtbl.Rows.Add(drow);
+        //                ds1.Merge(dtbl);
+        //            }
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLog.Error(ex, "Accounts/UploadBnkReconcilFile");
+        //    }
+        //    return Ok(ds1);
+
+        //}
+        [HttpPost]
+
+        public IHttpActionResult UploadBnkReconcilFileold()
+        {
+            //HttpResponseMessage response = null;
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+            // DataRow drow = new DataRow;
+            DataRow drow = dtbl.NewRow();
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            var cmpid = HttpContext.Current.Request.Params["cmpid"];
+            var vguid = HttpContext.Current.Request.Params["vguid"];
+            var makerip = HttpContext.Current.Request.Params["makerip"];
+            var cmpcode = HttpContext.Current.Request.Params["cmpcode"];
+            var citycode = HttpContext.Current.Request.Params["citycode"];
+            var citycode1 = HttpContext.Current.Request.Params["citycode1"];
+            try
+            {
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = Path.GetFileName(file.FileName);
+                    var filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~") + "\\DATA\\BankReconcil\\", fileName);
+
+                    if (File.Exists(filePath) == true)
+                    {
+                        dtbl.Columns.Add("STATUS", typeof(string));
+                        dtbl.Columns.Add("MSG", typeof(string));
+                        drow = dtbl.NewRow();
+                        drow[0] = "104";
+                        drow[1] = fileName + " already exists";
+                        dtbl.Rows.Add(drow);
+                        ds1.Merge(dtbl);
+                    }
+                    else
+                    {
+
+
+                        file.SaveAs(filePath);
+                        //fN_upload_BankreconcilExcelFile(fileName, cmpid, vguid, makerip, cmpcode, citycode, citycode1);
+                        dtbl.Columns.Add("STATUS", typeof(string));
+                        dtbl.Columns.Add("MSG", typeof(string));
+                        drow = dtbl.NewRow();
+                        drow[0] = "100";
+                        drow[1] = fileName + " uploaded successfully";
+                        // drow[0] = fileName + " uploaded successfully";
+                        dtbl.Rows.Add(drow);
+                        ds1.Merge(dtbl);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/UploadBnkReconcilFile");
+            }
+            return Ok(ds1);
+
+        }
+        [Route("api/Accounts/DownloadAttachment")]
+        [AcceptVerbs("GET")]
+        public HttpResponseMessage DownloadAttachment(string fileName, string FileType)
+        {
+            //below code locate physical file on server 
+            //var localFilePath = HttpContext.Current.Server.MapPath("../../uploadFiles/" + fileName);
+            var localFilePath = "";
+            if (FileType == "invoice")
+            {
+                localFilePath = HttpContext.Current.Server.MapPath(@"..\..\") + @"DATA\EInvoice\EInvoiceJson\" + fileName;
+            }
+            else
+            {
+                localFilePath = HttpContext.Current.Server.MapPath(@"..\..\") + @"DATA\EInvoice\ECNJson\" + fileName;
+            }
+            HttpResponseMessage response = null;
+            if (!File.Exists(localFilePath))
+            {
+                //if file not found than return response as resource not present 
+                response = Request.CreateResponse(HttpStatusCode.Gone);
+            }
+            else
+            {
+                //if file present than read file 
+                var fStream = new FileStream(localFilePath, FileMode.Open, FileAccess.Read);
+
+                //compose response and include file as content in it
+                response = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    // Content = new StreamContent(fStream)
+                    Content = new StreamContent(fStream)
+                };
+
+                //set content header of reponse as file attached in reponse
+                response.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = Path.GetFileName(fStream.Name)
+                };
+                //set the content header content type as application/octet-stream as it      
+                //returning file as reponse 
+                response.Content.Headers.ContentType = new
+                              MediaTypeHeaderValue("application/octet-stream");
+
+
+                response.Content.Headers.ContentLength = fStream.Length;
+                response.Headers.Add("fileName", fileName);
+
+            }
+            return response;
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_EInvoice_List(string FINSTARTDT, string CMPCODE, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_EINVOICE_GETDATA", FINSTARTDT, CMPCODE, CITYCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_EInvoice_List");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_EInvoice_ResetJsonList(string FINSTARTDT, string CMPCODE, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_EINVOICE_RESET_JSONDATA", FINSTARTDT, CMPCODE, CITYCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_EInvoice_ResetJsonList");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_EINVOICERESETDATA_FORJSON(string JSONFILEID, string INVOICEID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_EINVOICE_RESETJSON_UPDATEGSTIRN_NG", JSONFILEID, INVOICEID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_EINVOICERESETDATA_FORJSON");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_EINVOICEGETDATA_FORJSON(string INVNO, string CMPCODE, string CITYCODE, string CMPID, string MAKERIP, string FINSTARTDT)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            var r = new EInvoice();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_EINVOICE_JSON_GENERATE", INVNO, CMPCODE, CITYCODE, CMPID, MAKERIP, FINSTARTDT);
+                GenerateJson(ds);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_EINVOICEGETDATA_FORJSON");
+            }
+            return Ok(ds);
+        }
+        string RemoveQuotesAndNull(string value)
+        {
+            if (value != null)
+            {
+                value = value.Trim(); // Remove leading and trailing whitespaces
+
+                if (value == "null")
+                {
+                    return null;
+                }
+                else if (value.StartsWith("\"") && value.EndsWith("\""))
+                {
+                    return value.Substring(1, value.Length - 2);
+                }
+            }
+            return value; // Return value as is if null, doesn't have quotes, or is not trimmed
+        }
+        public static double SafeConvertToDouble(object value, int decimals = 2)
+        {
+            double result;
+
+            if (double.TryParse(Convert.ToString(value), out result))
+            {
+                if (result == 0) return 0; // Explicitly return 0 as an integer.
+                return Math.Round(result, decimals);
+            }
+
+            return 0; // Default for invalid or null values.
+        }
+        public string GenerateJson(DataSet ds)
+        {
+
+            DAL objDal = new DAL();
+            var r = new EInvoice();
+            String invoiceno = "";
+            String dataString1 = "";
+            String dataString = "";
+            string strPath = "";
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                invoiceno = row["InvoiceNo"].ToString();
+                DataView dvtrans = new DataView(ds.Tables[1]);
+                DataView dvdoc = new DataView(ds.Tables[2]);
+                DataView dvSeller = new DataView(ds.Tables[3]);
+                DataView dvBuyer = new DataView(ds.Tables[4]);
+                DataView dvValue = new DataView(ds.Tables[5]);
+                DataView dvItem = new DataView(ds.Tables[6]);
+                dvtrans.RowFilter = "InvoiceNo = " + invoiceno;
+                dvdoc.RowFilter = "InvoiceNo = " + invoiceno;
+                dvSeller.RowFilter = "InvoiceNo = " + invoiceno;
+                dvBuyer.RowFilter = "InvoiceNo = " + invoiceno;
+                dvValue.RowFilter = "InvoiceNo = " + invoiceno;
+                dvItem.RowFilter = "InvoiceNo = " + invoiceno;
+                DataTable DtTrans;
+                DtTrans = dvtrans.ToTable();
+                DtTrans.Columns.Remove("InvoiceNo");
+
+                DataTable DtDoc;
+                DtDoc = dvdoc.ToTable();
+                DtDoc.Columns.Remove("InvoiceNo");
+
+                DataTable DtSeller;
+                DtSeller = dvSeller.ToTable();
+                DtSeller.Columns.Remove("InvoiceNo");
+
+                DataTable DtBuyer;
+                DtBuyer = dvBuyer.ToTable();
+                DtBuyer.Columns.Remove("InvoiceNo");
+
+                DataTable DtValue;
+                DtValue = dvValue.ToTable();
+                DtValue.Columns.Remove("InvoiceNo");
+
+                DataTable DtItem;
+                DtItem = dvItem.ToTable();
+                DtItem.Columns.Remove("InvoiceNo");
+
+                //object info = GenericMapper.GetItem(ds.Tables[0]);
+                object Transinfo = GenericMapper.GetItem(DtTrans);
+                object Docinfo = GenericMapper.GetItem(DtDoc);
+                object Sellerinfo = GenericMapper.GetItem(DtSeller);
+                object Buyerinfo = GenericMapper.GetItem(DtBuyer);
+                object Valinfo = GenericMapper.GetItem(DtValue);
+                object Iteminfo = GenericMapper.GetItem(DtItem);
+                //EInvoice data = new EInvoice();
+                // public string invoiceno;
+                //var r = new EInvoice();
+                object regRevObject = ExtractObject.GetValFromObj(Transinfo, "RegRev");
+                string regRevValue = RemoveQuotesAndNull(Convert.ToString(regRevObject));
+
+                object ecmGstinObject = ExtractObject.GetValFromObj(Transinfo, "EcmGstin");
+                string ecmGstinValue = RemoveQuotesAndNull(Convert.ToString(ecmGstinObject));
+
+                r.TranDtls = new tranDtls
+                {
+                    TaxSch = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "TaxSch")),
+                    SupTyp = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "SupTyp")),
+                    IgstOnIntra = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "IgstOnIntra")),
+                    RegRev = regRevValue,//RemoveQuotes(Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "RegRev"))),
+                    EcmGstin = ecmGstinValue,//RemoveQuotes(Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "EcmGstin"))),
+                    //RegRev = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "RegRev")),
+                    //EcmGstin = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "EcmGstin")),
+
+                };
+                r.DocDtls = new docDtls
+                {
+                    Typ = Convert.ToString(ExtractObject.GetValFromObj(Docinfo, "Typ")),
+                    No = Convert.ToString(ExtractObject.GetValFromObj(Docinfo, "No")),
+                    Dt = Convert.ToString(ExtractObject.GetValFromObj(Docinfo, "Dt")),
+                };
+                r.SellerDtls = new sellerDtls
+                {
+                    Gstin = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Gstin")),
+                    LglNm = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "LglNm")),
+                    TrdNm = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "TrdNm")),
+                    Addr1 = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Addr1")),
+                    Addr2 = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Addr2")),
+                    Loc = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Loc")),
+                    Pin = Convert.ToInt32(ExtractObject.GetValFromObj(Sellerinfo, "Pin")),
+                    Stcd = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Stcd")),
+                };
+                r.BuyerDtls = new buyerDtls
+                {
+                    Gstin = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Gstin")),
+                    LglNm = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "LglNm")),
+                    TrdNm = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "TrdNm")),
+                    Pos = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Pos")),
+                    Addr1 = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Addr1")),
+                    Addr2 = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Addr2")),
+                    Loc = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Loc")),
+                    Pin = Convert.ToInt32(ExtractObject.GetValFromObj(Buyerinfo, "Pin")),
+                    Stcd = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Stcd")),
+
+                };
+                r.Valdtls = new valDtls
+                {
+                    AssVal = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "AssVal")),
+                    IgstVal = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "IgstVal")),
+                    CgstVal = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "CgstVal")),
+                    SgstVal = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "SgstVal")),
+                    CesVal = Convert.ToInt32(ExtractObject.GetValFromObj(Valinfo, "CesVal")),
+
+                    ////CesVal = SafeConvertToDouble(ExtractObject.GetValFromObj(Valinfo, "CesVal"),0),old one 
+                    // //StCesVal = SafeConvertToDouble(ExtractObject.GetValFromObj(Valinfo, "StCesVal"),0),
+                    //  //Discount = SafeConvertToDouble(ExtractObject.GetValFromObj(Valinfo, "Discount"),0),
+                    //   //OthChrg = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "OthChrg")),
+                   // CesVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "CesVal")) == 0 ? 0 : SafeConvertToDouble(ExtractObject.GetValFromObj(Valinfo, "CesVal"), 0),
+                    StCesVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "StCesVal")) == 0 ? 0 : SafeConvertToDouble(ExtractObject.GetValFromObj(Valinfo, "StCesVal"), 0),
+                    Discount = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "Discount")) == 0 ? 0 : SafeConvertToDouble(ExtractObject.GetValFromObj(Valinfo, "Discount"), 0),
+                    OthChrg = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "OthChrg")) == 0 ? 0 : SafeConvertToDouble(ExtractObject.GetValFromObj(Valinfo, "OthChrg"), 0),
+                    RndOffAmt = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "RndOffAmt")),
+                    TotInvVal = Convert.ToDecimal(ExtractObject.GetValFromObj(Valinfo, "TotInvVal"))
+                };
+                //r.Valdtls = new valDtls
+                //{
+
+                //    AssVal = Math.Round(Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "AssVal")),2),
+                //    IgstVal = Math.Round(Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "IgstVal")),2),
+                //    CgstVal = Math.Round(Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "CgstVal")),2),
+                //    SgstVal = Math.Round(Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "SgstVal")),2),
+                //    CesVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "CesVal")),
+                //    StCesVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "StCesVal")),
+                //    Discount = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "Discount")),
+                //    OthChrg = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "OthChrg")),
+                //    RndOffAmt = Math.Round(Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "RndOffAmt")), 2),
+                //    TotInvVal = Math.Round(Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "TotInvVal")), 2)
+
+                //};
+                r.ItemList = GetItemDtls(DtItem);
+                if (ds.Tables[0].Rows.Count == 1)
+                {
+                    //dataString = JsonConvert.SerializeObject(r);
+                    dataString = JsonConvert.SerializeObject(r, Newtonsoft.Json.Formatting.Indented);
+                    //string jsonResult = JsonConvert.SerializeObject(einvoice, Newtonsoft.Json.Formatting.Indented);
+                    //string finalJson = $"[{jsonResult}]";
+                    //return finalJson;
+                }
+                else
+                {
+
+                    dataString1 = JsonConvert.SerializeObject(r, Newtonsoft.Json.Formatting.Indented); //JsonConvert.SerializeObject(r);
+                    if (dataString == "")
+                    {
+                        dataString = dataString1;
+                    }
+                    else
+                    {
+                        // dataString = dataString + "," + dataString1;
+                        dataString += $",\n{dataString1}";
+                    }
+
+
+                }
+                Console.WriteLine(dataString1);
+            }
+
+
+            // dataString = "[" + dataString + "]";
+            string output = "";
+            output = $"[\n{dataString}\n]";//"[" + dataString + "]";
+            System.IO.StreamWriter oWrite;
+            strPath = HttpContext.Current.Server.MapPath(@"..\..\") + @"DATA\EInvoice\EInvoiceJson\" + ds.Tables[7].Rows[0]["FileNameT"];
+            if (File.Exists(strPath))
+            {
+                File.Delete(strPath);
+            }
+            oWrite = File.CreateText(strPath);
+            oWrite.WriteLine(output);
+            oWrite.Close();
+            return dataString;
+            // Console.WriteLine(dataString1);
+        }
+        //public string GenerateJson_bkup20241224(DataSet ds)
+        //{
+
+        //    DAL objDal = new DAL();
+        //    var r = new EInvoice();
+        //    String invoiceno = "";
+        //    String dataString1 = "";
+        //    String dataString = "";
+        //    string strPath = "";
+        //    foreach (DataRow row in ds.Tables[0].Rows)
+        //    {
+        //        invoiceno = row["InvoiceNo"].ToString();
+        //        DataView dvtrans = new DataView(ds.Tables[1]);
+        //        DataView dvdoc = new DataView(ds.Tables[2]);
+        //        DataView dvSeller = new DataView(ds.Tables[3]);
+        //        DataView dvBuyer = new DataView(ds.Tables[4]);
+        //        DataView dvValue = new DataView(ds.Tables[5]);
+        //        DataView dvItem = new DataView(ds.Tables[6]);
+        //        dvtrans.RowFilter = "InvoiceNo = " + invoiceno;
+        //        dvdoc.RowFilter = "InvoiceNo = " + invoiceno;
+        //        dvSeller.RowFilter = "InvoiceNo = " + invoiceno;
+        //        dvBuyer.RowFilter = "InvoiceNo = " + invoiceno;
+        //        dvValue.RowFilter = "InvoiceNo = " + invoiceno;
+        //        dvItem.RowFilter = "InvoiceNo = " + invoiceno;
+        //        DataTable DtTrans;
+        //        DtTrans = dvtrans.ToTable();
+        //        DtTrans.Columns.Remove("InvoiceNo");
+
+        //        DataTable DtDoc;
+        //        DtDoc = dvdoc.ToTable();
+        //        DtDoc.Columns.Remove("InvoiceNo");
+
+        //        DataTable DtSeller;
+        //        DtSeller = dvSeller.ToTable();
+        //        DtSeller.Columns.Remove("InvoiceNo");
+
+        //        DataTable DtBuyer;
+        //        DtBuyer = dvBuyer.ToTable();
+        //        DtBuyer.Columns.Remove("InvoiceNo");
+
+        //        DataTable DtValue;
+        //        DtValue = dvValue.ToTable();
+        //        DtValue.Columns.Remove("InvoiceNo");
+
+        //        DataTable DtItem;
+        //        DtItem = dvItem.ToTable();
+        //        DtItem.Columns.Remove("InvoiceNo");
+
+        //        //object info = GenericMapper.GetItem(ds.Tables[0]);
+        //        object Transinfo = GenericMapper.GetItem(DtTrans);
+        //        object Docinfo = GenericMapper.GetItem(DtDoc);
+        //        object Sellerinfo = GenericMapper.GetItem(DtSeller);
+        //        object Buyerinfo = GenericMapper.GetItem(DtBuyer);
+        //        object Valinfo = GenericMapper.GetItem(DtValue);
+        //        object Iteminfo = GenericMapper.GetItem(DtItem);
+              
+        //        object regRevObject = ExtractObject.GetValFromObj(Transinfo, "RegRev");
+        //        string regRevValue = RemoveQuotesAndNull(Convert.ToString(regRevObject));
+
+        //        object ecmGstinObject = ExtractObject.GetValFromObj(Transinfo, "EcmGstin");
+        //        string ecmGstinValue = RemoveQuotesAndNull(Convert.ToString(ecmGstinObject));
+
+        //        r.TranDtls = new tranDtls
+        //        {
+        //            TaxSch = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "TaxSch")),
+        //            SupTyp = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "SupTyp")),
+        //            IgstOnIntra = Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "IgstOnIntra")),
+        //            RegRev = regRevValue,//RemoveQuotes(Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "RegRev"))),
+        //            EcmGstin = ecmGstinValue,//RemoveQuotes(Convert.ToString(ExtractObject.GetValFromObj(Transinfo, "EcmGstin"))),
+                 
+
+        //        };
+        //        r.DocDtls = new docDtls
+        //        {
+        //            Typ = Convert.ToString(ExtractObject.GetValFromObj(Docinfo, "Typ")),
+        //            No = Convert.ToString(ExtractObject.GetValFromObj(Docinfo, "No")),
+        //            Dt = Convert.ToString(ExtractObject.GetValFromObj(Docinfo, "Dt")),
+        //        };
+        //        r.SellerDtls = new sellerDtls
+        //        {
+        //            Gstin = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Gstin")),
+        //            LglNm = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "LglNm")),
+        //            TrdNm = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "TrdNm")),
+        //            Addr1 = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Addr1")),
+        //            Addr2 = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Addr2")),
+        //            Loc = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Loc")),
+        //            Pin = Convert.ToInt32(ExtractObject.GetValFromObj(Sellerinfo, "Pin")),
+        //            Stcd = Convert.ToString(ExtractObject.GetValFromObj(Sellerinfo, "Stcd")),
+        //        };
+        //        r.BuyerDtls = new buyerDtls
+        //        {
+        //            Gstin = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Gstin")),
+        //            LglNm = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "LglNm")),
+        //            TrdNm = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "TrdNm")),
+        //            Pos = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Pos")),
+        //            Addr1 = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Addr1")),
+        //            Addr2 = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Addr2")),
+        //            Loc = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Loc")),
+        //            Pin = Convert.ToInt32(ExtractObject.GetValFromObj(Buyerinfo, "Pin")),
+        //            Stcd = Convert.ToString(ExtractObject.GetValFromObj(Buyerinfo, "Stcd")),
+
+        //        };
+        //        r.ValDtls = new valDtls
+        //        {
+        //            AssVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "AssVal")),
+        //            IgstVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "IgstVal")),
+        //            CgstVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "CgstVal")),
+        //            SgstVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "SgstVal")),
+        //            CesVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "CesVal")),
+        //            StCesVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "StCesVal")),
+        //            Discount = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "Discount")),
+        //            OthChrg = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "OthChrg")),
+        //            RndOffAmt = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "RndOffAmt")),
+        //            TotInvVal = Convert.ToDouble(ExtractObject.GetValFromObj(Valinfo, "TotInvVal"))
+
+        //        };
+        //        r.ItemList = GetItemDtls(DtItem);
+        //        if (ds.Tables[0].Rows.Count == 1)
+        //        {
+        //            dataString = JsonConvert.SerializeObject(r);
+        //        }
+        //        else
+        //        {
+
+        //            dataString1 = JsonConvert.SerializeObject(r);
+        //            if (dataString == "")
+        //            {
+        //                dataString = dataString1;
+        //            }
+        //            else
+        //            {
+        //                dataString = dataString + "," + dataString1;
+        //            }
+
+
+        //        }
+        //        Console.WriteLine(dataString1);
+        //    }
+            
+        //    string output = "";
+        //    output = "[" + dataString + "]";
+        //    System.IO.StreamWriter oWrite;
+        //    strPath = HttpContext.Current.Server.MapPath(@"..\..\") + @"DATA\EInvoice\EInvoiceJson\" + ds.Tables[7].Rows[0]["FileNameT"];
+        //    if (File.Exists(strPath))
+        //    {
+        //        File.Delete(strPath);
+        //    }
+        //    oWrite = File.CreateText(strPath);
+        //    oWrite.WriteLine(output);
+        //    oWrite.Close();
+        //    return dataString;
+         
+        //}
+        public static List<itemlist> GetItemDtls(DataTable dt)
+        {
+            List<itemlist> Item = new List<itemlist>();
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                Item.Add(new itemlist
+                {
+                    SlNo = Convert.ToString(dt.Rows[i]["SlNo"]),
+                    PrdDesc = Convert.ToString(dt.Rows[i]["PrdDesc"]),
+                    IsServc = Convert.ToString(dt.Rows[i]["IsServc"]),
+                    HsnCd = Convert.ToString(dt.Rows[i]["HsnCd"]),
+                    Qty = Convert.ToDouble(dt.Rows[i]["Qty"]),
+                    UnitPrice = Convert.ToDouble(dt.Rows[i]["UnitPrice"]),
+                    TotAmt = Convert.ToDouble(dt.Rows[i]["TotAmt"]),
+                    Discount = Convert.ToDouble(dt.Rows[i]["Discount"]),
+                    PreTaxVal = Convert.ToDouble(dt.Rows[i]["PreTaxVal"]),
+                    AssAmt = Convert.ToDouble(dt.Rows[i]["AssAmt"]),
+                    GstRt = Convert.ToDouble(dt.Rows[i]["GstRt"]),
+                    IgstAmt = Convert.ToDouble(dt.Rows[i]["IgstAmt"]),
+                    CgstAmt = Convert.ToDouble(dt.Rows[i]["CgstAmt"]),
+                    SgstAmt = Convert.ToDouble(dt.Rows[i]["SgstAmt"]),
+                    CesRt = Convert.ToDouble(dt.Rows[i]["CesRt"]),
+                    CesAmt = Convert.ToDouble(dt.Rows[i]["CesAmt"]),
+                    CesNonAdvlAmt = Convert.ToDouble(dt.Rows[i]["CesNonAdvlAmt"]),
+                    StateCesRt = Convert.ToDouble(dt.Rows[i]["StateCesRt"]),
+                    StateCesAmt = Convert.ToDouble(dt.Rows[i]["StateCesAmt"]),
+                    StateCesNonAdvlAmt = Convert.ToDouble(dt.Rows[i]["StateCesNonAdvlAmt"]),
+                    OthChrg = Convert.ToDouble(dt.Rows[i]["OthChrg"]),
+                    TotItemVal = Convert.ToDouble(dt.Rows[i]["TotItemVal"])
+                });
+            }
+
+            return Item;
+        }
+        [HttpPost]
+        // [Route("api/Accounts")]
+        public IHttpActionResult UploadIRNFile()
+        {
+
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable("Table");
+            DataRow drow = dtbl.NewRow();
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            var transtype = HttpContext.Current.Request.Params["transtype"];
+            var cmpid = HttpContext.Current.Request.Params["cmpid"];
+            var vguid = HttpContext.Current.Request.Params["vguid"];
+            var makerip = HttpContext.Current.Request.Params["makerip"];
+            try
+            {
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = Path.GetFileName(file.FileName);
+                    var filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~") + "\\DATA\\EInvoice\\ResponseIrn\\", fileName);
+
+                    if (File.Exists(filePath) == true)
+                    {
+                        dtbl.Columns.Add("STATUS", typeof(string));
+                        dtbl.Columns.Add("STATUSTXT", typeof(string));
+                        drow = dtbl.NewRow();
+                        drow[0] = "104";
+                        drow[1] = fileName + " already exists";
+                        dtbl.Rows.Add(drow);
+                        ds.Merge(dtbl);
+                    }
+                    else
+                    {
+
+                        file.SaveAs(filePath);
+                        ds = fN_upload_IRNFile(fileName, transtype, cmpid, vguid, makerip);
+                        file.SaveAs(filePath);
+
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Import/UploadItemMrpExcelFile");
+            }
+            return Ok(ds);
+
+        }
+        public DataSet fN_upload_IRNFile(string strFileName, string transtype, string CMPID, string VGUID, string MAKERIP)
+        {
+            DataSet ds_fst = new DataSet();
+            DataSet gstDS1 = new DataSet();
+            DataSet gstResust = new DataSet();
+
+            DAL objDal = new DAL();
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            try
+            {
+                strFileName = Path.GetFileName(strFileName);
+                string strExtension;
+                strExtension = Path.GetExtension(strFileName);
+
+                string strFilePath;
+                // strFilePath = HttpContext.Current.Server.MapPath(@"..\") + @"DATA\EInvoice\ResponseIrn\" + strFileName;
+                strFilePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~") + "\\DATA\\EInvoice\\ResponseIrn\\" + strFileName);
+
+
+                DataSet DS = new DataSet();
+                DataSet MP_DS = new DataSet();
+                OleDbDataAdapter Adapter = new OleDbDataAdapter();
+                OleDbConnection myExcelConn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + strFilePath + ";Extended Properties=\"Excel 12.0;HDR=Yes\"; ");
+
+                string Query, sqlconn;
+                // If transtype = "INV" Then
+                Query = string.Format("Select [IRN],[Ack No],[Ack Date],[Doc No],[Doc Date],[Signed QR Code] FROM [{0}]", "UploadedInvoiceDetails$");
+
+
+                OleDbCommand Ecom = new OleDbCommand(Query, myExcelConn);
+                try
+                {
+                    myExcelConn.Open();
+
+                    OleDbDataAdapter oda = new OleDbDataAdapter(Query, myExcelConn);
+                    myExcelConn.Close();
+                    oda.Fill(DS);
+                    DataTable Exceldt = DS.Tables[0];
+                    string invstr = "";
+                    Exceldt.Columns.Add("UserId", typeof(string));
+                    Exceldt.Columns.Add("VGUID", typeof(string));
+                    Exceldt.Columns.Add("TRANSTYPE", typeof(string));
+                    int i = Exceldt.Rows.Count;
+                    for (i = 0; i <= Exceldt.Rows.Count - 1; i++)
+                    {
+                        Exceldt.Rows[i]["UserId"] = CMPID;
+                        Exceldt.Rows[i]["VGUID"] = VGUID;
+                        Exceldt.Rows[i]["TRANSTYPE"] = transtype;
+                    }
+
+                    SqlConnection con = new SqlConnection();
+
+                    // creating object of SqlBulkCopy    
+                    SqlBulkCopy objbulk = new SqlBulkCopy(System.Configuration.ConfigurationManager.AppSettings["conString_Manilal"]);
+                    sqlconn = System.Configuration.ConfigurationManager.AppSettings["conString_Manilal"];
+                    con = new SqlConnection(sqlconn);
+
+                    // assigning Destination table name    
+                    objbulk.DestinationTableName = "ACC_INVOICE_EINVOICE_EXCEL";
+                    // Mapping Table column    
+                    objbulk.ColumnMappings.Add("Doc No", "INV_NO");
+                    objbulk.ColumnMappings.Add("Ack No", "ACKNO");
+                    objbulk.ColumnMappings.Add("Ack Date", "ACKDATE");
+                    objbulk.ColumnMappings.Add("IRN", "IRNNO");
+                    objbulk.ColumnMappings.Add("Doc Date", "INV_DATE");
+                    // objbulk.ColumnMappings.Add("Inv Value.", "TOTALAMT")
+                    objbulk.ColumnMappings.Add("Signed QR Code", "QRCODE");
+                    objbulk.ColumnMappings.Add("UserId", "USERID");
+                    objbulk.ColumnMappings.Add("VGUID", "VGUID");
+                    objbulk.ColumnMappings.Add("TRANSTYPE", "TRANSTYPE");
+
+                    // inserting Datatable Records to DataBase    
+                    con.Open();
+
+
+                    objbulk.WriteToServer(Exceldt);
+                    con.Close();
+                    ds_fst = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_EINVOICE_UPLOAD_XL_UPDATEGSTIRN", CMPID, MAKERIP, VGUID, strFileName, strFilePath, transtype);
+                }
+                catch (Exception excelEx)
+                {
+                    //Console.WriteLine($"Excel Operation Failed: {excelEx.Message}");
+                    //Console.WriteLine($"Stack Trace: {excelEx.StackTrace}");
+                    //ErrorLog.Error(excelEx, "Accounts/ExcelProcessing");
+                    DataTable dtbl = new DataTable("Table");
+                    // DataRow drow = new DataRow;
+                    DataRow drow = dtbl.NewRow();
+                    dtbl.Columns.Add("STATUS", typeof(string));
+                    dtbl.Columns.Add("STATUSTXT", typeof(string));
+                    drow = dtbl.NewRow();
+                    drow[0] = "103";
+                    drow[1] = excelEx.Message;
+                    dtbl.Rows.Add(drow);
+                    ds_fst.Merge(dtbl);
+                    throw; // Re-throw to stop execution or let outer catch handle it
+
+                }
+                finally
+                {
+                    if (myExcelConn.State == ConnectionState.Open)
+                    {
+                        myExcelConn.Close();
+                    }
+                }
+
+
+
+            }
+
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fN_upload_ExcelFile");
+            }
+            return ds_fst;
+
+
+        }
+
+        //[HttpPost]
+        //// [Route("api/Accounts")]
+        //public IHttpActionResult UploadIRNFile()
+        //{
+        //    //HttpResponseMessage response = null;
+        //    DataSet ds = new DataSet();
+        //    var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+        //    var transtype = HttpContext.Current.Request.Params["transtype"];
+        //    var cmpid = HttpContext.Current.Request.Params["cmpid"];
+        //    var vguid = HttpContext.Current.Request.Params["vguid"];
+        //    var makerip = HttpContext.Current.Request.Params["makerip"];
+        //    if (file != null && file.ContentLength > 0)
+        //    {
+
+        //        var fileName = Path.GetFileName(file.FileName);
+        //        var filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~") + "\\DATA\\EInvoice\\ResponseIrn\\", fileName);
+        //        file.SaveAs(filePath);
+        //        ds = fN_upload_IRNFile(fileName, transtype, cmpid, vguid, makerip);
+        //    }
+        //    return Ok(ds);
+
+        //}
+        //public DataSet fN_upload_IRNFile(string strFileName, string transtype, string CMPID, string VGUID, string MAKERIP)
+        //{
+        //    DataSet ds_fst = new DataSet();
+        //    DataSet gstDS1 = new DataSet();
+        //    DataSet gstResust = new DataSet();
+
+        //    DAL objDal = new DAL();
+        //    var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+        //    try
+        //    {
+        //        strFileName = Path.GetFileName(strFileName);
+        //        string strExtension;
+        //        strExtension = Path.GetExtension(strFileName);
+
+        //        string strFilePath;
+        //        // strFilePath = HttpContext.Current.Server.MapPath(@"..\") + @"DATA\EInvoice\ResponseIrn\" + strFileName;
+        //        strFilePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~") + "\\DATA\\EInvoice\\ResponseIrn\\" + strFileName);
+        //        if (File.Exists(strFilePath) == true)
+        //        {
+        //            //lblError.Visible = true;
+        //            //lblError.Text = strFileName + " File Already Exists - Please Check";
+
+        //            //  return;
+        //        }
+
+        //         file.SaveAs(strFilePath);
+
+        //        // Step 2
+
+        //        DataSet DS = new DataSet();
+        //        DataSet MP_DS = new DataSet();
+        //        OleDbDataAdapter Adapter = new OleDbDataAdapter();
+        //        OleDbConnection myExcelConn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + strFilePath + ";Extended Properties=\"Excel 12.0;HDR=Yes\"; ");
+
+        //        string Query, sqlconn;
+        //        // If transtype = "INV" Then
+        //        Query = string.Format("Select [IRN],[Ack No],[Ack Date],[Doc No],[Doc Date],[Signed QR Code] FROM [{0}]", "UploadedInvoiceDetails$");
+        //        // ElseIf transtype = "CN" Then
+        //        // Query = String.Format("Select [IRN],[Ack No],[Ack Date],[Doc No],[Doc Date],[Signed QR Code] FROM [{0}]", "Sheet1$")
+        //        // End If
+
+        //        OleDbCommand Ecom = new OleDbCommand(Query, myExcelConn);
+        //        myExcelConn.Open();
+
+        //        OleDbDataAdapter oda = new OleDbDataAdapter(Query, myExcelConn);
+        //        myExcelConn.Close();
+        //        oda.Fill(DS);
+        //        DataTable Exceldt = DS.Tables[0];
+        //        string invstr = "";
+        //        Exceldt.Columns.Add("UserId", typeof(string));
+        //        Exceldt.Columns.Add("VGUID", typeof(string));
+        //        Exceldt.Columns.Add("TRANSTYPE", typeof(string));
+        //        int i = Exceldt.Rows.Count;
+        //        for (i = 0; i <= Exceldt.Rows.Count - 1; i++)
+        //        {
+        //            Exceldt.Rows[i]["UserId"] = CMPID;
+        //            Exceldt.Rows[i]["VGUID"] = VGUID;
+        //            Exceldt.Rows[i]["TRANSTYPE"] = transtype;
+        //        }
+
+
+        //        SqlConnection con = new SqlConnection();
+
+        //        // creating object of SqlBulkCopy    
+        //        SqlBulkCopy objbulk = new SqlBulkCopy(System.Configuration.ConfigurationManager.AppSettings["conString_Manilal"]);
+        //        sqlconn = System.Configuration.ConfigurationManager.AppSettings["conString_Manilal"];
+        //        con = new SqlConnection(sqlconn);
+
+        //        // assigning Destination table name    
+        //        objbulk.DestinationTableName = "ACC_INVOICE_EINVOICE_EXCEL";
+        //        // Mapping Table column    
+        //        objbulk.ColumnMappings.Add("Doc No", "INV_NO");
+        //        objbulk.ColumnMappings.Add("Ack No", "ACKNO");
+        //        objbulk.ColumnMappings.Add("Ack Date", "ACKDATE");
+        //        objbulk.ColumnMappings.Add("IRN", "IRNNO");
+        //        objbulk.ColumnMappings.Add("Doc Date", "INV_DATE");
+        //        // objbulk.ColumnMappings.Add("Inv Value.", "TOTALAMT")
+        //        objbulk.ColumnMappings.Add("Signed QR Code", "QRCODE");
+        //        objbulk.ColumnMappings.Add("UserId", "USERID");
+        //        objbulk.ColumnMappings.Add("VGUID", "VGUID");
+        //        objbulk.ColumnMappings.Add("TRANSTYPE", "TRANSTYPE");
+
+        //        // inserting Datatable Records to DataBase    
+        //        con.Open();
+
+
+        //        // DataSet ds_fst = null/* TODO Change to default(_) if this is not a reference type */;
+        //      //  DataSet ds_fst = new DataSet();
+        //        objbulk.WriteToServer(Exceldt);
+        //        con.Close();
+
+        //       ds_fst = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_EINVOICE_UPLOAD_XL_UPDATEGSTIRN", CMPID, MAKERIP, VGUID, strFileName, strFilePath, transtype);
+
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLog.Error(ex, "Accounts/fN_upload_ExcelFile");
+        //    }
+        //    return ds_fst;
+        //    //return "success";
+        //    //return Ok(gstDS1);
+        //}
+        /* Added for bankpayment tds */
+
+        [HttpGet]
+        public IHttpActionResult ACC_CHEQUE_PREVIEWPRINT_PAGELOAD_NG(string CMPID, string CMPCODE, string CITYCODE1, string STRCHEQUENO, string COUNT, string OURBANK, string ENTRYNO, string STRVALUE, string MAKERIP)//CHQUE STATUS
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CHEQUE_PREVIEWPRINT_PAGELOAD_NG", CMPID, CMPCODE, CITYCODE1, STRCHEQUENO, COUNT, OURBANK, ENTRYNO, STRVALUE, MAKERIP);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CHEQUE_PREVIEWPRINT_PAGELOAD_NG");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_BRBPCRCPCE_RESET_NG(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_RESET_NG", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_RESET_NG");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_BRBPCRCPCE_PAYORDER_GENERATE_NG(string CMPID, string CMPCODE, string CITYCODE1, string OURBANK, String BPReqNo, String MAKERID, String MAKERIP)//CHQUE STATUS
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_PAYORDER_GENERATE_NG", CMPID, CMPCODE, CITYCODE1, OURBANK, BPReqNo, MAKERID, MAKERIP);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_PAYORDER_GENERATE");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_BRBPCRCPCE_TMP_DEL_NG(string ID, string VGUID, string ACC_BANKDTLS_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_TMP_DEL_NG", ID, VGUID, ACC_BANKDTLS_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_TMP_DEL_NG");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_BPDIIDE_TDS_RESET_NG(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BPDIIDE_TDS_RESET_NG", VGUID);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BPDIIDE_TDS_RESET_NG");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_BRBPCRCPCE_View_NG(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS, String CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_VIEW_NG", CMPCODE, CITYCODE, ENTRYNO, VGUID, STATUS, CMPID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_View_NG");
+            }
+            return Ok(ds);
+        }
+
+        [HttpPost]
+        public IHttpActionResult ACC_BRBPCRCPCE_IU_NG([FromBody]BRBPCRCPCE BR)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            string spName = "";
+            if (BR.ENTRYNO == " ")
+            {
+                spName = "USP_ACC_BRBPCRCPCE_INSERT_NG";
+            }
+            else
+            {
+                spName = "USP_ACC_BRBPCRCPCE_UPDATE_NG";
+            }
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, spName, BR.CMPID, BR.CMPCODE, BR.CITYCODE1, BR.CITYCODE, BR.USERNAME, BR.ENTRYNO, BR.ENTRYDT, BR.STATUS, (BR.OURBANK != null) ? BR.OURBANK : "", (BR.OURBANKNM != null) ? BR.OURBANKNM : "", BR.CHEQUETYPE, (BR.CHEQUENO != null) ? BR.CHEQUENO : "", (BR.CHEQUEDT != null) ? BR.CHEQUEDT : "", (BR.BANK != null) ? BR.BANK : "", BR.NARRATION, BR.ACTUALAMOUNT, BR.VGUID, BR.MAKER_ID, BR.MAKER_IP, BR.NOTOVERFLAG, BR.ACTION, BR.PAYEENAME, BR.BANKREFNO);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_IU_NG");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_BPDIIDE_TDS_TMP_IU_NG([FromBody]StaffPurchaseInvoiceDtls PID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BPDIIDE_TDS_TMP_IU_NG", PID.cmpid, PID.STATUS, PID.VGUID, PID.STR);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BPDIIDE_TDS_TMP_IU_NG");
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_BRBPCRCPCE_TMP_IU_NG([FromBody]BRBPCRCPCEDTL BRD)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            string spName = "";
+            if (BRD.ISOLDENTRY == "1")
+            {
+                spName = "USP_ACC_BRBPCRCPCE_TMP_IU_OLD";
+            }
+            else
+            {
+                spName = "USP_ACC_BRBPCRCPCE_TMP_IU_NG";
+            }
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, spName, BRD.ID, BRD.ENTRYNO, BRD.CLIENT, (BRD.JOBNO != null) ? BRD.JOBNO : "", (BRD.BILLNO != null) ? BRD.BILLNO : "", BRD.DEDUCTION, BRD.AMOUNT, BRD.ENTRYTYPE, BRD.EMP_CODE, BRD.USERNAME, BRD.CRPARENTENTRYNO, (BRD.NARRATION != null) ? BRD.NARRATION : "", BRD.IS_NOT_EDIT_ABLE, BRD.ITEMCODE, (BRD.DEPTID != null) ? BRD.DEPTID : "", BRD.VGUID, BRD.ACCOUNT_NAME, BRD.ITEM, (BRD.DEPARTMENT != null) ? BRD.DEPARTMENT : "", BRD.ACC_BANKDTLS_ID, BRD.STATUS, BRD.ISJOBREPORT, BRD.EMP_CODE_VALUE, BRD.EMP_CODE_TEXT, BRD.ITEM_DATAVALUE, BRD.CMPCODE, BRD.CITYCODE, BRD.CMPID, BRD.IS_GST, BRD.ISTDSCALC, BRD.IS_TDS, BRD.GSTRATE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_TMP_IU_NG");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_BP_TDSCAL(string ENTRYDT, string VGUID, string CMPCODE, string CMPID, string CITYCODE, string STATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BP_TDSCAL", ENTRYDT, VGUID, CMPCODE, CMPID, CITYCODE, STATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BP_TDSCAL");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_BP_TDSCAL_NG(string SUPPCODE, string PURCHASEDT, string VGUID, string CMPCODE, string CMPID, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BP_TDSCAL_NG", SUPPCODE, PURCHASEDT, VGUID, CMPCODE, CMPID, CITYCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BP_TDSCAL_NG");
+            }
+            return Ok(ds);
+        }
+        /*  Added For Staff Purchase Request  14/08/2020*/
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_PAGELOAD(string cmp_code, string citycode, string citycode1, string PSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_PAGELOAD", cmp_code, citycode, citycode1, PSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_PAGELOAD");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_VIEW(string cmp_code, string citycode, string ENTRYNO, string VGUID, string STATUS,string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_VIEW", cmp_code, citycode, ENTRYNO, VGUID, STATUS,CMPID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_VIEW");
+            }
+            return Ok(ds);
+        }
+
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_INSERT([FromBody]StaffPurchaseInvoiceMaster PIM)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_INSERT", PIM.CMPID, PIM.CMPCODE, PIM.CITYCODE1, PIM.CITYCODE, PIM.USERNAME, (PIM.ENTRYNO != null)? PIM.ENTRYNO :"", PIM.ENTRYDT, PIM.STATUS, PIM.SUP_CODE, PIM.SUP_NAME, PIM.SUP_INVNO, PIM.SUP_INVDT, PIM.SUP_BILLRECEIVEDDT, PIM.SUP_DUEDT, PIM.PASSFLAG, PIM.PASSEDBY, PIM.PASSEDAMT, PIM.INVAMT, PIM.VOUCHERNO, PIM.MAWBN0, PIM.FREIGHTG100235, PIM.SURCHARGEG101468, PIM.AIRFRTCOMMG100153, PIM.FRTREBATEG100186, PIM.NARRATION, PIM.ACTUALAMOUNT, PIM.VGUID, PIM.MAKER_ID, PIM.MAKER_IP, PIM.ACTION, PIM.DOCUMENTG100179, PIM.FK_SUP_ADDR_ID, PIM.AMSENSEXP_G102024, PIM.MISCEXP_G102025);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_INSERT");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_UPDATE([FromBody]StaffPurchaseInvoiceMaster PIM)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_UPDATE", PIM.CMPID, PIM.CMPCODE, PIM.CITYCODE1, PIM.CITYCODE, PIM.USERNAME, PIM.ENTRYNO, PIM.ENTRYDT, PIM.STATUS, PIM.SUP_CODE, PIM.SUP_NAME, PIM.SUP_INVNO, PIM.SUP_INVDT, PIM.SUP_BILLRECEIVEDDT, PIM.SUP_DUEDT, PIM.PASSFLAG, PIM.PASSEDBY, PIM.PASSEDAMT, PIM.INVAMT, PIM.VOUCHERNO, PIM.MAWBN0, PIM.FREIGHTG100235, PIM.SURCHARGEG101468, PIM.AIRFRTCOMMG100153, PIM.FRTREBATEG100186, PIM.NARRATION, PIM.ACTUALAMOUNT, PIM.VGUID, PIM.MAKER_ID, PIM.MAKER_IP, PIM.ACTION, PIM.DOCUMENTG100179, PIM.FK_SUP_ADDR_ID, PIM.AMSENSEXP_G102024, PIM.MISCEXP_G102025);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_UPDATE");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_TMP_DEL(string ID, string VGUID, string ACC_PURCHASEDTLS_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_TMP_DEL", ID, VGUID, ACC_PURCHASEDTLS_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_TMP_DEL");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_RESET(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_RESET", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_RESET");
+            }
+            return Ok(ds);
+        }
+       
+
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_TMP_IU([FromBody]StaffPurchaseInvoiceDtls PID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_TMP_IU", PID.ID, PID.ENTRYNO, PID.CLIENT, PID.JOBNO, PID.DEDUCTION, PID.AMOUNT, PID.USERNAME, PID.NARRATION, PID.IS_NOT_EDIT_ABLE, PID.ITEMCODE, PID.VGUID, PID.ACCOUNT_NAME, PID.ITEM, PID.ACC_PURCHASEDTLS_ID, PID.STATUS, PID.IsJobReport, PID.ITEM_DATAVALUE, PID.SRPIPASSAMOUNT,PID.cmpid); 
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_TMP_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_TMP_IUOLD([FromBody]StaffPurchaseInvoiceDtls PID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_TMP_IU_OLD", PID.ID, PID.ENTRYNO, PID.CLIENT, PID.JOBNO, PID.DEDUCTION, PID.AMOUNT, PID.USERNAME, PID.NARRATION, PID.IS_NOT_EDIT_ABLE, PID.ITEMCODE, PID.VGUID, PID.ACCOUNT_NAME, PID.ITEM, PID.ACC_PURCHASEDTLS_ID, PID.STATUS, PID.IsJobReport, PID.ITEM_DATAVALUE, PID.SRPIPASSAMOUNT,PID.cmpid);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_TMP_IUOLD");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_SEARCH_RPI(string PUR_CODE, string PUR_SUPPLIER, string PUR_INVNO, string PUR_JOBNO, string AMOUNT, string FROMDATE, string TODATE, string cmp_code, string citycode, string TYPE, string DISPLAYTYPE, string YEAR_ID, string FIN_STARTDATE, string FIN_ENDDATE, string USERID, string STATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_SEARCH_REQUEST", (PUR_CODE != null) ? PUR_CODE : "", (PUR_SUPPLIER != null) ? PUR_SUPPLIER : "", (PUR_INVNO != null) ? PUR_INVNO : "", (PUR_JOBNO != null) ? PUR_JOBNO : "", (AMOUNT != null) ? AMOUNT : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", cmp_code, citycode, TYPE, DISPLAYTYPE, YEAR_ID, FIN_STARTDATE, FIN_ENDDATE, USERID, STATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_SEARCH_RPI");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_SEARCH_PI(string PUR_CODE, string PUR_SUPPLIER, string PUR_INVNO, string PUR_JOBNO, string AMOUNT, string FROMDATE, string TODATE, string cmp_code, string citycode, string TYPE, string DISPLAYTYPE, string YEAR_ID, string FIN_STARTDATE, string FIN_ENDDATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_N_Purchase_Search", (PUR_CODE != null) ? PUR_CODE : "", (PUR_SUPPLIER != null) ? PUR_SUPPLIER : "", (PUR_INVNO != null) ? PUR_INVNO : "", (PUR_JOBNO != null) ? PUR_JOBNO : "", (AMOUNT != null) ? AMOUNT : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", cmp_code, citycode, TYPE, DISPLAYTYPE, (YEAR_ID!=null)? YEAR_ID:"", FIN_STARTDATE, FIN_ENDDATE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_SEARCH_PI");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_PRINT_PI(string cmp_code, string citycode,string PUR_CODE, string FROMDATE, string TODATE, string PUR_SUPPLIER, string PUR_INVNO, string DISPLAYTYPE, string YEAR_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_Purchase_Search", cmp_code, citycode, (PUR_CODE != null) ? PUR_CODE : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", (PUR_SUPPLIER != null) ? PUR_SUPPLIER : "",(PUR_INVNO != null) ? PUR_INVNO:"", DISPLAYTYPE, YEAR_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_SEARCH_PI");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_PRINT_RPI(string cmp_code, string citycode, string PUR_CODE, string FROMDATE, string TODATE, string PUR_SUPPLIER, string PUR_INVNO, string DISPLAYTYPE, string YEAR_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_RPI_PRINT", cmp_code, citycode, (PUR_CODE != null) ? PUR_CODE : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", (PUR_SUPPLIER != null) ? PUR_SUPPLIER : "", (PUR_INVNO != null) ? PUR_INVNO : "", DISPLAYTYPE, YEAR_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_PRINT_RPI");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_SUPINVNO_VALIDATE(string SUPCODE,string SUPINVNO,string ENTRYNO)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_SUPINVNO_VALIDATE", SUPCODE, SUPINVNO,(ENTRYNO != null) ? ENTRYNO :"");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_SUPINVNO_VALIDATE");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_Purchase_Check_Input_VoucherNo(string VoucherNo)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CHECK_VOUCHERNO_EXIST_IN_JV_PUR_35", VoucherNo);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Purchase_Check_Input_VoucherNo");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_SEARCH_PERDAY(string cmp_code, string citycode, string TYPE, string FIN_STARTDATE, string FIN_ENDDATE, string DAY)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_N_Purchase_Search_Day", cmp_code, citycode, TYPE, FIN_STARTDATE, FIN_ENDDATE, DAY);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_SEARCH_PERDAY");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_RESTALL(string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_RESET_ALL", CMPID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_RESTALL");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MAWBNO_LIST(string CMPID, string CMPCODE, string CITYCODE , string TYPE, string MAWBNO )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MAWB_PAGELOAD",CMPID,CMPCODE,CITYCODE,TYPE, (MAWBNO != null) ? MAWBNO : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MAWBNO_LIST");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MAWBNO_PAGELOAD(string CMPID, string CMPCODE, string CITYCODE,string MAWBNO,string FREIGHT, string SURCHARGE,string AIRFRTCOMM_G100153,string FRTREBATE_G100186,string VGUID,string STATUS,string DOCUMENT_G100179,string AMSENSEXP_G102024, string MISCEXP_G102025 )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MAWB", CMPID, CMPCODE, CITYCODE,MAWBNO, (FREIGHT != null) ? FREIGHT : "0", (SURCHARGE != null) ? SURCHARGE : "0", (AIRFRTCOMM_G100153 != null) ? AIRFRTCOMM_G100153 : "0", (FRTREBATE_G100186 != null) ? FRTREBATE_G100186 : "0",VGUID,STATUS, (DOCUMENT_G100179 != null) ? DOCUMENT_G100179 : "0", (AMSENSEXP_G102024 != null) ? AMSENSEXP_G102024 : "0",  (MISCEXP_G102025 != null) ? MISCEXP_G102025 : "0");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MAWBNO_PAGELOAD");
+            }
+            return Ok(ds);
+        }
+
+        //--MULTICONTAIER PUCHASE 
+        /*
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_TMP_IU([FromBody]StaffPurchaseInvoiceDtls PID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MULTICONTAINER_TMP_IU", PID.ID, PID.ENTRYNO, PID.VGUID, PID.CLIENT, PID.ACCOUNT_NAME, PID.JOBNO, PID.AMOUNT, PID.DEDUCTION, PID.NARRATION, PID.ITEMCODE ,PID.ITEM_DATAVALUE, PID.ACC_PURCHASEDTLS_ID , PID.IsJobReport,PID.cmpid);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MULTICONTAINER_TMP_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }*/
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_TMP_IU([FromBody]StaffPurchaseInvoiceDtls PID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MULTICONTAINER_TMP_IU", PID.ID, (PID.ENTRYNO == null) ? "" : PID.ENTRYNO, PID.VGUID, PID.CLIENT, PID.ACCOUNT_NAME, PID.JOBNO, PID.AMOUNT, PID.DEDUCTION, PID.NARRATION, (PID.ITEMCODE == null) ? "" : PID.ITEMCODE, (PID.ITEM_DATAVALUE == null) ? "" : PID.ITEM_DATAVALUE, PID.ACC_PURCHASEDTLS_ID, PID.IsJobReport, PID.cmpid);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MULTICONTAINER_TMP_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_IU(string CMPCODE, string CITYCODE1,string VGUID,string TYPE,String CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MULTTCONTAINER_STEP1_IU", CMPCODE,  CITYCODE1, VGUID,TYPE ,CMPID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MULTICONTAINER_IU");
+            }
+            return Ok(ds);
+        }
+
+        //----AUTHORISATION INVOICE
+
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_invoice_auth_list(string  cmpid , string cmp_code, string RoleType , string Type )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_PRINT_AUTHORISATION", cmpid,cmp_code,RoleType,Type);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_invoice_auth_list");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_invoice_Proforma_Print_list(string cmpid, string cmp_code, string RoleType, string Type)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_PRINT_PROFORMA_LIST", cmpid, cmp_code, RoleType, Type);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_invoice_Proforma_Print_list");
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_invoice_Authorisation_Update([FromBody]Authorisation obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_PRINT_AUTHORISATION_ASSIGN", obj.cmp_code,obj.citycode,obj.NOSTR,obj.CHKAuthorityFlag,obj.CMPID);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_invoice_Authorisation_Update");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_invoice_view(string invoiceno, string cmp_code )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_PRINT_AUTHORISATION_VIEW", invoiceno, cmp_code);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_invoice_view");
+            }
+            return Ok(ds);
+        }
+        //CreditNote UNAuthorisation 
+        [HttpPost]
+        public IHttpActionResult ACC_CN_Authorisation_Update([FromBody]Authorisation obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_PRINT_AUTHORISATION_ASSIGN", obj.cmp_code, obj.citycode, obj.NOSTR, obj.CHKAuthorityFlag, obj.CMPID);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_CN_Authorisation_Update");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CN_view(string CNno, string cmp_code,string citycode,string type,string finstartdt,string fin_enddt)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_N_CreditNote_Print", CNno, cmp_code,citycode,type,finstartdt,fin_enddt);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CN_view");
+            }
+            return Ok(ds);
+        }
+        //invoice UNAuthorisation 
+        [HttpGet]
+        public IHttpActionResult ACC_invoice_unauth_list(string cmpid, string cmp_code, string RoleType, string Type)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_PRINT_unAUTHORISATION", cmpid, cmp_code, RoleType, Type);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_invoice_unauth_list");
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_invoice_UnAuthorisation_Update([FromBody]Authorisation obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_PRINT_UNAUTHORISATION_ASSIGN", obj.cmp_code, obj.citycode, obj.NOSTR, obj.CHKAuthorityFlag, obj.CMPID);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_invoice_unAuthorisation_Update");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_invoice_AUTHORISATION_CHECK(string invno, string cmp_code )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_PRINT_AUTHORISATION_CHECK", invno, cmp_code );
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_invoice_AUTHORISATION_CHECK");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_invoice_Chk_Inv_NONINR(string invno, string cmp_code,string citycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_Acc_Chk_INV_NONINR", invno, cmp_code,citycode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_invoice_Chk_Inv_NONINR");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_invoice_Print(string invno, string cmp_code, string citycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_Acc_INV_Print_New", invno, cmp_code, citycode);
+                            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_invoice_Print");
+            }
+            return Ok(ds);
+        }
+       
+
+        /*INVOICE */
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_PAGE_LOAD(string CMPCODE, string CITYCODE,string CITYCODE1,string cmpid,string INVNO,string type)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_PAGE_LOAD", CMPCODE, CITYCODE, CITYCODE1, cmpid, (INVNO == null) ? "" : INVNO, type);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_PAGE_LOAD");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_LIST_JOB(string frmdt,string todt ,string CMPCODE, string CITYCODE, string CITYCODE1 ,string Type )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_LIST_JOB",frmdt,todt, CMPCODE, CITYCODE, CITYCODE1, Type);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_LIST_JOB");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_JOB_POPULATE(string JOBSTR, string TYPE, string CMPID,string GUID, string INVNO,string CMPCODE )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_JOB_POPULATE", JOBSTR, TYPE, CMPID, GUID, (INVNO == null) ? "" : INVNO, CMPCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_JOB_POPULATE");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_PAYBYDATE_GET(string clientcode, string invdt, string mode, string ISPAYBYDT_AIR, string ISPAYBYDT_SEA,string CREDITPERIOD_SEA,string CREDITPERIOD_AIR, string HAWBDT)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_PAYBYDATE_GET", clientcode,invdt, (mode==null) ? "" : mode, ISPAYBYDT_AIR, ISPAYBYDT_SEA, CREDITPERIOD_SEA, CREDITPERIOD_AIR, (HAWBDT == null)? "" : HAWBDT);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_PAYBYDATE_GET");
+            }
+            return Ok(ds);
+        }
+         
+        [HttpPost]
+        public IHttpActionResult ACC_invoice_Job_TMP([FromBody]InvJobDtls obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_JOBNODTLS_TMP_IU", obj.ID, (obj.INV_NO == null) ? "" : obj.INV_NO, obj.INV_JOBNO, (obj.INV_PKGS == null) ? "" : obj.INV_PKGS, (obj.INV_GRWT == null) ? "" : obj.INV_GRWT, obj.VGUID, obj.ACC_JOBDTLS_ID, obj.CMPID);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_invoice_Job_TMP");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_invoice_Charge_TMP([FromBody]InvChrgeDtls obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_STEP3_CHARGES_DTLS_TMP_IU", obj.ID,(obj.INV_NO==null)?"": obj.INV_NO, obj.INV_CHRGCODE,obj.INV_ACCOUNT,obj.ACCOUNT_NAME,(obj.INV_DESC_CHRG==null)?"": obj.INV_DESC_CHRG, (obj.INV_DESC1_CHRG1==null)?"": obj.INV_DESC1_CHRG1, (obj.INV_DESC2_CHRG1==null)?"": obj.INV_DESC2_CHRG1, obj.INV_TAXABLE,obj.INV_AMOUNT,obj.INV_INRAMT,obj.INV_TAXABLE_AMOUNT,obj.INV_TAXABLE_INRAMT,obj.USERNAME,obj.VGUID,obj.ACC_CHARGDTLS_ID,obj.CMPID,obj.CMPCODE,obj.CITYCODE1,obj.CITYCODE,obj.INV_QTY,obj.INV_RATE,obj.INV_CURRENCY,obj.INV_EXRATE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_invoice_Job_TMP");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_JOB_DELETE(string ID ,string  GUID, string   ACC_JOBDTLS_ID,string MAKERID )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_JOBNODTLS_TMP_DEL", ID , GUID, ACC_JOBDTLS_ID, MAKERID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_JOB_DELETE");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_CHARGES_DELETE(string ID, string GUID, string ACC_CHARGS_ID,string INV_CHRGCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_STEP3_CHRGDTLS_TMP_DEL", ID, GUID, ACC_CHARGS_ID, INV_CHRGCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_CHARGES_DELETE");
+            }
+            return Ok(ds);
+        }
+
+        [HttpPost]
+        public IHttpActionResult ACC_invoice_enclosure_TMPIU([FromBody]InvEnclosure obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_STEP4_ENCLOSURE_DTLS_TMP_IU", (obj.ID==null)?"0": obj.ID, obj.INV_NO, obj.INV_ENCLCODE, obj.INV_DESC, obj.INV_NUMBER, obj.USERNAME, obj.VGUID, (obj.ACC_ENCLDTLS_ID==null)?"0": obj.ACC_ENCLDTLS_ID, obj.CMPID, obj.CMPCODE, obj.CITYCODE1, obj.CITYCODE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_invoice_enclosure_TMPIU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_ENCLOSURE_DELETE(string ID, string GUID, string ACC_ENCLDTLS_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_STEP4_ENCLOSUER_DTLS_TMP_DEL", ID, GUID, ACC_ENCLDTLS_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_ENCLOSURE_DELETE");
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_invoice_Dispatch_TMPIU([FromBody]InvDispatch obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_STEP5_DESPATCH_DTLS_TMP_IU", (obj.ID==null)?"0": obj.ID, obj.INV_NO, obj.INV_DESPCODE, obj.INV_DESC, obj.INV_NUMBER, obj.USERNAME, obj.VGUID, (obj.ACC_DESPDTLS_ID==null)?"0": obj.ACC_DESPDTLS_ID, obj.CMPID, obj.CMPCODE, obj.CITYCODE1, obj.CITYCODE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_invoice_Dispatch_TMPIU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_dispatch_DELETE(string ID, string GUID, string ACC_DESPDTLS_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_STEP5_DESPATCH_DTLS_TMP_DEL", ID, GUID, ACC_DESPDTLS_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_dispatch_DELETE");
+            }
+            return Ok(ds);
+        }
+        
+        [HttpPost]
+        public IHttpActionResult ACC_invoice_INSERT([FromBody]InvoiceMain obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_MAINDTLS_INSERT", obj.CMPID, obj.CMPCODE, obj.CITYCODE1, obj.CITYCODE, (obj.INV_NO == null) ? "" : obj.INV_NO, (obj.INV_DATE == null) ? "" : obj.INV_DATE, obj.INV_CLIENT, (obj.INV_CLIENT_NM == null) ? "" : obj.INV_CLIENT_NM, obj.INV_SHIPPER, obj.INV_BILLTYPE, (obj.INV_PKGS == null) ? "" : obj.INV_PKGS, (obj.INV_TYPEOFPKG == null) ? "" : obj.INV_TYPEOFPKG, (obj.INV_NOOFPCS == null) ? "" : obj.INV_NOOFPCS, (obj.INV_TYPEOFPCS == null) ? "" : obj.INV_TYPEOFPCS, (obj.INV_CLIENTREF == null) ? "" : obj.INV_CLIENTREF, (obj.INV_WT == null) ? "" : obj.INV_WT, (obj.INV_VOL == null) ? "" : obj.INV_VOL, (obj.INV_HAWBNO == null) ? "" : obj.INV_HAWBNO, (obj.INV_HAWBDT == null) ? "" : obj.INV_HAWBDT, (obj.INV_CARRIER == null) ? "" : obj.INV_CARRIER, (obj.INV_GOODS == null) ? "" : obj.INV_GOODS, obj.INV_CUR, obj.INV_CURINR, obj.INV_CURRATE, obj.INV_CURRATE1, (obj.INV_TAX == null) ? "" : obj.INV_TAX, (obj.INV_ADVANCE == null) ? "" : obj.INV_ADVANCE, obj.NARRATIONDESC, obj.VGUID, obj.MAKER_ID, obj.MAKER_IP, (obj.SHIPINGBILLNO == null) ? "" : obj.SHIPINGBILLNO, (obj.SHIPBILLDT == null) ? "" : obj.SHIPBILLDT, obj.paydt, obj.INV_TYPE, obj.CLIENTCONT,obj.INVSTARTDATE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_invoice_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        } 
+        [HttpPost]
+        public IHttpActionResult ACC_invoice_UPDATE([FromBody]InvoiceMain obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_MAINDTLS_UPDATE", obj.CMPID, obj.CMPCODE, obj.CITYCODE1, obj.CITYCODE, (obj.INV_NO == null) ? "" : obj.INV_NO, (obj.INV_DATE == null) ? "" : obj.INV_DATE, obj.INV_CLIENT, (obj.INV_CLIENT_NM == null) ? "" : obj.INV_CLIENT_NM, obj.INV_SHIPPER, obj.INV_BILLTYPE, (obj.INV_PKGS == null) ? "" : obj.INV_PKGS, (obj.INV_TYPEOFPKG == null) ? "" : obj.INV_TYPEOFPKG, (obj.INV_NOOFPCS == null) ? "" : obj.INV_NOOFPCS, (obj.INV_TYPEOFPCS == null) ? "" : obj.INV_TYPEOFPCS, (obj.INV_CLIENTREF == null) ? "" : obj.INV_CLIENTREF, (obj.INV_WT == null) ? "" : obj.INV_WT, (obj.INV_VOL == null) ? "" : obj.INV_VOL, (obj.INV_HAWBNO == null) ? "" : obj.INV_HAWBNO, (obj.INV_HAWBDT == null) ? "" : obj.INV_HAWBDT, (obj.INV_CARRIER == null) ? "" : obj.INV_CARRIER, (obj.INV_GOODS == null) ? "" : obj.INV_GOODS, obj.INV_CUR, obj.INV_CURINR, obj.INV_CURRATE, obj.INV_CURRATE1, (obj.INV_TAX == null) ? "" : obj.INV_TAX, (obj.INV_ADVANCE == null) ? "" : obj.INV_ADVANCE, obj.NARRATIONDESC, obj.VGUID, obj.MAKER_ID, obj.MAKER_IP, (obj.SHIPINGBILLNO == null) ? "" : obj.SHIPINGBILLNO, (obj.SHIPBILLDT == null) ? "" : obj.SHIPBILLDT, obj.paydt, obj.INV_TYPE, obj.CLIENTCONT);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_invoice_UPDATE");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_Search_Pageloag(string cmp_code,string citycode,string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_CMP_FillExpoterCity",cmp_code,citycode,citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_Search_Pageloag");
+            }
+            return Ok(ds);
+        } 
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_Search_List(string InvoiceNo, string Client, string JobNo, string Amount, string FromDate, string ToDate, string cmp_code, string citycode, string TYPE, string Fin_StartDate, string Fin_EndDate, string cmpid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_N_INVSearchClient_Get", (InvoiceNo == null) ? "" : InvoiceNo, (Client == null) ? "" : Client, (JobNo == null) ? "" : JobNo, (Amount == null) ? "" : Amount, (FromDate == null) ? "" : FromDate, (ToDate == null) ? "" : ToDate, cmp_code, citycode, TYPE, Fin_StartDate, Fin_EndDate, cmpid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_Search_List");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_Edit_Populate(string InvoiceNo, string cmp_code, string citycode,string makerid,string vguid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_EDITPOPUALTE", InvoiceNo, cmp_code, citycode,makerid,vguid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_Edit_Populate");
+            }
+            return Ok(ds);
+        }
+        [HttpGet] 
+        public IHttpActionResult ACC_INVOICE_SEARCH_PERDAY(string cmp_code, string citycode, string FIN_STARTDATE, string FIN_ENDDATE, string DAY)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_N_InvoiceList_Day", cmp_code, citycode, FIN_STARTDATE, FIN_ENDDATE, DAY);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_SEARCH_PERDAY");
+            }
+            return Ok(ds);
+        }
+        /*AIR FREIGHT INVOICE*/
+        /*Freight Invoice  step1*/
+        [HttpGet]
+        public IHttpActionResult ACC_INV_MAWB_AIRFRT_CONS_PUR_PAGELOAD(string cmpid, string MakerIP, string cmpcode, string citycode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CONS_PUR_PAGELOAD", cmpid, MakerIP, cmpcode, citycode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INV_MAWB_AIRFRT_CONS_PUR_PAGELOAD");
+            }
+            return Ok(ds);
+        }
+        /*AF invoice History*/
+        [HttpGet]
+        public IHttpActionResult ACC_INV_MAWB_AIRFRT_CONS_PUR_LIST(string cmpid, string cmpcode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CONS_PUR_LIST", cmpid, cmpcode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INV_MAWB_AIRFRT_CONS_PUR_LIST");
+            }
+            return Ok(ds);
+        }
+
+        //[HttpGet]
+        //public IHttpActionResult ACCT_INV_MAWB_FRT_SOF_AUTO(string INVNO, string TransType)
+        //{
+        //    DataSet ds = new DataSet();
+        //    DAL objDal = new DAL();
+        //    string spName = "";
+        //    if (TransType == "INV")
+        //    {
+        //        spName = "USP_ACC_INV_MAWB_AIRFRT_SHAREOFPROFIT";
+        //    }
+        //    else if (TransType == "CRT")
+        //    {
+        //        spName = "USP_ACC_INV_MAWB_AIRFRT_SHAREOFPROFIT_CNINV_IU";
+        //    }
+        //    try
+        //    {
+        //        ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, spName, INVNO);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ds = ErrorLog.Error(ex, "Accounts/ACCT_INV_MAWB_FRT_SOF_AUTO");
+        //    }
+        //    finally
+        //    {
+        //        objDal.Dispose();
+
+        //    }
+        //    return Ok(ds);
+        //}
+        /*STEP1 v2*/
+        //[HttpGet]
+        //public IHttpActionResult ACC_INV_MAWB_AIRFRT_SHAREOFPROFIT_PAGELOAD(string invno)
+        //{
+        //    DataSet ds = new DataSet();
+        //    DAL objDal = new DAL();
+
+        //    try
+        //    {
+
+        //        ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_SHAREOFPROFIT_PAGELOAD", invno);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLog.Error(ex, "Accounts/ACC_INV_MAWB_AIRFRT_SHAREOFPROFIT_PAGELOAD");
+        //    }
+        //    return Ok(ds);
+        //}
+
+        ///*FRT INVOICE DETAIL RESET*/
+        //[HttpGet]
+        //public IHttpActionResult ACCT_INV_MAWB_FRT_SOF_AUTO_RESET(string INVCNCONPI_LOGID)
+        //{
+        //    DataSet ds = new DataSet();
+        //    DAL objDal = new DAL();
+
+        //    try
+        //    {
+
+        //        ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_SHAREOFPROFIT_REST", INVCNCONPI_LOGID);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLog.Error(ex, "Accounts/ACCT_INV_MAWB_FRT_SOF_AUTO_RESET");
+        //    }
+        //    return Ok(ds);
+        //}
+        /*AFAutoviewInv */
+        [HttpGet]
+        public IHttpActionResult ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_INV_VIEW(string INVCNCONPI_LOGID, string INVTYPE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_INV_VIEW", INVCNCONPI_LOGID, INVTYPE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_INV_VIEW");
+            }
+            return Ok(ds);
+        }
+
+        /*AFAutoview Inv v2 */
+        [HttpGet]
+        public IHttpActionResult ACC_INV_MAWB_AIRFRT_INV_VIEW(string INVCNCONPI_LOGID, string FRTINVNO)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_INV_VIEW", INVCNCONPI_LOGID, FRTINVNO);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INV_MAWB_AIRFRT_INV_VIEW");
+            }
+            return Ok(ds);
+        }
+        /* AIRFRT_CN_SHAREOFPROFIT_CN_VIEW */
+        [HttpGet]
+        public IHttpActionResult ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CN_VIEW(string INVCNCONPI_LOGID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CN_VIEW", INVCNCONPI_LOGID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CN_VIEW");
+            }
+            return Ok(ds);
+        }
+        /* AIRFREIGHT_CONSOLE_PURCAHSE_VIEW*/
+        [HttpGet]
+        public IHttpActionResult ACCT_INV_CN_MAWB_AIRFREIGHT_CONSOLE_PURCAHSE_VIEW(string INVCNCONPI_LOGID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CONSPUR_VIEW", INVCNCONPI_LOGID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACCT_INV_CN_MAWB_AIRFREIGHT_CONSOLE_PURCAHSE_VIEW");
+            }
+            return Ok(ds);
+        }
+
+        /* AIRFRT_CN_SHAREOFPROFIT_CONS_PUR */
+        [HttpGet]
+        public IHttpActionResult ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CONS_PUR(string FK_LOGID, string MAWBNO, string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CONS_PUR", FK_LOGID, MAWBNO, CMPID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CONS_PUR");
+            }
+            return Ok(ds);
+        }
+        /*FRT INVOICE DETAIL INVCN RESET*/
+        [HttpGet]
+        public IHttpActionResult ACC_INV_MAWB_AIRFRT_CN_SOF_INVCN_REST(string FK_LOGID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_INVCN_REST", FK_LOGID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INV_MAWB_AIRFRT_CN_SOF_INVCN_REST");
+            }
+            return Ok(ds);
+        }
+
+
+        /*FRT INVOICE DETAIL CN GENERATE*/
+        [HttpGet]
+        public IHttpActionResult ACC_INV_MAWB_AIRFRT_CN_SOF_CONS_PUR_GENERATE(string CMPID, string CMPCODE, string CITYCODE1, string CITYCODE, string FK_LOGID, string LOCALIPADD, string ROUTERIPADD)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CONS_PUR_GENERATE", CMPID, CMPCODE, CITYCODE1, CITYCODE, FK_LOGID, LOCALIPADD, ROUTERIPADD);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INV_MAWB_AIRFRT_CN_SOF_CONS_PUR_GENERATE");
+            }
+            return Ok(ds);
+        }
+        /*FRT INVOICE PURCHASE*/
+        [HttpGet]
+        public IHttpActionResult ACCFRA_TRAN_PURCHASE_PRINT(string entryno)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCFRA_TRAN_PURCHASE_PRINT", entryno);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACCFRA_TRAN_PURCHASE_PRINT");
+            }
+            return Ok(ds);
+        }
+
+
+        /*CREDIT NOTE*/
+        [HttpGet]
+        public IHttpActionResult ACC_CREDITNOTE_SEARCH_PERDAY(string cmp_code, string citycode , string DAY)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_N_CreditNote_day", DAY,cmp_code, citycode, DAY);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CREDITNOTE_SEARCH_PERDAY");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CRTNOTE_JOB_POPULATE(string JOBSTR, string TYPE, string CMPID, string GUID, string INVNO, string CMPCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_JOB_POPULATE", JOBSTR, TYPE, CMPID, GUID, INVNO, CMPCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_JOB_POPULATE");
+            }
+            return Ok(ds);
+        }
+        /*
+       [HttpPost]
+       public IHttpActionResult ACC_CRTNOTE_JOB_TMP([FromBody]InvJobDtls obj)
+       {
+           DataSet ds = new DataSet();
+           DAL objDal = new DAL();
+           try
+           {
+               ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_JOBNODTLS_TMP_IU", obj.ID, obj.INV_NO, obj.INV_JOBNO, (obj.INV_PKGS == null) ? "" : obj.INV_PKGS, (obj.INV_GRWT == null) ? "" : obj.INV_GRWT, obj.VGUID, obj.ACC_JOBDTLS_ID, obj.CMPID);
+           }
+           catch (Exception ex)
+           {
+               ds = ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_JOB_TMP");
+           }
+           finally
+           {
+               objDal.Dispose();
+
+           }
+           return Ok(ds);
+       }*/
+        [HttpPost]
+        public IHttpActionResult ACC_CRTNOTE_JOB_TMP([FromBody]InvJobDtls obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_JOBNODTLS_TMP_IU", obj.ID, (obj.INV_NO == null) ? "" : obj.INV_NO, obj.INV_JOBNO, (obj.INV_PKGS == null) ? "" : obj.INV_PKGS, (obj.INV_GRWT == null) ? "" : obj.INV_GRWT, obj.VGUID, obj.ACC_JOBDTLS_ID, obj.CMPID);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_JOB_TMP");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_CRTNOTE_CHARGE_TMP([FromBody]InvChrgeDtls obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_STEP3_CHARGES_DTLS_TMP_IU", obj.ID, (obj.INV_NO == null) ? "" : obj.INV_NO, obj.INV_CHRGCODE, obj.INV_ACCOUNT, obj.ACCOUNT_NAME, (obj.INV_DESC_CHRG == null) ? "" : obj.INV_DESC_CHRG, (obj.INV_DESC1_CHRG1 == null) ? "" : obj.INV_DESC1_CHRG1, (obj.INV_DESC2_CHRG1 == null) ? "" : obj.INV_DESC2_CHRG1, obj.INV_TAXABLE, obj.INV_AMOUNT, obj.INV_INRAMT, obj.INV_TAXABLE_AMOUNT, obj.INV_TAXABLE_INRAMT, obj.USERNAME, obj.VGUID, obj.ACC_CHARGDTLS_ID, obj.CMPID, obj.CMPCODE, obj.CITYCODE1, obj.CITYCODE, obj.INV_QTY, obj.INV_RATE, obj.INV_CURRENCY, obj.INV_EXRATE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_CHARGE_TMP");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CRTNOTE_JOB_DELETE(string ID, string GUID, string ACC_JOBDTLS_ID, string MAKERID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_JOBNODTLS_TMP_DEL", ID, GUID, ACC_JOBDTLS_ID, MAKERID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_JOB_DELETE");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CRTNOTE_CHARGES_DELETE(string ID, string GUID, string ACC_CHARGS_ID, string INV_CHRGCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_CHRGDTLS_TMP_DEL", ID, GUID, ACC_CHARGS_ID, INV_CHRGCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_CHARGES_DELETE");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult ACC_CRTNOTE_INVOICE_TMP([FromBody]creditnoteBillno obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_INVOICE_DTLS_TMP_IU", obj.ID, (obj.CRT_NO == null) ? "" : obj.CRT_NO, obj.CRT_INVNO, obj.CRT_AMOUNT, obj.CRT_ADJUST, obj.CMPID, obj.VGUID, obj.ACC_INVDTLS_ID, obj.INVSTATUS, (obj.CRT_CLIENT == null) ? "" : obj.CRT_CLIENT);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_INVOICE_TMP");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CRTNOTE_INV_DELETE(string ID, string GUID, string ACC_INVDTLS_ID, string MAKERID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_INVDTLS_TMP_DEL", ID, GUID, ACC_INVDTLS_ID, MAKERID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_INV_DELETE");
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_CRTNOTE_Final_IU([FromBody]creditnote obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_FINAL_IU", (obj.CMPID == null) ? "" : obj.CMPID, (obj.CMPCODE == null) ? "" : obj.CMPCODE, (obj.CITYCODE1 == null) ? "" : obj.CITYCODE1, (obj.CITYCODE == null) ? "" : obj.CITYCODE, (obj.ID == null) ? "" : obj.ID, (obj.CRT_NO == null) ? "" : obj.CRT_NO, (obj.CRT_DATE == null) ? "" : obj.CRT_DATE, (obj.CRT_CLIENT == null) ? "" : obj.CRT_CLIENT, (obj.CRT_SHIPPER == null) ? "" : obj.CRT_SHIPPER, (obj.CRT_BILLTYPE == null) ? "" : obj.CRT_BILLTYPE, (obj.CRT_PKGS == null) ? "" : obj.CRT_PKGS, (obj.CRT_TYPEOFPKG == null) ? "" : obj.CRT_TYPEOFPKG, (obj.CRT_NOOFPCS == null) ? "" : obj.CRT_NOOFPCS, (obj.CRT_TYPEOFPCS == null) ? "" : obj.CRT_TYPEOFPCS, (obj.CRT_CLIENTREF == null) ? "" : obj.CRT_CLIENTREF, (obj.CRT_WT == null) ? "" : obj.CRT_WT, (obj.CRT_VOL == null) ? "" : obj.CRT_VOL, (obj.CRT_HAWBNO == null) ? "" : obj.CRT_HAWBNO, (obj.CRT_HAWBDT == null) ? "" : obj.CRT_HAWBDT, (obj.CRT_CARRIER == null) ? "" : obj.CRT_CARRIER, (obj.CRT_GOODS == null) ? "" : obj.CRT_GOODS, (obj.CRT_CUR == null) ? "" : obj.CRT_CUR, (obj.CRT_CURINR == null) ? "" : obj.CRT_CURINR, (obj.CRT_CURRATE == null) ? "" : obj.CRT_CURRATE, (obj.CRT_CURRATE1 == null) ? "" : obj.CRT_CURRATE1, (obj.CRT_TAX == null) ? "" : obj.CRT_TAX, (obj.CRT_CUR_NM == null) ? "" : obj.CRT_CUR_NM, (obj.NARRATIONDESC == null) ? "" : obj.NARRATIONDESC, (obj.MAKERIP == null) ? "" : obj.MAKERIP, (obj.BILLTOADDID == null) ? "" : obj.BILLTOADDID, (obj.VGUID == null) ? "" : obj.VGUID, (obj.CN_TYPE == null) ? "" : obj.CN_TYPE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_Final_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CREDITNOTE_Search_List(string CREDITNO, string Client, string JobNo, string Amount, string FromDate, string ToDate, string cmp_code, string citycode, string TYPE, string yearid, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_N_CreditNote_Search", (CREDITNO != null) ? CREDITNO : "", (Client != null) ? Client : "", (JobNo != null) ? JobNo : "", (Amount != null) ? Amount : "", (FromDate != null) ? FromDate : "", (ToDate != null) ? ToDate : "", cmp_code, citycode, TYPE, (yearid != null) ? yearid : "" , Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CREDITNOTE_Search_List");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CRTNOTE_Edit_Populate(string CRTNOTE, string cmp_code, string citycode, string makerid, string vguid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CRTNOTE_EDITPOPUALTE", CRTNOTE, cmp_code, citycode, makerid, vguid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CRTNOTE_Edit_Populate");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_creditNote_Chk_Inv_NONINR(string invno, string cmp_code, string citycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CHK_CREDITNOTE_NONINR", invno, cmp_code, citycode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_creditNote_Chk_Inv_NONINR");
+            }
+            return Ok(ds);
+        }
+        /* JV start */
+        [HttpGet]
+        public IHttpActionResult ACC_JV_PAGELOAD(string cmp_code, string citycode, string citycode1, string PSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_JV_PAGELOAD", cmp_code, citycode, citycode1, PSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_JV_PAGELOAD");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult ACC_JV_IU([FromBody]JournalVoucherMaster JVM)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            string spName = "";
+            if (JVM.ENTRYNO == " ")
+            {
+                spName = "USP_ACC_JV_INSERT";
+            }
+            else
+            {
+                spName = "USP_ACC_JV_UPDATE";
+            }
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, spName, JVM.CMPID, JVM.CMPCODE, JVM.CITYCODE1, JVM.CITYCODE, JVM.USERNAME, JVM.ENTRYNO, JVM.ENTRYDT, JVM.STATUS, JVM.NARRATION, JVM.VGUID, JVM.MAKER_ID, JVM.MAKER_IP, JVM.ACTION);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_JV_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult ACC_JV_TMP_IU([FromBody]JournalVoucherDtls JVD)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            string spName = "";
+            if (JVD.ISOLDENTRY == "1")
+            {
+                spName = "USP_ACC_JV_TMP_IU_OLD";
+            }
+            else
+            {
+                spName = "USP_ACC_JV_TMP_IU";
+            }
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, spName, JVD.ID, JVD.ENTRYNO, JVD.CLIENT, (JVD.JOBNO != null) ? JVD.JOBNO : "", (JVD.BILLNO != null) ? JVD.BILLNO : "", JVD.JV_TRN, JVD.DEBIT, JVD.CREDIT, JVD.ENTRYTYPE, (JVD.NARRATION != null) ? JVD.NARRATION : "", JVD.ITEMCODE, (JVD.DEPTID != null) ? JVD.DEPTID : "", JVD.VGUID, JVD.ACCOUNT_NAME, JVD.ITEM, (JVD.DEPARTMENT != null) ? JVD.DEPARTMENT : "", JVD.JV_DTLS_ID, JVD.STATUS, JVD.ISJOBREPORT, JVD.ITEM_DATAVALUE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_JV_TMP_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_JV_TMP_DEL(string ID, string VGUID, string JV_DTLS_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_JV_TMP_DEL", ID, VGUID, JV_DTLS_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_JV_TMP_DEL");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_JV_RESET(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_JV_RESET", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_JV_RESET");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_JV_SEARCH(string CODE, string FROMDATE, string TODATE, string TYPEVALUE, string TYPE, string Details_flag, string CITYCODE, string CMP_CODE, string YEAR_ID, string FIN_STARTDATE, string FIN_ENDDATE, string USERID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            string spName = "";
+            if (TYPE == "JV")
+            {
+                spName = "usp_Acct_N_JV_Search_new";
+            }
+            else
+            {
+                spName = "USP_ACC_JV_SEARCH_REQ";
+            }
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, spName, (CODE != null) ? CODE : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", (TYPEVALUE != null) ? TYPEVALUE : "", (TYPE != null) ? TYPE : "", (Details_flag != null) ? Details_flag : "", CITYCODE, CMP_CODE, YEAR_ID, FIN_STARTDATE, FIN_ENDDATE, USERID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_JV_SEARCH");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_JV_View(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_JV_VIEW", CMPCODE, CITYCODE, ENTRYNO, VGUID, STATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_JV_View");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_JV_JOBNO_VALIDATE(string JVJOBNO, string JVACCOUNT)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_JV_VALIDATE_JOBNO", JVJOBNO, JVACCOUNT);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_JV_JOBNO_VALIDATE");
+            }
+            return Ok(ds);
+        }
+        /*   Added on 07092020 for BankReceipt */
+
+        [HttpGet]
+        public IHttpActionResult ACC_CASHBOOK_BRBPCRCPCE_PAGELOAD(string CMPCODE, string CITYCODE, string CITYCODE1, string PSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_PAGELOAD", CMPCODE, CITYCODE, CITYCODE1, PSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CASHBOOK_BRBPCRCPCE_PAGELOAD");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult ACC_BRBPCRCPCE_IU([FromBody]BRBPCRCPCE BR)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            string spName = "";
+            if (BR.ENTRYNO == " ")
+            {
+                spName = "USP_ACC_BRBPCRCPCE_INSERT";
+            }
+            else
+            {
+                spName = "USP_ACC_BRBPCRCPCE_UPDATE";
+            }
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, spName, BR.CMPID, BR.CMPCODE, BR.CITYCODE1, BR.CITYCODE, BR.USERNAME, BR.ENTRYNO, BR.ENTRYDT, BR.STATUS, (BR.OURBANK != null) ? BR.OURBANK : "", (BR.OURBANKNM != null) ? BR.OURBANKNM : "", BR.CHEQUETYPE, (BR.CHEQUENO != null) ? BR.CHEQUENO : "", (BR.CHEQUEDT != null) ? BR.CHEQUEDT : "", (BR.BANK != null) ? BR.BANK : "", BR.NARRATION, BR.ACTUALAMOUNT, BR.VGUID, BR.MAKER_ID, BR.MAKER_IP, BR.NOTOVERFLAG, BR.ACTION, BR.PAYEENAME, (BR.BANKREFNO != null) ? BR.BANKREFNO : "");
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_BRBPCRCPCE_TMP_DEL(string ID, string VGUID, string ACC_BANKDTLS_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_TMP_DEL", ID, VGUID, ACC_BANKDTLS_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_TMP_DEL");
+            }
+            return Ok(ds);
+        }
+
+
+
+        [HttpPost]
+        public IHttpActionResult ACC_BRBPCRCPCE_TMP_IU([FromBody]BRBPCRCPCEDTL BRD)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            string spName = "";
+            if (BRD.ISOLDENTRY == "1")
+            {
+                spName = "USP_ACC_BRBPCRCPCE_TMP_IU_OLD";
+            }
+            else
+            {
+                spName = "USP_ACC_BRBPCRCPCE_TMP_IU";
+            }
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, spName, BRD.ID, BRD.ENTRYNO, BRD.CLIENT, (BRD.JOBNO != null) ? BRD.JOBNO : "", (BRD.BILLNO != null) ? BRD.BILLNO : "", BRD.DEDUCTION, BRD.AMOUNT, BRD.ENTRYTYPE, BRD.EMP_CODE, BRD.USERNAME, BRD.CRPARENTENTRYNO, (BRD.NARRATION != null) ? BRD.NARRATION : "", BRD.IS_NOT_EDIT_ABLE, BRD.ITEMCODE, (BRD.DEPTID != null) ? BRD.DEPTID : "", BRD.VGUID, BRD.ACCOUNT_NAME, BRD.ITEM, (BRD.DEPARTMENT != null) ? BRD.DEPARTMENT : "", BRD.ACC_BANKDTLS_ID, BRD.STATUS, BRD.ISJOBREPORT, BRD.EMP_CODE_VALUE, BRD.EMP_CODE_TEXT, BRD.ITEM_DATAVALUE, BRD.CMPCODE, BRD.CITYCODE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_TMP_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_BRBPCRCPCE_RESET(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_RESET", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_RESET");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_BRBPCRCPCE_View(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_VIEW", CMPCODE, CITYCODE, ENTRYNO, VGUID, STATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_View");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_CASHBOOK_SEARCH(string CMPCODE, string CITYCODE, string ENTRYNO, string FROMDATE, string TODATE, string CLIENT, string CHEQUENO, string OURBANK, string JOBNO, string AMOUNT, string STATUS, string MODE, string DISPLAYTYPE, string YEARID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CashBook_Search1", (CMPCODE != null) ? CMPCODE : "", CITYCODE, (ENTRYNO != null) ? ENTRYNO : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", (CLIENT != null) ? CLIENT : "", (CHEQUENO != null) ? CHEQUENO : "", (OURBANK != null) ? OURBANK : "", (JOBNO != null) ? JOBNO : "", (AMOUNT != null) ? AMOUNT : "", (STATUS != null) ? STATUS : "", (MODE != null) ? MODE : "", (DISPLAYTYPE != null) ? DISPLAYTYPE : "", (YEARID != null) ? YEARID : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CASHBOOK_SEARCH");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CASHBOOK_RCP_PRINT(string CMPCODE, string CITYCODE, string ENTRYNO, string FROMDATE, string TODATE, string CLIENT, string CHEQUENO, string OURBANK, string JOBNO, string AMOUNT, string STATUS, string MODE, string DISPLAYTYPE, string YEARID,string cmpid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CP_REQUEST_SEARCH", (CMPCODE != null) ? CMPCODE : "", CITYCODE, (ENTRYNO != null) ? ENTRYNO : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", (CLIENT != null) ? CLIENT : "", (CHEQUENO != null) ? CHEQUENO : "", (OURBANK != null) ? OURBANK : "", (JOBNO != null) ? JOBNO : "", (AMOUNT != null) ? AMOUNT : "", (STATUS != null) ? STATUS : "", (MODE != null) ? MODE : "", (DISPLAYTYPE != null) ? DISPLAYTYPE : "", (YEARID != null) ? YEARID : "", cmpid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CASHBOOK_RCP_PRINT");
+            }
+            return Ok(ds);
+        }
+        /*----------------------*/
+        [HttpGet]
+        public IHttpActionResult CASHBOOK_AUTOGENERATE_BIND(string CMPCODE, string CITYCODE, string FRDT)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CashBook_CE_GetDataForGenerateCR", CMPCODE  , CITYCODE,FRDT);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/CASHBOOK_AUTOGENERATE_BIND");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult FillCE_Employees(string CMPCODE, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CE_FillEmployees", CMPCODE, CITYCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/FillCE_Employees");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult CE_STAEMENT(string Fin_StartDate, string Fin_EndDate, string usr_StartDate, string usr_EndDate, string CMPCODE, string CITYCODE, string ACCTCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            //WithJob ALL FILES ARE COMPULSORY 
+            //WITH CRT REPORT DISCUSS AFTER WARDS
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_Rpt_EmpStatement_Expenses", Fin_StartDate, Fin_EndDate, usr_StartDate, usr_EndDate,CMPCODE, CITYCODE, ACCTCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/CE_STAEMENT");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult EMPLOYEE_STAEMENT(string Fin_StartDate, string Fin_EndDate, string usr_StartDate, string usr_EndDate, string CMPCODE, string CITYCODE1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            //WithJob ALL FILES ARE COMPULSORY 
+            //WITH CRT REPORT DISCUSS AFTER WARDS
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_Rpt_EmployeeStatement", Fin_StartDate, Fin_EndDate, usr_StartDate, usr_EndDate, CMPCODE, CITYCODE1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/EMPLOYEE_STAEMENT");
+            }
+            return Ok(ds);
+        }
+        
+        [HttpPost]
+        public IHttpActionResult ACC_BRBPCRCPCE_CE_AutoGenerateCR([FromBody]BRBPCRCPCE BRD)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();            
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_CE_AutoGenerateCR", BRD.CMPID, BRD.CMPCODE, BRD.CITYCODE1, BRD.CITYCODE, BRD.USERNAME, (BRD.ENTRYNO != null) ? BRD.ENTRYNO : "", (BRD.ENTRYDT != null) ? BRD.ENTRYDT : "", BRD.STATUS, (BRD.NARRATION != null) ? BRD.NARRATION : "", BRD.MAKER_IP, BRD.MAKERIP);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_CE_AutoGenerateCR");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        /*----------------Auto CR----------------------*/
+        [HttpGet]
+        public IHttpActionResult ACC_RECEIPT_POPULATE_CLIENTBILL(string CLIENT, string FINSTARTDATE, string FINENDDATE, string CMPCODE, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCOUNTS_RECEIPT_POPULATE_CLIENTBILL", (CLIENT != null) ? CLIENT : "", (FINSTARTDATE != null) ? FINSTARTDATE : "", (FINENDDATE != null) ? FINENDDATE : "", (CMPCODE != null) ? CMPCODE : "", CITYCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RECEIPT_POPULATE_CLIENTBILL");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_RECEIPT_BIND_CLIENTBILL(string VGUID, string CMPCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BR_BILLPOPULATE", VGUID, CMPCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RECEIPT_BIND_CLIENTBILL");
+            }
+            return Ok(ds);
+        }
+
+        [HttpPost]
+        public IHttpActionResult ACC_BR_BLHELP_TMP_IU([FromBody]BRBPCRCPCEDTL BRD)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+              try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BR_BLHELP_TMP_IU", BRD.CLIENT, BRD.ITEMCODE, BRD.STATUS, BRD.CMPCODE, BRD.CITYCODE, BRD.VGUID, BRD.USERNAME, BRD.STRINGTEXT);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_BR_BLHELP_TMP_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_CASHBOOK_VALIDATECHQ(string CMPCODE, string CITYCODE, string CHQNO, string STATUS, string OURBANK, string ENTRYNO)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Usp_Acc_CAshBook_ChequeValidate", CMPCODE, CITYCODE, (CHQNO != null) ? CHQNO : "", STATUS, OURBANK, (ENTRYNO != null) ? ENTRYNO : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RECEIPT_POPULATE_CLIENTBILL");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CASHBOOK_BILLNO_VALIDATION(string BILLNO, string ACC_CODE, string ENTRYTYPE, string CMPCODE, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP35_Acc_CashBank_BillNo_Validation", BILLNO, ACC_CODE, ENTRYTYPE, CMPCODE, CITYCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CASHBOOK_BILLNO_VALIDATION");
+            }
+            return Ok(ds);
+        }
+
+        /*CR*/
+        [HttpGet]
+        public IHttpActionResult ACC_CASHBOOK_CR_CHECKISAUTOGENERATED(string Entryno)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CashBook_CR_CheckIsAutoGenerated", Entryno);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CASHBOOK_CR_CHECKISAUTOGENERATED");
+            }
+            return Ok(ds);
+        }
+
+        //  Computerised Cheque
+
+        [HttpGet]
+        public IHttpActionResult ACC_CHEQUESTOCK_FILLOURBANK(string cmpcode, string citycode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_ChequeStock_FillOurbank", cmpcode,citycode,citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CHEQUESTOCK_FILLOURBANK");
+            }
+            return Ok(ds);
+        }
+
+        [HttpPost]
+        public IHttpActionResult ACC_CHEQUESTOCK_IU([FromBody]ChequeStock obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_ChequeStock_Add", obj.CHQ_CREATER_ID,obj.USER_IP,obj.CHQ_CREATED_DATE,obj.CMP_CODE,obj.CITY_CODE,obj.OURBANK,obj.STCHEQUENO,obj.ENDCHEQUENO);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_CHEQUESTOCK_IU");
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CHEQUESTOCK_LIST(string CMPCODE, string CITYCODE, string CHEQUNO, string BANK)//BANK=''
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_ChequeStock_List", CMPCODE, CITYCODE, (CHEQUNO == null) ? "" : CHEQUNO, (BANK == null) ? "" : BANK);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CHEQUESTOCK_LIST");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CASHBOOK_BRBPCRCPCE_PAGELOAD_RBP(string CMPCODE, string CITYCODE, string CITYCODE1, string PSTATUS)//CC
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_PAGELOAD_RBP", CMPCODE, CITYCODE, CITYCODE1, PSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CASHBOOK_BRBPCRCPCE_PAGELOAD_RBP");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_ReqBP_SEARCH(string CMPCODE, string CITYCODE, string ENTRYNO, string FROMDATE, string TODATE, string CLIENT, string CHEQUENO, string OURBANK, string JOBNO, string AMOUNT, string STATUS, string MODE, string DISPLAYTYPE, string YEARID,string Cmpid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_BP_CMP_Search", (CMPCODE != null) ? CMPCODE : "", CITYCODE, (ENTRYNO != null) ? ENTRYNO : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", (CLIENT != null) ? CLIENT : "", (CHEQUENO != null) ? CHEQUENO : "", (OURBANK != null) ? OURBANK : "", (JOBNO != null) ? JOBNO : "", (AMOUNT != null) ? AMOUNT : "", (STATUS != null) ? STATUS : "", (MODE != null) ? MODE : "", (DISPLAYTYPE != null) ? DISPLAYTYPE : "", (YEARID != null) ? YEARID : "",Cmpid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_ReqBP_SEARCH");
+            }
+            return Ok(ds);
+        }
+        
+            [HttpGet]
+        public IHttpActionResult ACC_BP_SEARCH_DAY(string CMPCODE, string CITYCODE, string ENTRYNO, string FROMDATE, string TODATE, string CLIENT, string CHEQUENO, string OURBANK, string JOBNO, string AMOUNT, string STATUS, string MODE, string DISPLAYTYPE, string YEARID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CashBook_Search1_Day", (CMPCODE != null) ? CMPCODE : "", CITYCODE, (ENTRYNO != null) ? ENTRYNO : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", (CLIENT != null) ? CLIENT : "", (CHEQUENO != null) ? CHEQUENO : "", (OURBANK != null) ? OURBANK : "", (JOBNO != null) ? JOBNO : "", (AMOUNT != null) ? AMOUNT : "", (STATUS != null) ? STATUS : "", (MODE != null) ? MODE : "", (DISPLAYTYPE != null) ? DISPLAYTYPE : "", (YEARID != null) ? YEARID : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_ReqBP_SEARCH");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CMPBP_Fill_Vouchers_Authorisation(string cmpid,string CMPCODE,  string citycode, string status)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CMPBP_Fill_Vouchers_Authorisation", cmpid  , CMPCODE,citycode, (status != null) ? status : "" );
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CMPBP_Fill_Vouchers_Authorisation");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_CMPBP_Assign_Authorisation_ChqPrint(string cmpid, string CMPCODE, string citycode, string status, string EntryNo, string CHKAuthorityFlag, string AuthorisationDt)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CMPBP_Assign_Authorisation_ChqPrint",   CMPCODE, citycode, status, EntryNo, CHKAuthorityFlag, AuthorisationDt,cmpid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CMPBP_Assign_Authorisation_ChqPrint");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_CMPBP_REJECT_BPREQUEST(string cmpid, string CMPCODE, string citycode, string status, string EntryNo, string CHKAuthorityFlag, string AuthorisationDt)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CMPBP_REJECT_BPREQUEST", CMPCODE, citycode, status, EntryNo, CHKAuthorityFlag, AuthorisationDt, cmpid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CMPBP_REJECT_BPREQUEST");
+            }
+            return Ok(ds);
+        }
+
+	[HttpGet]
+        public IHttpActionResult Acc_CMPBP_REJECT_BPView(string cmpid, string CMPCODE, string citycode, string status)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CMPBP_FILL_BPREQUEST_REJECTED_LIST", cmpid, CMPCODE, citycode, status);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CMPBP_REJECT_BPView");
+            }
+            return Ok(ds);
+        }
+	[HttpGet]
+        public IHttpActionResult Acc_CMPBP_BPView(string EntryNo)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_COMPCHEQ_REQUEST_BP_VIEW",EntryNo);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CMPBP_BPView");
+            }
+            return Ok(ds);
+        }
+
+	[HttpGet]
+        public IHttpActionResult Acc_CMPBP_BPlISTView(string EntryNo)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_COMP_CHEQUE_BP_REQUEST_BILL_VIEW",EntryNo);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CMPBP_BPView");
+            }
+            return Ok(ds);
+        }
+         
+        [HttpGet]
+        public IHttpActionResult ACC_BP_CMP_CHEQUE_SEARCH_PRINTING(string CMPID, string CMPCODE, string CITYCODE, string ENTRYNO, string FROMDT,String TODAT ,String OURBNK,string TYPE,string STATUStype)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_BP_CMP_Cheque_Search_Printing_35", CMPID, CMPCODE, CITYCODE, (ENTRYNO != null) ? ENTRYNO : "" , (FROMDT != null) ? FROMDT : "" , (TODAT != null) ? TODAT : "" ,OURBNK, (TYPE != null) ? TYPE : "", (STATUStype != null) ? STATUStype : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BP_CMP_CHEQUE_SEARCH_PRINTING");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_BP_CHEQUE_AVAILABILITY( string CMPCODE, string CITYCODE1, string CHEQUNO,string OURBANK, String PRINTCNTVAL)//CHQUE STATUS
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Usp_Cheque_Stock_Availability", CMPCODE, CITYCODE1, CHEQUNO, OURBANK,PRINTCNTVAL);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BP_CHEQUE_AVAILABILITY");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_BRBPCRCPCE_PAYORDER_GENERATE(string CMPID ,string CMPCODE, string CITYCODE1, string OURBANK, String BPReqNo,string MAKERID,string MAKERIP)//CHQUE STATUS
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_PAYORDER_GENERATE", CMPID, CMPCODE, CITYCODE1, OURBANK, BPReqNo, MAKERID, MAKERIP);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_PAYORDER_GENERATE");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CMP_BP_CHEQUENO_ASSIGNTOPRINT_LIST( string CMPCODE, string CITYCODE1, string chequNo ,string count,string OURBANK, string BPReqNo,string Pstatus)//CHQUE STATUS
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Usp_ChequeNo_AssignedTo_Cmp_BPNo_For_Print_Cancel", CMPCODE, CITYCODE1, chequNo, count,OURBANK, BPReqNo, Pstatus);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CMP_BP_CHEQUENO_ASSIGNTOPRINT_LIST");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CHEQUE_STOCK_HELPVIEW(string CMPCODE, string CITYCODE1, string OURBANK, String chequeno)//CHQUE STATUS
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CHEQUESTOCK_HELPVIEW", CMPCODE, CITYCODE1, (chequeno != null) ? chequeno : "", OURBANK);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CHEQUE_STOCK_HELPVIEW");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_CHEQUE_PREVIEWPRINT_PAGELOAD(string CMPID, string CMPCODE, string CITYCODE1, string COUNT , string ENTRYNO,string MAKERIP)//CHQUE STATUS
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CHEQUE_PREVIEWPRINT_PAGELOAD", CMPID,  CMPCODE,  CITYCODE1 , COUNT, ENTRYNO,MAKERIP);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CHEQUE_PREVIEWPRINT_PAGELOAD");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CPJVPI_REQUEST_AUTHORISATION_PAGELOAD(string CMPID, string CMPCODE, string CITYCODE, string STATUS, string AUTHORISATIONSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CPJVPI_REQUEST_FILL_AUTHORISATION_PAGELOAD", CMPID, CMPCODE, CITYCODE, STATUS, AUTHORISATIONSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CPJVPI_REQUEST_AUTHORISATION_PAGELOAD");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CPJVPI_REQUEST_AUTHORISATION(string CMPID, string CMPCODE, string CITYCODE, string STATUS, string AUTHORISATIONSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CPJVPI_REQUEST_FILL_AUTHORISATION", CMPID, CMPCODE, CITYCODE, STATUS, AUTHORISATIONSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CPJVPI_REQUEST_AUTHORISATION");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_CPJVPI_REQUEST_Authorisation_Update(string CMPCODE, string CITYCODE1, string CITYCODE, string STATUS, string JVREQNO, string AUTHORISATIONDT, string CMPID, string AUTHORISATIONSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CPJVPI_REQUEST_AUTHORISATION_UPDATE", CMPCODE, CITYCODE1, CITYCODE, STATUS, JVREQNO, (AUTHORISATIONDT != null) ? AUTHORISATIONDT : "", CMPID, AUTHORISATIONSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CPJVPI_REQUEST_Authorisation_Update");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc_CPJVPI_REQUEST_Authorisation_REJECT(string CMPCODE, string CITYCODE1, string CITYCODE, string STATUS, string JVREQNO, string AUTHORISATIONDT, string CMPID, string AUTHORISATIONSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CPJVPI_REQUEST_AUTHORISATION_REJECTMULTI", CMPCODE, CITYCODE1, CITYCODE, STATUS, JVREQNO, (AUTHORISATIONDT != null) ? AUTHORISATIONDT : "", CMPID, AUTHORISATIONSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CPJVPI_REQUEST_Authorisation_REJECT");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult Acc_CPJVPI_REQUEST_Management_UPDATE(string CMPCODE, string CITYCODE1, string CITYCODE, string STATUS, string JVREQNO, string AUTHORISATIONDT, string CMPID, string AUTHORISATIONSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CPJVPI_REQUEST_MANAGEMENT_UPDATE", CMPCODE, CITYCODE1, CITYCODE, STATUS, JVREQNO, CMPID, AUTHORISATIONSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CPJVPI_REQUEST_Management_UPDATE");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult Acc_CMPBP_Cheque_Report(string SearchType, string FromVal, string ToVal, string Type, string CMPCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BP_CHEQUE_REPORT_NG", SearchType, FromVal, ToVal, Type, CMPCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CMPBP_Cheque_Report");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc__ChequePrintError_Report(string ChequeNo, string cmpid, string MakerIP)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Usp_CompCheque_RePrintCheque_AssignReqNo_NotGenerate_BPNo", ChequeNo, cmpid, MakerIP);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_ChequePrintError_Report");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_BP_CMP_CHEQUENO_CANCEL(string USERID, string CMPCODE, string citycode, string ENTRYNO, string Remark, string MakerIP)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_BP_CMP_Chequeno_Cancel", USERID, CMPCODE, citycode, ENTRYNO, Remark, MakerIP);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BP_CMP_CHEQUENO_CANCEL");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_BP_CMP_REQNO_GET(string EntryNo)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_BP_CMP_ReqNo_Get", EntryNo);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BP_CMP_REQNO_GET");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_BP_CMP_CHEQUE_SEARCH_READYTO_REPRINT(string USERID, string CMPCODE, string citycode, string ENTRYNO, string FROMDATE, string TODATE, string OURBNK, string TYPE, string STATUSTYPE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_BP_CMP_Cheque_Search_ReadyTo_Reprint", USERID, CMPCODE, citycode, (ENTRYNO != null) ? ENTRYNO : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", OURBNK, (TYPE != null) ? TYPE : "", (STATUSTYPE != null) ? STATUSTYPE : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BP_CMP_CHEQUE_SEARCH_READYTO_REPRINT");
+            }
+            return Ok(ds);
+        }
+
+
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_BP_CMP_CHEQUE_READYTO_PRINT_LIST_35(string strentryNo)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Usp_Cheque_ReadyTo_Print_List_35", strentryNo);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BP_CMP_CHEQUE_READYTO_PRINT_LIST_35");
+            }
+            return Ok(ds);
+        }
+
+
+
+        [HttpGet]
+        public IHttpActionResult ACC_SETDEFAULT(string cmpcode, string citycode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CashBook_SETDEFA", cmpcode, citycode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_SETDEFAULT");
+            }
+            return Ok(ds);
+        }
+
+
+        /*report start here*/
+        /* Reports Register from Invoice to CN  */
+
+        [HttpGet]
+        public IHttpActionResult fn_Acc_Rpt_Invoice_Register_XL_Search_Register(string _FromDt, string _ToDt, string cmp_code, string citycode, string FINSTARTDATE, string FINENDDATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_N_Inv_Search_Register", _FromDt, _ToDt, cmp_code, citycode, (FINSTARTDATE != null) ? FINSTARTDATE : "", (FINENDDATE != null) ? FINENDDATE : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fn_Acc_Rpt_Invoice_Register_XL_Search_Register");
+            }
+            return Ok(ds);
+        } 
+
+        [HttpGet]
+        public IHttpActionResult fn_Acc_Rpt_Invoice_Register_ActDetail_XL_Search_Acct_details(string _FromDt, string _ToDt, string cmp_code, string citycode, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Usp_Acct_Invoice_Register_Acct_Detail", _FromDt, _ToDt, cmp_code, citycode, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fn_Acc_Rpt_Invoice_Register_ActDetail_XL_Search_Acct_details");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult fn_Acc_Rpt_CashBook_Register_XL_Fill_CashBook(string FromDate, string ToDate, string CmpCode, string CityCode, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_Cashbook_Register_new", FromDate, ToDate, CmpCode, CityCode, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fn_Acc_Rpt_CashBook_Register_XL_Fill_CashBook");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult fn_Acc_Rpt_Purchase_Register_XL_Fill(string _FromDt, string _ToDt, string cmp_code, string citycode, string FINSTARTDATE, string FINENDDATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_Purchase_Register", _FromDt, _ToDt, cmp_code, citycode, FINSTARTDATE, FINENDDATE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fn_Acc_Rpt_Purchase_Register_XL_Fill");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult fn_Acc_Rpt_storage_Register_XL_Fill(string FromDate, string ToDate, string CmpCode, string CityCode, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_storage_Register", FromDate, ToDate, CmpCode, CityCode, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fn_Acc_Rpt_storage_Register_XL_Fill");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult fn_frm_Acc_Rpt_Brokerage_Register_XL_Fill(string FromDate, string ToDate, string CmpCode, string CityCode, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Usp_Brokerage_Register", FromDate, ToDate, CmpCode, CityCode, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fn_frm_Acc_Rpt_Brokerage_Register_XL_Fill");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult fn_Acc_Rpt_CN_Register_AcctDetail_XL(string FromDate, string ToDate, string CmpCode, string CityCode, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Usp_Acct_CreditNote_Register_Act_Detail", FromDate, ToDate, CmpCode, CityCode, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fn_Acc_Rpt_CN_Register_AcctDetail_XL");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult fn_Acc_Rpt_Common_CompanyDetails(string CmpCode, string CityCode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_Common_Company", CmpCode, CityCode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fn_Acc_Rpt_Common_CompanyDetails");
+            }
+            return Ok(ds);
+        }
+        //job profit
+        [HttpGet]
+        public IHttpActionResult ACC_ACCOUNT_FILL_JOBPROFIT_Fill(string CmpCode, string CityCode, string CityCode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_ACCOUNT_FILL_JOBPROFIT", CmpCode, CityCode, CityCode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_ACCOUNT_FILL_JOBPROFIT_Fill");//frm_Acc_Rpt_Search_Jobwise_New.aspx single 
+            }
+            return Ok(ds);
+        }
+        
+        [HttpGet]
+        public IHttpActionResult ACCT_RPT_JOBWISE_ACCOUNT_JOBNO(string ACCTCODE, string BRANCH_CODE, string DATE_TYPE, string FRDATE_U, string TODATE_U,string CmpCode, string CityCode, string cmpid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCT_RPT_JOBWISE_ACCOUNT_JOBNO", ACCTCODE, BRANCH_CODE, DATE_TYPE, FRDATE_U, TODATE_U,CmpCode, CityCode, cmpid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACCT_RPT_JOBWISE_ACCOUNT_JOBNO");//frm_Acc_Rpt_Search_Jobwise_New.aspx single 
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_JOBPROFITS_NEW(string FromDate, string ToDate, string JobNoFrom, string JobNoTo, string SearchType, string DateType, string Mode, string citycode1, string CityCode, string CmpCode, string con_code)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_JOBPROFITS_NEW", FromDate, ToDate, (JobNoFrom != null) ? JobNoFrom : "", (JobNoTo != null) ? JobNoTo : "", SearchType, DateType, Mode, citycode1, CityCode, CmpCode, (con_code != null) ? con_code : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_JOBPROFITS_NEW");//frm_Acc_Rpt_Search_Jobwise_New.aspx single 
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_JOBPROFITS_JOBWISE(string JOBNO  )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCT_RPT_JOB_PROFIT", JOBNO);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_JOBPROFITS_JOBWISE"); 
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_MAWBPROFITS_JOBWISE(string SearchType, String searchno, String strVessel)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_REPORT_CONTAINER_MAWB_SUMMARY_NG", SearchType, searchno, (strVessel != null) ? strVessel : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_MAWBPROFITS_JOBWISE");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_CMP_FillClient(string cmpcode, string citycode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_CMP_FillClient_new", cmpcode, citycode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CMP_FillClient");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_ClientOutstandingALL_AllCITY_LIST(string ClientCode, string cmp_code, string User_StartDate, string User_EndDate, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_CLIENT_OUTSTANDING_ALLCITY_LIST", ClientCode, cmp_code, User_StartDate, User_EndDate, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_ClientOutstandingALL_AllCITY_LIST");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_TrialBalance_With_Advance_Print_GetAll(string ClCode, string cmp_code, string citycode1, string STARTDATE, string ENDDATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_Rpt_ClientOutstanding_AdvanceAll_35", ClCode, cmp_code, citycode1, STARTDATE, ENDDATE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_TrialBalance_With_Advance_Print_GetAll");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_TrialBalance_With_Advance_Print_Get(string ClCode, string FINSTARTDATE, string FINENDDATE, string cmp_code, string citycode1, string STARTDATE, string ENDDATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_Rpt_ClientOutstanding_Advance_35", ClCode, FINSTARTDATE, FINENDDATE, cmp_code, citycode1, STARTDATE, ENDDATE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_TrialBalance_With_Advance_Print_Get");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_ClientOutstandingList_GetAll(string ClCode, string cmp_code, string citycode1, string STARTDATE, string ENDDATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_Rpt_ClientOutstandingAll_35", ClCode, cmp_code, citycode1, STARTDATE, ENDDATE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_ClientOutstandingList_GetAll");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_ClientOutstandingList_Get(string ClCode, string FINSTARTDATE, string FINENDDATE, string cmp_code, string citycode1, string STARTDATE, string ENDDATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_Rpt_ClientOutstandingNew_030409_35", ClCode, FINSTARTDATE, FINENDDATE, cmp_code, citycode1, STARTDATE, ENDDATE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_ClientOutstandingList_Get");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_TrialBalance_ClientOutstandingList_Remark_Add(string Remark, string ClCode, string cmp_code, string citycode, string UserName)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_Remark_Add", Remark, ClCode, cmp_code, citycode, UserName);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_TrialBalance_ClientOutstandingList_Remark_Add");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_TrialBalance_ClientOutstandingList_Remark_Get(string ClCode, string cmp_code, string citycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_Remark_Get", ClCode, cmp_code, citycode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_TrialBalance_ClientOutstandingList_Remark_Get");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage Acc_Rpt_ClientOutstandingList_Get_AllCITY([FromUri]string ClientCode, string cmp_code, string User_StartDate, string User_EndDate, string Fin_StartDate, string Fin_EndDate,string cmpname ,string subhead1)
+
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+           // var advmainhead_ary =[];
+            string[] advmainhead_ary;
+
+            
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCT_RPT_CLIENTOUTSTANDINGALL_CITY", ClientCode, cmp_code, User_StartDate, User_EndDate, Fin_StartDate, Fin_EndDate);
+
+                StreamReader reader = new StreamReader(HttpContext.Current.Server.MapPath("..\\..\\") + "Include\\template\\Account_Statement_columnwise.html");
+                string readFile = reader.ReadToEnd();
+                string myString = string.Empty;
+                string header1 = "", header2 = "", header3 = "";
+                header1 = cmpname;
+                header2 = "Account Statement with All Branch From " + User_StartDate + " To "  + User_EndDate;
+                header3 = subhead1;
+                StringBuilder sb = new StringBuilder();
+                StringBuilder sb1 = new StringBuilder();
+
+                StringBuilder sb2 = new StringBuilder();
+                StringBuilder sb3 = new StringBuilder();
+                myString = readFile;
+            if (ds.Tables.Count > 0)
+                {
+                    advmainhead_ary = Convert.ToString(ds.Tables[2].Rows[0]["CITYNAME"]).Split(';');                   
+
+                    foreach (var item in advmainhead_ary)
+                    {
+                        sb.AppendLine("<td class='xl65' colspan='2' style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;' x:str> ");
+                        sb.AppendLine(item);
+                        sb.AppendLine("</td>");
+
+                        sb1.AppendLine("<td class='xl65'   style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;' x:str> Debit </td>");
+                        sb1.AppendLine("<td class='xl65'   style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;' x:str> Credit </td>");
+
+                    }
+                string str="";
+                    for (int i = 0; i < ds.Tables[1].Rows.Count; i++)
+                    {
+                    sb2.AppendLine("<tr height='24' style = 'height:14.40pt ' > ");
+                    for (int j = 0; j < ds.Tables[1].Columns.Count; j++)
+                        {
+                            
+                            if (j == 0) {
+                                str = ds.Tables[1].Rows[i][j].ToString().Replace("<TD colspan=4>", "");
+                                str = str.Replace("</TD>", "");
+
+                                sb2.AppendLine("<td class='xl71' colspan='5' style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;' x:str'> ");
+                                sb2.AppendLine(str);
+                                sb2.AppendLine("</td>");
+                            }
+                            else {
+                                sb2.AppendLine("<td class='xl72' align='right' x:num'> ");
+                                sb2.AppendLine(Convert.ToString(ds.Tables[1].Rows[i][j]));
+                                sb2.AppendLine("</td>");
+                            }
+                        }
+                    sb2.AppendLine("</tr>");
+
+                }
+                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                    sb3.AppendLine("<tr height='24' style = 'height:14.40pt ' > ");
+                    for (int j = 0; j < ds.Tables[0].Columns.Count; j++)
+                        {
+                            
+                            if (j <= 3)
+                            {
+                                sb3.AppendLine("<td class='xl75' x:str'> ");
+                                sb3.AppendLine(Convert.ToString(ds.Tables[0].Rows[i][j]));
+                                sb3.AppendLine("</td>");
+                            }
+                            else
+                            {
+                                sb3.AppendLine("<td class='xl75' align='right' x:num'> ");
+                                sb3.AppendLine(Convert.ToString(ds.Tables[0].Rows[i][j]));
+                                sb3.AppendLine("</td>");
+                            }
+                            
+                        }
+                    sb3.AppendLine("</tr>");
+                }
+
+                }
+            myString = myString.Replace("[header1]", header1)
+            .Replace("[header2]", header2)
+            .Replace("[header3]", header3)
+            .Replace("[header3]", header3)
+            .Replace("[advmainhead]", Convert.ToString(sb))
+            .Replace("[advmainhead1]", Convert.ToString(sb1))
+            .Replace("[advmainrowdata1]", Convert.ToString(sb2))
+             .Replace("[rowdatadynamic]", Convert.ToString(sb3));           
+
+            byte[] byteArray = Encoding.UTF8.GetBytes(myString);
+            MemoryStream stream = new MemoryStream(byteArray);
+            stream.WriteTo(HttpContext.Current.Response.OutputStream);
+
+            HttpResponseMessage httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK);
+            httpResponseMessage.Content = new StreamContent(stream);
+            httpResponseMessage.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            httpResponseMessage.Content.Headers.ContentDisposition.FileName = "Accounts StatementAll With AllCity_"+ ClientCode+".xls";
+            httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+            return httpResponseMessage;
+
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_ItemWise_Statement_List(string ClientCode, string ItemCode, string cmp_code, string city_code,string User_StartDate, string User_EndDate, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_ITEMSTATEMENT_LIST", ClientCode, ItemCode, cmp_code, city_code, User_StartDate, User_EndDate, Fin_StartDate, Fin_EndDate);
+           }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_ItemWise_Statement_List");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_AccountWise_ItemStatement_List(string ClientCode, string cmp_code, string User_StartDate, string User_EndDate, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_ACCOUTWISE_ITEMSTATEMENT_LIST", ClientCode, cmp_code, User_StartDate, User_EndDate, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_AccountWise_ItemStatement_List");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Fill_ITEMACCOUNT(string CmpCode, string CityCode, string CityCode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_ITEM_FILL_PAGELOAD", CmpCode, CityCode, CityCode1);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Common/Fill_ITEMACCOUNT");
+            }
+            finally
+            {
+                objDal.Dispose();
+                ds.Dispose();
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Fill_ACCOUNTWISE_ITEM(string CmpCode, string CityCode, string CityCode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_ACCOUTWISE_ITEM_FILL_PAGELOAD", CmpCode, CityCode, CityCode1);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Common/Fill_ACCOUNTWISE_ITEM");
+            }
+            finally
+            {
+                objDal.Dispose();
+                ds.Dispose();
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_NotOver_List(string cmpcode, string citycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Usp_Acct_Cashook_BP_NotOver_List", cmpcode, citycode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_NotOver_List");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_Receivable_AdvFromClients(string Jobno, string ClientCode, string All, string cmpcode, string citycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCT_RPT_ADVANCE_FROM_CLIENT", (Jobno != null) ? Jobno : "", (ClientCode != null) ? ClientCode : "", (All != null) ? All : "", cmpcode, citycode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_Receivable_AdvFromClients");
+            }
+            return Ok(ds);
+        }
+	[HttpGet]
+        public IHttpActionResult Acct_Rpt_ClientOutstandingAll_35_Special_ledger(string ClientCode,string cmpcode,string UserStartDate,string UserEndDate ,string FinStartDate,string FinEndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_Rpt_ClientOutstandingAll_35_Special_ledger", ClientCode,cmpcode, UserStartDate, UserEndDate, FinStartDate, FinEndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acct_Rpt_ClientOutstandingAll_35_Special_ledger");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_FILL_UNDERGROUP_ACCOUNTS(string cmpcode, string citycode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_FILL_UNDERGROUP_ACCOUNTS", cmpcode, citycode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_FILL_UNDERGROUP_ACCOUNTS");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_MIS_INCOME_TAX(string AccountCode, string FromDate, string ToDate, string cmpcode, string citycode, string mode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_MIS_INCOME_TAX", AccountCode, FromDate, ToDate, cmpcode, citycode, mode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_MIS_INCOME_TAX");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult CMP_FillClient(string cmpcode, string citycode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_CMP_FillClient", cmpcode, citycode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/CMP_FillClient");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_CLIENT_OUTSTANDING_ALLCITY_ACCOUNT_WISE(string ClientCode, string cmpcode, string FromDate, string ToDate, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_CLIENT_OUTSTANDING_ALLCITY_ACCOUNT_WISE", ClientCode, cmpcode, FromDate, ToDate, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_CLIENT_OUTSTANDING_ALLCITY_ACCOUNT_WISE");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_MIS_INVOICE_DELAY(string FromDate, string ToDate, string Mode, string cmpcode, string citycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_MIS_INVOICE_DELAY", FromDate, ToDate, Mode, cmpcode, citycode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_MIS_INVOICE_DELAY");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_MIS_MAWB_NET_FREGHT(string cmpcode, string citycode1, string FromDate, string ToDate, string Branch)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_MIS_MAWB_NET_FREGHT", cmpcode, citycode1, FromDate, ToDate, (Branch != null) ? Branch : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_MIS_MAWB_NET_FREGHT");
+            }
+            return Ok(ds);
+
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_MIS_AIRFREIGHT_STATEMENT(string FromDate, string ToDate, string cmpcode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_MIS_AIRFREIGHT_STATEMENT", FromDate, ToDate, cmpcode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_MIS_AIRFREIGHT_STATEMENT");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_AIRFRT_INVO_SERACH_LIST(string FromDate, string ToDate, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_AIRFRT_INVO_SERACH_LIST", FromDate, ToDate, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_AIRFRT_INVO_SERACH_LIST");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_MIS_SUNDRY_EXPENSES(string FromDate, string ToDate, string NoOfDays, string Department, string cmpcitycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_MIS_SUNDRY_EXPENSES", FromDate, ToDate, NoOfDays, Department, cmpcitycode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_MIS_SUNDRY_EXPENSES");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult CMP_FillGenralAccount(string cmpcode, string citycode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_CMP_FillGenralAccount", cmpcode, citycode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/CMP_FillGenralAccount");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ServiceTaxRegSupport(string Frmdt, string Todt, string FinFrndt ,string FinTodt,string CMP_CODE,string CITYCODE1,string CMPID )
+        {
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+           // DataRow drow = new DataRow;
+            DataRow drow = dtbl.NewRow();
+
+            DAL objDal = new DAL();
+            Report objRpt = new Report();
+            string SearchCTA, SqlQueryPARA ,PKID ;
+            try
+            {
+                SearchCTA = objRpt.SEARCHCRITERIA(Frmdt, Todt, FinFrndt, FinTodt, CMP_CODE, CITYCODE1);
+                SqlQueryPARA = objRpt.SQLQUERY_PARA(Frmdt, Todt, FinFrndt, FinTodt, CMP_CODE, CITYCODE1);
+                PKID=  objRpt.REPORT_LOG("47", SearchCTA, SqlQueryPARA, CMPID);
+
+                dtbl.Columns.Add("PKID", typeof(string));
+                
+                drow = dtbl.NewRow();
+                drow[0] =   PKID;
+                dtbl.Rows.Add(drow);
+                ds1.Merge(dtbl);
+
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ServiceTaxRegSupport");
+            }
+            return Ok(ds1);
+        }
+        [HttpGet]
+        public IHttpActionResult REPORT_LOG_SCRIPT(string fkID, string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_REPORT_LOG_SCRIPT_LIST", fkID,CMPID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/REPORT_LOG_SCRIPT");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult REPORT_LOG_DOWNLOAD(string fkID, string Mode, string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_REPORT_LOG_DOWNLOADED", fkID, Mode, CMPID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/REPORT_LOG_DOWNLOAD");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult GstRegister(string Frmdt, string Todt, string FinFrndt, string FinTodt, string CMP_CODE, string CITYCODE, string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+            // DataRow drow = new DataRow;
+            DataRow drow = dtbl.NewRow();
+
+            DAL objDal = new DAL();
+            Report objRpt = new Report();
+            string SearchCTA, SqlQueryPARA, PKID;
+            try
+            {
+                SearchCTA = objRpt.SEARCHCRITERIA(Frmdt, Todt, FinFrndt, FinTodt, CMP_CODE, CITYCODE);
+                SqlQueryPARA = objRpt.SQLQUERY_PARA(Frmdt, Todt, FinFrndt, FinTodt, CMP_CODE, CITYCODE);
+                PKID = objRpt.REPORT_LOG("50", SearchCTA, SqlQueryPARA, CMPID);
+
+                dtbl.Columns.Add("PKID", typeof(string));
+
+                drow = dtbl.NewRow();
+                drow[0] = PKID;
+                dtbl.Rows.Add(drow);
+                ds1.Merge(dtbl);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/GstRegister");
+            }
+            return Ok(ds1);
+        }
+        [HttpGet]
+        public IHttpActionResult Receivable_AnyOneClient_AllBranch(string ClientName, string ClientCode, string CMP_CODE, string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+            // DataRow drow = new DataRow;
+            DataRow drow = dtbl.NewRow();
+
+            DAL objDal = new DAL();
+            Report objRpt = new Report();
+            string SearchCTA, SqlQueryPARA, PKID;
+            try
+            {
+                SearchCTA = objRpt.SEARCHCRITERIA(ClientName);
+                SqlQueryPARA = objRpt.SQLQUERY_PARA(ClientCode, CMP_CODE);
+                PKID = objRpt.REPORT_LOG("3", SearchCTA, SqlQueryPARA, CMPID);
+
+                dtbl.Columns.Add("PKID", typeof(string));
+
+                drow = dtbl.NewRow();
+                drow[0] = PKID;
+                dtbl.Rows.Add(drow);
+                ds1.Merge(dtbl);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Receivable_AnyOneClient_AllBranch");
+            }
+            return Ok(ds1);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc_MIS_Receivable_AnyOneClient_Branch_AsOn(string ClientCode, string ClientName, string CMP_CODE, string AsOnDate, string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+            // DataRow drow = new DataRow;
+            DataRow drow = dtbl.NewRow();
+
+            DAL objDal = new DAL();
+            Report objRpt = new Report();
+            string SearchCTA, SqlQueryPARA, PKID;
+            try
+            {
+                SearchCTA = ClientName + " OUTSTANDING - RECEIVABLE - ALL BRANCH - AS ON";
+                SqlQueryPARA = objRpt.SQLQUERY_PARA(ClientCode, CMP_CODE, AsOnDate);
+                PKID = objRpt.REPORT_LOG("38", SearchCTA, SqlQueryPARA, CMPID);
+
+                dtbl.Columns.Add("PKID", typeof(string));
+
+                drow = dtbl.NewRow();
+                drow[0] = PKID;
+                dtbl.Rows.Add(drow);
+                ds1.Merge(dtbl);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_MIS_Receivable_AnyOneClient_Branch_AsOn");
+            }
+            return Ok(ds1);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_Receivable_AnyOneClient_XL_Client_Oustanding_ClientBill_35_Branch(string ClientCode, string cmp_code, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_Rpt_Outstanding_ClientBill_35_Branch", ClientCode, "", "", cmp_code, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_Receivable_AnyOneClient_XL_Client_Oustanding_ClientBill_35_Branch");
+            }
+            return Ok(ds);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_Receivable_AgeWise_XL_35(string ClientCode, string FinStartDate, string FinEndDate, string cmpcode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_Rpt_Outstanding_ClientBill_35_Agewise", ClientCode, FinStartDate, FinEndDate, cmpcode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_Receivable_AgeWise_XL_35");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_TrialBalance_DateWise(string Usr_StartDate, string Usr_EndDate, string ClientCode, string FinStartDate, string FinEndDate, string cmp_code, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCT_RPT_TRIALBALANCE_DATEWISE", Usr_StartDate, Usr_EndDate, FinStartDate, FinEndDate, cmp_code, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_TrialBalance_DateWise");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_TrialBalance_DateWise_All(string Usr_StartDate, string Usr_EndDate, string ClientCode, string FinStartDate, string FinEndDate, string cmp_code)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCT_RPT_TRIALBALANCE_DATEWISE_ALL", Usr_StartDate, Usr_EndDate, FinStartDate, FinEndDate, cmp_code);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_TrialBalance_DateWise_All");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult TrialBalance_Datewise(string Frmdt, string Todt, string FinFrndt, string FinTodt, string CMP_CODE, string CITYCODE1, string CMPID, string CityName, string chkcity)
+        {
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+            // DataRow drow = new DataRow;
+            DataRow drow = dtbl.NewRow();
+
+            DAL objDal = new DAL();
+            Report objRpt = new Report();
+            string SearchCTA, SqlQueryPARA, PKID;
+            try
+            {
+                if (chkcity == "1")
+                {
+                    SearchCTA = objRpt.SEARCHCRITERIA("Branch : " + CityName, " From:" + Frmdt, " To:" + Todt);
+                    SqlQueryPARA = objRpt.SQLQUERY_PARA(Frmdt, Todt, FinFrndt, FinTodt, CMP_CODE, CITYCODE1);
+                    PKID = objRpt.REPORT_LOG("7", SearchCTA, SqlQueryPARA, CMPID);
+                }
+                else
+                {
+                    SearchCTA = objRpt.SEARCHCRITERIA("All Branch " + " From:" + Frmdt, " To:" + Todt);
+                    SqlQueryPARA = objRpt.SQLQUERY_PARA(Frmdt, Todt, FinFrndt, FinTodt, CMP_CODE);
+                    PKID = objRpt.REPORT_LOG("6", SearchCTA, SqlQueryPARA, CMPID);
+                }
+                dtbl.Columns.Add("PKID", typeof(string));
+
+                drow = dtbl.NewRow();
+                drow[0] = PKID;
+                dtbl.Rows.Add(drow);
+                ds1.Merge(dtbl);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/TrialBalance_Datewise");
+            }
+            return Ok(ds1);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_TrialBalance_GrpWiseDtls_All_ToExcel_TrialBalanceGroupDetail(string FinStartDate, string FinEndDate, string cmp_code, string CityCode1, string FinEndDate1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acct_Rpt_Trialbalance_byGrpDtls_NG", FinStartDate, FinEndDate, cmp_code, CityCode1, FinEndDate1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_TrialBalance_GrpWiseDtls_All_ToExcel_TrialBalanceGroupDetail");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Acc_Rpt_ItemStatement(string ACCTCODE, string ITEMCODE, string Frmdt, string Todt, string FINSTARTDATE, string FINENDDATE, string CMP_CODE, string ITEMNAME, string CMPID,string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+            // DataRow drow = new DataRow;
+            DataRow drow = dtbl.NewRow();
+
+            DAL objDal = new DAL();
+            Report objRpt = new Report();
+            string SearchCTA, SqlQueryPARA, PKID;
+            try
+            {
+                SearchCTA = "Item:" + ITEMNAME + " From: " + Frmdt + " To: " + Todt;
+                SqlQueryPARA = objRpt.SQLQUERY_PARA(ACCTCODE, ITEMCODE, Frmdt, Todt, FINSTARTDATE, FINENDDATE, CMP_CODE, CITYCODE);
+                PKID = objRpt.REPORT_LOG("23", SearchCTA, SqlQueryPARA, CMPID);
+
+                dtbl.Columns.Add("PKID", typeof(string));
+
+                drow = dtbl.NewRow();
+                drow[0] = PKID;
+                dtbl.Rows.Add(drow);
+                ds1.Merge(dtbl);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Rpt_ItemStatement");
+            }
+            return Ok(ds1);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CMP_FILL_GACCOUNT_SPECIAL_LEDGER_PAGELOAD(string cmpcode, string citycode, string citycode1, string cmpid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_CMP_FILL_GACCOUNT_SPECIAL_LEDGER_PAGELOAD", cmpcode, citycode, citycode1, cmpid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CMP_FILL_GACCOUNT_SPECIAL_LEDGER_PAGELOAD");
+            }
+            return Ok(ds);
+        }
+
+         
+
+        [HttpGet]
+        public IHttpActionResult Acc_Fill_Export(string cmpcode, string citycode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_CMP_FillExpoterCity", cmpcode, citycode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_Fill_Export");
+            }
+            return Ok(ds);
+        }
+           [HttpGet]
+        public IHttpActionResult ACC_RPT_CLIENTOUTSTANDING_AGEING(string cmpcode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_MIS_CLIENTOUTSTANDING_AGEING_EXE_LOG_MP", cmpcode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_CLIENTOUTSTANDING_AGEING");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_JV_PRINT(string JVCode, string Type)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+                if (Type == "JV" || Type == "GENJV")
+                {
+                    ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_JVREPORT", JVCode);
+                }
+                else
+                {
+                    ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_JV_PRINT_REQ", JVCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_JV_PRINT");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult REPORT_LOG_FILL(string CmpId, string FormId, string ReportMode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_REPORT_LOG_FILL", CmpId, "", ReportMode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/REPORT_LOG_FILL");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_CashBook_FillOurbank(string cmpcode, string citycode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CashBook_FillOurbank", cmpcode, citycode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CashBook_FillOurbank");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_CashBook_BankRecousillation(string _ourbank, string _FromDt, string _ToDt, string cmpcode, string citycode, string citycode1, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "usp_Acc_CashBook_BankRecousillation", _ourbank, _FromDt, _ToDt, cmpcode, citycode, citycode1, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CashBook_BankRecousillation");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Acc_CashBook_BankRecousillation_Update(string _reconsillationstr)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_Acc_CashBook_BankRecousillation_Update", _reconsillationstr);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/Acc_CashBook_BankRecousillation_Update");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Fill_CashBook_BankRecRpt(string _ourbank, string _FromDt, string _ToDt, string cmpcode, string citycode1, string citycode, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Acc_Cashbook_bankRecRpt", _ourbank, _FromDt, _ToDt, cmpcode, citycode1, citycode, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Fill_CashBook_BankRecRpt");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Fill_CashBook_BankRecRptNew1(string _ourbank, string _FromDt, string _ToDt, string cmpcode, string citycode1, string citycode, string Fin_StartDate, string Fin_EndDate)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Acc_Cashbook_bankRecRptnew", _ourbank, _FromDt, _ToDt, cmpcode, citycode1, citycode, Fin_StartDate, Fin_EndDate);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Fill_CashBook_BankRecRptNew1");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_CMP_FILL_GACCOUNT_PAGELOAD(string cmpcode, string citycode, string citycode1, string cmpid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_CMP_FILL_GACCOUNT_PAGELOAD", cmpcode, citycode, citycode1, cmpid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_CMP_FILL_GACCOUNT_PAGELOAD");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_EXP_MST_EXPORT_MISC_JOB_FILL_CLIENT( string citycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_EXP_MST_EXPORT_MISC_JOB_FILL_CLIENT", citycode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_EXP_MST_EXPORT_MISC_JOB_FILL_CLIENT");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_TRA_CLIENT_STATUS_FOLLOWUP_GETDTLS(string EXP_CODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_TRAN_CLIENT_STATUS_FOLLOWUP_GETDTLS", EXP_CODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_TRA_CLIENT_STATUS_FOLLOWUP_GETDTLS");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_TRA_CLIENT_STATUS_FOLLOWUP_IU(string CmpId,string Exp_Code, string AssignTo, string Client_Status,string AssignOn)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_TRAN_CLIENT_STATUS_FOLLOWUP_IU", CmpId,Exp_Code, AssignTo, Client_Status, AssignOn);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_TRA_CLIENT_STATUS_FOLLOWUP_IU");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_REQUEST_FILL_TO_GENERATE_PAGELOAD(string CMPID, string CMPCODE, string CITYCODE, string CITYCODE1, string STATUS, string AUTHORISATIONSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_REQUEST_FILL_TO_GENERATE_PAGELOAD", CMPID, CMPCODE, CITYCODE, CITYCODE1, STATUS, AUTHORISATIONSTATUS,"194");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_REQUEST_FILL_TO_GENERATE_PAGELOAD");
+            }
+            return Ok(ds);
+        }
+  
+
+    [HttpGet]
+    public IHttpActionResult ACC_GENERATE_FINAL_CODE_CPJVPI(string CMPID,string CMPCODE,string CITYCODE1,string CITYCODE,string MAKERIP,string REQCODE,string STATUS,string AUTHORISATIONSTATUS,string FormId)
+    {
+        DataSet ds = new DataSet();
+        DAL objDal = new DAL();
+        string spName = "";
+        if (STATUS == "JVREQ")
+        {
+            spName = "USP_ACC_JV_GENERATE";
+        }
+        else if (STATUS == "RCP")
+            {
+            spName = "USP_ACC_CP_GENERATE";
+        }
+            else if (STATUS == "RPI")
+            {
+                spName = "USP_ACC_PI_GENERATE";
+            }
+            else if (STATUS == "SRPI")
+            {
+                spName = "USP_ACC_SRPI_GENERATE";
+            }
+            try
+        {
+            ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, spName, CMPID, CMPCODE, CITYCODE1, CITYCODE, CMPID, MAKERIP,REQCODE, STATUS, AUTHORISATIONSTATUS, FormId);
+        }
+        catch (Exception ex)
+        {
+            ds = ErrorLog.Error(ex, "Accounts/ACC_GENERATE_FINAL_CODE_CPJVPI");
+        }
+        finally
+        {
+            objDal.Dispose();
+
+        }
+        return Ok(ds);
+    }
+
+        [HttpGet]
+        public IHttpActionResult Acc_CPJVPI_REQUEST_AUTHORISATION_UPDATEMULTI(string CMPCODE, string CITYCODE1, string CITYCODE, string STATUS, string JVREQNO, string AUTHORISATIONDT, string CMPID, string AUTHORISATIONSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_CPJVPI_REQUEST_AUTHORISATION_UPDATEMULTI", CMPCODE, CITYCODE1, CITYCODE, STATUS, JVREQNO, (AUTHORISATIONDT != null) ? AUTHORISATIONDT : "", CMPID, AUTHORISATIONSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Acc_CPJVPI_REQUEST_AUTHORISATION_UPDATEMULTI");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_PRINT_SRPI(string cmp_code, string citycode, string PUR_CODE, string FROMDATE, string TODATE, string PUR_SUPPLIER, string PUR_INVNO, string DISPLAYTYPE, string YEAR_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_SRPI_PRINT", cmp_code, citycode, (PUR_CODE != null) ? PUR_CODE : "", (FROMDATE != null) ? FROMDATE : "", (TODATE != null) ? TODATE : "", (PUR_SUPPLIER != null) ? PUR_SUPPLIER : "", (PUR_INVNO != null) ? PUR_INVNO : "", DISPLAYTYPE, YEAR_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_PRINT_SRPI");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Export_Search_List_acct(string searchtype,string searchval,string cmp_code, string CityCode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_EXP_MST_EXPORT_SEARCH_LIST", searchtype,searchval, cmp_code, CityCode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Export_Search_List_acct");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACCT_MST_RPT_CLIENT_REGISTER()
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_MST_RPT_CLIENT_REGISTER");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACCT_MST_RPT_CLIENT_REGISTER");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACCT_USP_MST_RPT_SUPPLIER_REGISTER()
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_MST_RPT_SUPPLIER_REGISTER");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACCT_USP_MST_RPT_SUPPLIER_REGISTER");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_BRBPCRCPCE_View_OLD(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BRBPCRCPCE_VIEW_OLD", CMPCODE, CITYCODE, ENTRYNO, VGUID, STATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_BRBPCRCPCE_View_OLD");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_JV_View_OLD(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_JV_VIEW_OLD", CMPCODE, CITYCODE, ENTRYNO, VGUID, STATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_JV_View_OLD");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_VIEW_OLD(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS,string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_VIEW_OLD", CMPCODE, CITYCODE, ENTRYNO, VGUID, STATUS, CMPID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_VIEW_OLD");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_PAYMENT_POPULATE_SUPPLIERBILL(string SUPPLIER, string FINSTARTDATE, string FINENDDATE, string CMPCODE, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCOUNTS_PAYMENT_POPULATE_SUPPLIERBILL", (SUPPLIER != null) ? SUPPLIER : "", (FINSTARTDATE != null) ? FINSTARTDATE : "", (FINENDDATE != null) ? FINENDDATE : "", (CMPCODE != null) ? CMPCODE : "", CITYCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PAYMENT_POPULATE_SUPPLIERBILL");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult OutstandingReceivableOverseasAgent(string ClientName, string ClientCode, string CmpCode, string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+            // DataRow drow = new DataRow;
+            DataRow drow = dtbl.NewRow();
+
+            DAL objDal = new DAL();
+            Report objRpt = new Report();
+            string SearchCTA, SqlQueryPARA, PKID;
+            try
+            {
+                SearchCTA = objRpt.SEARCHCRITERIA(ClientName);
+                SqlQueryPARA = objRpt.SQLQUERY_PARA(ClientCode, CmpCode, CMPID);
+                PKID = objRpt.REPORT_LOG_BATCH("33", SearchCTA, SqlQueryPARA, CMPID);
+
+                dtbl.Columns.Add("PKID", typeof(string));
+
+                drow = dtbl.NewRow();
+                drow[0] = PKID;
+                dtbl.Rows.Add(drow);
+                ds1.Merge(dtbl);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/OutstandingReceivableOverseasAgent");
+            }
+            return Ok(ds1);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_FILLEXPOTERCITY_OVERSEAS_AGENT(string cmpcode, string citycode, string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_CMP_FILLEXPOTERCITY_OVERSEAS_AGENT", cmpcode, citycode, citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_FILLEXPOTERCITY_OVERSEAS_AGENT");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MContainer_Validate(string CMPCODE, string CITYCODE, string CONTAINERNO)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MULTICONTAINERNO_VALIDATE", CMPCODE, CITYCODE, CONTAINERNO);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MContainer_Validate");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MultiContainer_RESET(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MULTICONTAINER_RESET", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MultiContainer_RESET");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_NG_RESET(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_RESET_NG", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MULTICONTAINER_NG_RESET");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_PAGELOAD_MAWB(string cmp_code, string citycode, string citycode1, string PSTATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_PAGELOAD_MAWB", cmp_code, citycode, citycode1, PSTATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_PAGELOAD_MAWB");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MAWBNO_PAGELOAD_TDS(string CMPID, string CMPCODE, string CITYCODE, string MAWBNO, string VGUID, string STATUS, string STR)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MAWB", CMPID, CMPCODE, CITYCODE, MAWBNO, VGUID, STATUS, STR);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MAWBNO_PAGELOAD_TDS");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MAWB_NG_RESET(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MAWB_RESET_NG", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MAWB_NG_RESET");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MAWB_RESET_STEP1(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MAWB_RESET_STEP1", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MAWB_RESET_STEP1");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MAWBNO_PAGELOAD_NG(string CMPID, string CMPCODE, string CITYCODE, string MAWBNO, string VGUID, string STATUS)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MAWB_NG", CMPID, CMPCODE, CITYCODE, MAWBNO, VGUID, STATUS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MAWBNO_PAGELOAD_NG");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MAWB_VALIDATE(string CMPCODE, string CITYCODE, string MAWBNO)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MAWB_VALIDATE", CMPCODE, CITYCODE, MAWBNO);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MAWB_VALIDATE");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_RESETMAWB(string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_RESET_MAWB", CMPID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_RESETMAWB");
+            }
+            return Ok(ds);
+        }
+        /* ADDED FOR TDS PART IN NG  */
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_TMP_IU_NG([FromBody]StaffPurchaseInvoiceDtls PID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_TMP_IU_NG", PID.ID, PID.ENTRYNO, PID.CLIENT, PID.JOBNO, PID.DEDUCTION, PID.AMOUNT, PID.USERNAME, PID.NARRATION, PID.IS_NOT_EDIT_ABLE, PID.ITEMCODE, PID.VGUID, PID.ACCOUNT_NAME, PID.ITEM, PID.ACC_PURCHASEDTLS_ID, PID.STATUS, PID.IsJobReport, PID.ITEM_DATAVALUE, PID.SRPIPASSAMOUNT, PID.cmpid, PID.PUR_TAXABLE, PID.ISTDSAPP, PID.PUR_TDS, PID.MAWBFLAG);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_TMP_IU_NG");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        //[HttpGet]
+        //public IHttpActionResult ACC_PURCHASE_GET_FINALTDSDATA_NG(string TYPE, string SUPPCODE, string PURCHASEDT, string VGUID, string CMPCODE, string CMPID)
+        //{
+        //    DataSet ds = new DataSet();
+        //    DAL objDal = new DAL();
+        //    try
+        //    {
+
+        //        ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_GET_FINALTDSDATA_NG", TYPE, SUPPCODE, PURCHASEDT, VGUID, CMPCODE, CMPID);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_GET_FINALTDSDATA_NG");
+        //    }
+        //    return Ok(ds);
+        //}
+        [HttpGet]
+        public IHttpActionResult ACC_PIBP_GET_TDSDATA_NG(string SUPPCODE, string PURCHASEDT, string VGUID, string CMPCODE, string CMPID, string CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PIBP_TDSCAL_NG_FINAL", SUPPCODE, PURCHASEDT, VGUID, CMPCODE, CMPID, CITYCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PIBP_GET_TDSDATA_NG");
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_TMP_TDSMULTI_IU_NG([FromBody]StaffPurchaseInvoiceDtls PID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_TDS_TMPMULTI_IU_NG", PID.cmpid, PID.STATUS, PID.VGUID, PID.SUPCODE, PID.STR);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_TMP_TDSMULTI_IU_NG");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_TDS_RESET_NG(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_TDS_RESET_NG", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_TDS_RESET_NG");
+            }
+            return Ok(ds);
+        }
+        /* MULTICONTAINER */
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_TMP_IU_NG([FromBody]StaffPurchaseInvoiceDtls PID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MULTICONTAINER_TMP_IU_NG", PID.ID, (PID.ENTRYNO == null) ? "" : PID.ENTRYNO, PID.VGUID, PID.CLIENT, PID.ACCOUNT_NAME, PID.JOBNO, PID.AMOUNT, PID.DEDUCTION, PID.NARRATION, (PID.ITEMCODE == null) ? "" : PID.ITEMCODE, (PID.ITEM_DATAVALUE == null) ? "" : PID.ITEM_DATAVALUE, PID.ACC_PURCHASEDTLS_ID, PID.IsJobReport, PID.cmpid, PID.PUR_TAXABLE, PID.ISTDSAPP, PID.PUR_TDS);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MULTICONTAINER_TMP_IU_NG");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_IU_NG(string CMPCODE, string CITYCODE1, string VGUID, string TYPE, string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MULTTCONTAINER_STEP1_IU_NG", CMPCODE, CITYCODE1, VGUID, TYPE, CMPID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MULTICONTAINER_IU_NG");
+            }
+            return Ok(ds);
+        }
+
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_MAWB_TMP_IU_NG([FromBody]StaffPurchaseInvoiceDtls PID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MAWB_TMP_IU_NG", PID.ID, (PID.ENTRYNO == null) ? "" : PID.ENTRYNO, PID.VGUID, PID.CLIENT, PID.ACCOUNT_NAME, PID.AMOUNT, PID.DEDUCTION, (PID.MAWBNO == null) ? "" : PID.MAWBNO, PID.ACC_PURCHASEDTLS_ID, PID.IsJobReport, PID.cmpid, PID.PUR_TAXABLE, PID.ISTDSAPP, PID.PUR_TDS);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MAWB_TMP_IU_NG");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASEE_MAWB_TMP_DEL_NG(string ID, string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MAWB_TMP_DEL_NG", ID, VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASEE_MAWB_TMP_DEL_NG");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_TMP_DEL_NG(string ID, string VGUID, string ACC_PURCHASEDTLS_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_TMP_DEL_NG", ID, VGUID, ACC_PURCHASEDTLS_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_TMP_DEL_NG");
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_UPDATE_NG([FromBody]StaffPurchaseInvoiceMaster PIM)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_UPDATE_NG", PIM.CMPID, PIM.CMPCODE, PIM.CITYCODE1, PIM.CITYCODE, PIM.USERNAME, PIM.ENTRYNO, PIM.ENTRYDT, PIM.STATUS, PIM.SUP_CODE, PIM.SUP_NAME, PIM.SUP_INVNO, PIM.SUP_INVDT, PIM.SUP_BILLRECEIVEDDT, PIM.SUP_DUEDT, PIM.PASSFLAG, PIM.PASSEDBY, PIM.PASSEDAMT, PIM.INVAMT, PIM.VOUCHERNO, PIM.MAWBN0, PIM.FREIGHTG100235, PIM.SURCHARGEG101468, PIM.AIRFRTCOMMG100153, PIM.FRTREBATEG100186, PIM.NARRATION, PIM.ACTUALAMOUNT, PIM.VGUID, PIM.MAKER_ID, PIM.MAKER_IP, PIM.ACTION, PIM.DOCUMENTG100179, PIM.FK_SUP_ADDR_ID, PIM.AMSENSEXP_G102024, PIM.MISCEXP_G102025);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_UPDATE_NG");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpPost]
+        public IHttpActionResult ACC_PURCHASE_INSERT_NG([FromBody]StaffPurchaseInvoiceMaster PIM)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_INSERT_NG", PIM.CMPID, PIM.CMPCODE, PIM.CITYCODE1, PIM.CITYCODE, PIM.USERNAME, (PIM.ENTRYNO != null) ? PIM.ENTRYNO : "", PIM.ENTRYDT, PIM.STATUS, PIM.SUP_CODE, PIM.SUP_NAME, PIM.SUP_INVNO, PIM.SUP_INVDT, PIM.SUP_BILLRECEIVEDDT, PIM.SUP_DUEDT, PIM.PASSFLAG, PIM.PASSEDBY, PIM.PASSEDAMT, PIM.INVAMT, PIM.VOUCHERNO, PIM.MAWBN0, PIM.FREIGHTG100235, PIM.SURCHARGEG101468, PIM.AIRFRTCOMMG100153, PIM.FRTREBATEG100186, PIM.NARRATION, PIM.ACTUALAMOUNT, PIM.VGUID, PIM.MAKER_ID, PIM.MAKER_IP, PIM.ACTION, PIM.DOCUMENTG100179, PIM.FK_SUP_ADDR_ID, PIM.AMSENSEXP_G102024, PIM.MISCEXP_G102025);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_INSERT_NG");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_VIEW_NG(string cmp_code, string citycode, string ENTRYNO, string VGUID, string STATUS, string CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_VIEW_NG", cmp_code, citycode, ENTRYNO, VGUID, STATUS, CMPID);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_VIEW_NG");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_GETTDSTYPE(string SUPPCODE, string PURCHASEDT, string CMPCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_GETTDSTYPE", SUPPCODE, PURCHASEDT, CMPCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_GETTDSTYPE");
+            }
+            return Ok(ds);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_RESET_STEP1(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_MULTICONTAINER_RESET_STEP1", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_MULTICONTAINER_RESET_STEP1");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_RESETMAWB_NG(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_RESET_MAWB_NG", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_RESETMAWB_NG");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_PURCHASE_RESETMULTICONTAINER_NG(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PURCHASE_RESET_MULTICONTAINER_NG", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PURCHASE_RESETMULTICONTAINER_NG");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_NG_RESET(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_RESET_NG", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_NG_RESET");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult ACC_INVOICE_RESET_CHRGCURRENCY(string CMPID, string VGUID, string CURRENCY)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INVOICE_RESET_CURCHARGES", CMPID, VGUID, CURRENCY);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_INVOICE_RESET_CHRGCURRENCY");
+            }
+            return Ok(ds);
+        }
+    }
+}
