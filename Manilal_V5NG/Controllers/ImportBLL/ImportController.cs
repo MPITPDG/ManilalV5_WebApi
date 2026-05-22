@@ -26,6 +26,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
     public class ImportController : ApiController
     {
 
+        /// <summary>excellocaldatafile operation.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         // [Route("upload/excellocaldatafile")]
         public IHttpActionResult excellocaldatafile()
@@ -296,6 +298,10 @@ namespace Manilal_V5NG.Controllers.ImportBLL
 
             return null;
         }
+        /// <summary>Perform WMS LOCALGRN BOXDTLS records.</summary>
+        /// <param name="BXNO">BXNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_LOCALGRN_BOXDTLS(string BXNO, string VGUID)
         {
@@ -453,6 +459,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
                 return "error";
             }
         }
+        /// <summary>IMP WMS LOCALGRN PAGE LOAD operation.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
 
         public IHttpActionResult IMP_WMS_LOCALGRN_PAGE_LOAD(string CMPCODE, string CITYCODE, string CITYCODE1)
@@ -472,6 +480,10 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform WMS GRN LOCALBOXDTLS records.</summary>
+        /// <param name="BXNO">BXNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GRN_LOCALBOXDTLS(string BXNO, string VGUID)
         {
@@ -489,6 +501,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Upload UploadGoodsReturnCSV records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         [Route("api/Import/UploadGoodsReturnCSV")]
         public IHttpActionResult UploadGoodsReturnCSV()
@@ -654,6 +668,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return dsupdate;
 
         }
+        /// <summary>Perform WMS SHIPMENTWISE ITEMSTATUS ALL MRPQTY XL records.</summary>
+        /// <param name="CONTAINERNO">CONTAINERNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ASONDATE">ASONDATE parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL(string CONTAINERNO, string CMPCODE, string CITYCODE, string ASONDATE)
         {
@@ -690,6 +710,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Insert or update WMS GRN BOXWISE records.</summary>
+        /// <param name="GRITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GRN_BOXWISE_IU([FromBody] GRNITEM GRITEM)
         {
@@ -709,6 +732,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GETBDSHIPMENTNO records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETBDSHIPMENTNO()
         {
@@ -726,6 +751,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Upload UploadInvoice records.</summary>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpPost]
         public HttpResponseMessage UploadInvoice()
         {
@@ -970,6 +997,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
         }
 
 
+        /// <summary>Upload UploadPackingList records.</summary>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpPost]
         public HttpResponseMessage UploadPackingList()
         {
@@ -1207,6 +1236,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
         }
 
 
+        /// <summary>Perform WMS SHIPMENTHBL DOWNLOADTEMPLATE records.</summary>
+        /// <param name="HBLNO">Bill of lading number.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_SHIPMENTHBL_DOWNLOADTEMPLATE(string HBLNO)
         {
@@ -1263,6 +1295,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Retrieve list of WMS GETSHIPMENTHBL records.</summary>
+        /// <param name="Shipmentno">Shipmentno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETSHIPMENTHBL_LIST(string Shipmentno)
         {
@@ -1280,6 +1315,14 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of WMS GOODSRETURN LIST XL records.</summary>
+        /// <param name="GRTNNO">GRTNNO parameter.</param>
+        /// <param name="GRTNFROMDATE">Start date for the date range filter.</param>
+        /// <param name="GRTNTODATE">End date for the date range filter.</param>
+        /// <param name="SEARCHTYPE">Search type/column identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_GOODSRETURN_LIST_XL(string GRTNNO, string GRTNFROMDATE, string GRTNTODATE, string SEARCHTYPE, string CITYCODE, string CMPCODE)
         {
@@ -1310,6 +1353,10 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform WMS GETKIABICODEWISE DTLS GOODSRETURN records.</summary>
+        /// <param name="KIABICODE">KIABICODE parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETKIABICODEWISE_DTLS_GOODSRETURN(string KIABICODE, string VGUID)
         {
@@ -1326,6 +1373,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS MULTIEAN RACKNO records.</summary>
+        /// <param name="GRNITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_MULTIEAN_RACKNO_UPDATE([FromBody]GRNITEM GRNITEM)
         {
@@ -1346,6 +1396,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GET EANDTLS FROMRACKNO records.</summary>
+        /// <param name="RACKNO">RACKNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GET_EANDTLS_FROMRACKNO(string RACKNO)
         {
@@ -1362,6 +1415,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS DASHBOARD GETRACKNO records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_DASHBOARD_GETRACKNO()
         {
@@ -1378,6 +1433,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS GRN BARCODEITEM IU MANUAL records.</summary>
+        /// <param name="GRITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GRN_BARCODEITEM_IU_MANUAL([FromBody]GRNITEM GRITEM)
         {
@@ -1397,6 +1455,14 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GETEANBOXWISE DTLS GRN MANUAL records.</summary>
+        /// <param name="EANCODE">EANCODE parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="CONTAINERNO">CONTAINERNO parameter.</param>
+        /// <param name="BOXNO">BOXNO parameter.</param>
+        /// <param name="SHIPMENTTYPE">SHIPMENTTYPE parameter.</param>
+        /// <param name="PONO">PONO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETEANBOXWISE_DTLS_GRN_MANUAL(string EANCODE, string VGUID, string CONTAINERNO, string BOXNO, string SHIPMENTTYPE, string PONO)
         {
@@ -1413,6 +1479,13 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GRN BOXDTLS MANUAL records.</summary>
+        /// <param name="BXNO">BXNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="SHIPMENTTYPE">SHIPMENTTYPE parameter.</param>
+        /// <param name="SUPCODE">SUPCODE parameter.</param>
+        /// <param name="PONO">PONO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GRN_BOXDTLS_MANUAL(string BXNO, string VGUID, string SHIPMENTTYPE, string SUPCODE, string PONO)
         {
@@ -1429,6 +1502,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS SHIPMENTSTOCK STATUS PAGE LOAD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_SHIPMENTSTOCK_STATUS_PAGE_LOAD(string CMPCODE, string CITYCODE, string CITYCODE1)
         {
@@ -1446,6 +1524,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GRN GETSHIPMENTNO FORLOCAL records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="SUPCODE">SUPCODE parameter.</param>
+        /// <param name="PONO">PONO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GRN_GETSHIPMENTNO_FORLOCAL(string CMPCODE, string CITYCODE, string SUPCODE, string PONO)
         {
@@ -1463,6 +1547,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS SHIPMENTWISE ITEMSTATUS MONTHWISE records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_SHIPMENTWISE_ITEMSTATUS_MONTHWISE(string CMPCODE, string CITYCODE, string FROMDATE, string TODATE)
         {
@@ -1492,6 +1582,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform WMS SHIPMENTWISE ITEMSTATUS OP XL records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_SHIPMENTWISE_ITEMSTATUS_OP_XL(string CMPCODE, string CITYCODE, string FROMDATE, string TODATE)
         {
@@ -1521,6 +1617,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform WMS GOODSISSUE EXPORTTOXL records.</summary>
+        /// <param name="GINNO">GINNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_GOODSISSUE_EXPORTTOXL(string GINNO, string CMPCODE, string CITYCODE)
         {
@@ -1551,6 +1652,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform WMS COMMONSEARCH RACKWISE GETDATA records.</summary>
+        /// <param name="RACKNO">RACKNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_COMMONSEARCH_RACKWISE_GETDATA(String RACKNO)
         {
@@ -1569,6 +1673,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS MULTICONT EANWISE RACKNO records.</summary>
+        /// <param name="GRNITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_MULTICONT_EANWISE_RACKNO_UPDATE([FromBody]GRNITEM GRNITEM)
         {
@@ -1589,6 +1696,10 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GOODSISSUE GETMULTICONTAINEREANDTLS records.</summary>
+        /// <param name="EAN">EAN parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSISSUE_GETMULTICONTAINEREANDTLS(string EAN, string VGUID)
         {
@@ -1605,6 +1716,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS SKUWISE GETDATA ADV records.</summary>
+        /// <param name="SKU">SKU parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CONTNO">CONTNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_SKUWISE_GETDATA_ADV(String SKU, string CMPCODE, string CITYCODE, string CONTNO)
         {
@@ -1623,6 +1740,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS RACKUPDATE GETDATA records.</summary>
+        /// <param name="EAN">EAN parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_RACKUPDATE_GETDATA(String EAN)
         {
@@ -1641,6 +1761,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for WMS GOODSRETURN records.</summary>
+        /// <param name="GRTNNO">GRTNNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSRETURN_PRINT(string GRTNNO, string CMPCODE, string CITYCODE)
         {
@@ -1658,6 +1783,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete WMS GOODSRETURN ITEMDTLS TMP records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="GRTNDTLSID">GRTNDTLSID parameter.</param>
+        /// <param name="EAN">EAN parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSRETURN_ITEMDTLS_TMP_DEL(string ID, string VGUID, string GRTNDTLSID, string EAN)
         {
@@ -1673,6 +1804,14 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve WMS GOODSRETURN records.</summary>
+        /// <param name="GRTNNO">GRTNNO parameter.</param>
+        /// <param name="GRTNFROMDATE">Start date for the date range filter.</param>
+        /// <param name="GRTNTODATE">End date for the date range filter.</param>
+        /// <param name="SEARCHTYPE">Search type/column identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSRETURN_SEARCH(string GRTNNO, string GRTNFROMDATE, string GRTNTODATE, string SEARCHTYPE, string CITYCODE, string CMPCODE)
         {
@@ -1695,6 +1834,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for WMS GOODSRETURN records.</summary>
+        /// <param name="GRTNNO">GRTNNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSRETURN_VIEW(string GRTNNO, string CMPCODE, string CITYCODE, string VGUID)
         {
@@ -1712,6 +1857,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS GOODSRETURN records.</summary>
+        /// <param name="GI">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GOODSRETURN_INSERT([FromBody]GOODSRETURN GI)
         {
@@ -1732,6 +1880,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS GOODSRETURN records.</summary>
+        /// <param name="GI">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GOODSRETURN_UPDATE([FromBody]GOODSRETURN GI)
         {
@@ -1752,6 +1903,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for WMS GOODSRETURN records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSRETURN_RESET(string VGUID)
         {
@@ -1769,6 +1923,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS GOODSRETURN TMP records.</summary>
+        /// <param name="GRTITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GOODSRETURN_TMP_IU([FromBody]GOODSRETURNITEM GRTITEM)
         {
@@ -1788,6 +1945,10 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GETEANWISE DTLS GOODSRETURN records.</summary>
+        /// <param name="EANCODE">EANCODE parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETEANWISE_DTLS_GOODSRETURN(string EANCODE, string VGUID)
         {
@@ -1804,6 +1965,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GOODSRETURN PAGE LOAD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="MODE">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSRETURN_PAGE_LOAD(string CMPCODE, string CITYCODE, string CITYCODE1, string MODE)
         {
@@ -1821,6 +1988,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS MULTIEANWISE RACKSHELF records.</summary>
+        /// <param name="ITEMMST">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_MULTIEANWISE_RACKSHELF_UPDATE([FromBody]wmsitemmaster ITEMMST)
         {
@@ -1840,6 +2010,13 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS ITEM GETDATA SHIPMENTWISE records.</summary>
+        /// <param name="CONTAINERNO">CONTAINERNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_ITEM_GETDATA_SHIPMENTWISE(String CONTAINERNO, string CMPCODE, string CITYCODE, string FROMDATE, string TODATE)
         {
@@ -1858,6 +2035,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS SKUWISE GETDATA WITHSKU records.</summary>
+        /// <param name="SKU">SKU parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_SKUWISE_GETDATA_WITHSKU(String SKU, string CMPCODE, string CITYCODE)
         {
@@ -1876,6 +2058,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS SKUWISE GETDATA records.</summary>
+        /// <param name="SKU">SKU parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CONTNO">CONTNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_SKUWISE_GETDATA(String SKU, string CMPCODE, string CITYCODE, string CONTNO)
         {
@@ -1894,6 +2082,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS SHIPMENTWISE STOCKSTATUS XL records.</summary>
+        /// <param name="CONTAINERNO">CONTAINERNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ASONDATE">ASONDATE parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_SHIPMENTWISE_STOCKSTATUS_XL(string CONTAINERNO, string CMPCODE, string CITYCODE, string ASONDATE)
         {
@@ -1932,6 +2126,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform WMS SHIPMENTWISE ITEMSTATUS XL records.</summary>
+        /// <param name="CONTAINERNO">CONTAINERNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ASONDATE">ASONDATE parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_SHIPMENTWISE_ITEMSTATUS_XL(string CONTAINERNO, string CMPCODE, string CITYCODE, string ASONDATE)
         {
@@ -1968,6 +2168,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform WMS DASHBOARD SHIPMENTWISE records.</summary>
+        /// <param name="CONTAINERNO">CONTAINERNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_DASHBOARD_SHIPMENTWISE(string CONTAINERNO)
         {
@@ -1984,6 +2187,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS ITEMUPLOAD PAGE LOAD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_ITEMUPLOAD_PAGE_LOAD(string CMPCODE, string CITYCODE, string CITYCODE1)
         {
@@ -2001,6 +2209,13 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GRN BOXDTLS records.</summary>
+        /// <param name="BXNO">BXNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="SHIPMENTTYPE">SHIPMENTTYPE parameter.</param>
+        /// <param name="SUPCODE">SUPCODE parameter.</param>
+        /// <param name="PONO">PONO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GRN_BOXDTLS(string BXNO, string VGUID, string SHIPMENTTYPE, string SUPCODE, string PONO)
         {
@@ -2017,6 +2232,13 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GETEANBOXWISE DTLS GRN records.</summary>
+        /// <param name="EANCODE">EANCODE parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="CONTAINERNO">CONTAINERNO parameter.</param>
+        /// <param name="BOXNO">BOXNO parameter.</param>
+        /// <param name="SHIPMENTTYPE">SHIPMENTTYPE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETEANBOXWISE_DTLS_GRN(string EANCODE, string VGUID, string CONTAINERNO, string BOXNO, string SHIPMENTTYPE)
         {
@@ -2033,6 +2255,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS GRN BARCODEITEM records.</summary>
+        /// <param name="GRITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GRN_BARCODEITEM_IU([FromBody]GRNITEM GRITEM)
         {
@@ -2053,6 +2278,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform WMS CLIENT PO DOWNLOAD records.</summary>
+        /// <param name="PONO">PONO parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_CLIENT_PO_DOWNLOAD(string PONO)
         {
@@ -2109,6 +2337,10 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Retrieve list of WMS GET CLIENTPO records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GET_CLIENTPO_LIST(String FromDate, string ToDate)
         {
@@ -2129,6 +2361,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS EANWISE RACKNO records.</summary>
+        /// <param name="GRNITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_EANWISE_RACKNO_UPDATE([FromBody]GRNITEM GRNITEM)
         {
@@ -2149,6 +2384,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS CLIENTPOUPLOAD PAGE LOAD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_CLIENTPOUPLOAD_PAGE_LOAD(string CMPCODE, string CITYCODE, string CITYCODE1)
         {
@@ -2166,6 +2406,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GOODSISSUE PACKINGLIST DOWNLOAD records.</summary>
+        /// <param name="ISSUENO">ISSUENO parameter.</param>
+        /// <param name="PONO">PONO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_GOODSISSUE_PACKINGLIST_DOWNLOAD(string ISSUENO, string PONO, string CMPCODE, string CITYCODE)
         {
@@ -2222,6 +2468,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Load page reference data for WMS COMMONSEARCH records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_COMMONSEARCH_PAGELOAD()
         {
@@ -2243,6 +2491,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Upload UploadClientPOCSV records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         [Route("api/Import/UploadClientPOCSV")]
         public IHttpActionResult UploadClientPOCSV()
@@ -2403,6 +2653,14 @@ namespace Manilal_V5NG.Controllers.ImportBLL
         }
 
 
+        /// <summary>Retrieve list of WMS GRN LIST XL records.</summary>
+        /// <param name="GRNNO">GRNNO parameter.</param>
+        /// <param name="GRNFROMDATE">Start date for the date range filter.</param>
+        /// <param name="GRNTODATE">End date for the date range filter.</param>
+        /// <param name="SEARCHTYPE">Search type/column identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_GRN_LIST_XL(string GRNNO, string GRNFROMDATE, string GRNTODATE, string SEARCHTYPE, string CITYCODE, string CMPCODE)
         {
@@ -2433,6 +2691,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Populate form with existing data for WMS ITEM MASTER records.</summary>
+        /// <param name="ItemId">Item Id parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_ITEM_MASTER_POPULATE(String ItemId)
         {
@@ -2450,6 +2711,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS ITEM MASTER COMMONSEARCH records.</summary>
+        /// <param name="EAN">EAN parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_ITEM_MASTER_COMMONSEARCH(String EAN, string CMPCODE, string CITYCODE1)
         {
@@ -2468,6 +2734,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GOODSISSUE CARTONPRINT records.</summary>
+        /// <param name="GINNO">GINNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSISSUE_CARTONPRINT(String GINNO)
         {
@@ -2502,6 +2771,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
         //    }
         //    return Ok(ds);
         //}
+        /// <summary>Perform WMS GETDATA FORASSIGN MRPLABLES TOUSERS ONLOAD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="USERID">USERID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETDATA_FORASSIGN_MRPLABLES_TOUSERS_ONLOAD(string CMPCODE, string CITYCODE, string USERID)
         {
@@ -2518,6 +2792,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for WMS GRN records.</summary>
+        /// <param name="GRNNO">GRNNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GRN_PRINT(string GRNNO, string CMPCODE, string CITYCODE)
         {
@@ -2535,6 +2814,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS MRPLABEL ASSIGNUSERS records.</summary>
+        /// <param name="im">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_MRPLABEL_ASSIGNUSERS_UPDATE([FromBody]wmsitemmaster im)
         {
@@ -2555,6 +2837,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS MRPLABEL ASSIGNUSERS UPDATEOLD records.</summary>
+        /// <param name="im">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_MRPLABEL_ASSIGNUSERS_UPDATEOLD([FromBody]wmsitemmaster im)
         {
@@ -2575,6 +2860,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS ITEMSTOCK REPORT XL records.</summary>
+        /// <param name="TODT">End date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_WMS_ITEMSTOCK_REPORT_XL(string TODT, string CMPCODE, string CITYCODE)
         {
@@ -2605,6 +2895,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform WMS GETEANWISE DTLS GOODSISSUE POWISE records.</summary>
+        /// <param name="EANCODE">EANCODE parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="PONO">PONO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETEANWISE_DTLS_GOODSISSUE_POWISE(string EANCODE, string VGUID, string PONO)
         {
@@ -2621,6 +2916,10 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GETEANWISE DTLS GOODSISSUE records.</summary>
+        /// <param name="EANCODE">EANCODE parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETEANWISE_DTLS_GOODSISSUE(string EANCODE, string VGUID)
         {
@@ -2902,6 +3201,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return "success";
             //return Ok(gstDS1);
         }
+        /// <summary>Retrieve print/view data for WMSGOODSISSUE records.</summary>
+        /// <param name="GINO">GINO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMSGOODSISSUE_PRINT(string GINO, string CMPCODE, string CITYCODE)
         {
@@ -2919,6 +3223,10 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GETEANWISE DTLS records.</summary>
+        /// <param name="EANCODE">EANCODE parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETEANWISE_DTLS(string EANCODE, string VGUID)
         {
@@ -2935,6 +3243,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for WMS MRPLABLE records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_MRPLABLE_PRINT(string ID)
         {
@@ -2951,6 +3262,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS MRPLABEL ASSIGNUSERS records.</summary>
+        /// <param name="im">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_MRPLABEL_ASSIGNUSERS_INSERT([FromBody]wmsitemmaster im)
         {
@@ -2971,6 +3285,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GETDATA FORASSIGN MRPLABLES TOUSERS records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="USERID">USERID parameter.</param>
+        /// <param name="BOXNO">BOXNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETDATA_FORASSIGN_MRPLABLES_TOUSERS(string CMPCODE, string CITYCODE, string USERID, string BOXNO)
         {
@@ -2987,6 +3307,13 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GETDATA FORASSIGN MRPLABLES TOUSERSOLD records.</summary>
+        /// <param name="ITEMGROUP">ITEMGROUP parameter.</param>
+        /// <param name="ITEMSUBGRP">ITEMSUBGRP parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="USERID">USERID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETDATA_FORASSIGN_MRPLABLES_TOUSERSOLD(string ITEMGROUP, string ITEMSUBGRP, string CMPCODE, string CITYCODE, string USERID)
         {
@@ -3003,6 +3330,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for WMS ITEM records.</summary>
+        /// <param name="EANCODE">EANCODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_ITEM_PRINT(string EANCODE)
         {
@@ -3019,6 +3349,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GETEANWISE DTLS records.</summary>
+        /// <param name="EANCODE">EANCODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GETEANWISE_DTLS(string EANCODE)
         {
@@ -3036,6 +3369,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>UploadItemMrpExcelFile operation.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         // [Route("api/Accounts")]
         public IHttpActionResult UploadItemMrpExcelFile()
@@ -3395,6 +3730,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return "success";
 
         }
+        /// <summary>Upload UploadItemExcelFile records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UploadItemExcelFile()
         {
@@ -3649,6 +3986,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return "success";
             //return Ok(gstDS1);
         }
+        /// <summary>Insert or update WMS GOODSISSUE BARCODEITEM records.</summary>
+        /// <param name="GITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GOODSISSUE_BARCODEITEM_IU([FromBody]GOODISSUEITEM GITEM)
         {
@@ -3704,6 +4044,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
         //    }
         //    return Ok(ds);
         //}
+        /// <summary>Perform WMS GRN BARCODEITEM IUold records.</summary>
+        /// <param name="GRITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GRN_BARCODEITEM_IUold([FromBody]GRNITEM GRITEM)
         {
@@ -3724,6 +4067,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform WMS ITEM STOCK REPORT records.</summary>
+        /// <param name="TODT">End date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_ITEM_STOCK_REPORT(string TODT, string CMPCODE, string CITYCODE)
         {
@@ -3740,6 +4088,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS DASHBOARD records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_DASHBOARD()
         {
@@ -3756,6 +4106,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Generate SEA CONSOLE GENERATE AUTO records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_SEA_CONSOLE_GENERATE_AUTO([FromBody]CommonEight obj)
         {
@@ -3779,6 +4132,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Load page reference data for CONT MAWB PAGELOAD records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult EXP_CONT_MAWB_PAGELOAD_LIST([FromUri]CommonThree obj)
         {
@@ -3802,6 +4157,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for WMS GRN records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GRN_RESET(string VGUID)
         {
@@ -3819,6 +4177,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for WMS GRN records.</summary>
+        /// <param name="GRNNO">GRNNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GRN_VIEW(string GRNNO, string CMPCODE, string CITYCODE, string VGUID)
         {
@@ -3836,6 +4200,14 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve WMS GRN records.</summary>
+        /// <param name="GRNNO">GRNNO parameter.</param>
+        /// <param name="GRNFROMDATE">Start date for the date range filter.</param>
+        /// <param name="GRNTODATE">End date for the date range filter.</param>
+        /// <param name="SEARCHTYPE">Search type/column identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GRN_SEARCH(string GRNNO, string GRNFROMDATE, string GRNTODATE, string SEARCHTYPE, string CITYCODE, string CMPCODE)
         {
@@ -3858,6 +4230,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete WMS GRN ITEMDTLS TMP records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="GRNDTLSID">GRNDTLSID parameter.</param>
+        /// <param name="EAN">EAN parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GRN_ITEMDTLS_TMP_DEL(string ID, string VGUID, string GRNDTLSID, string EAN)
         {
@@ -3873,6 +4251,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS GRN ITEMDTLS TMP records.</summary>
+        /// <param name="GITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GRN_ITEMDTLS_TMP_IU([FromBody]GRNITEM GITEM)
         {
@@ -3892,6 +4273,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GRN ORDERDETAILS GET records.</summary>
+        /// <param name="orderno">orderno parameter.</param>
+        /// <param name="vguid">Session GUID for temporary record management.</param>
+        /// <param name="shiptype">shiptype parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GRN_ORDERDETAILS_GET(string orderno, string vguid, string shiptype)
         {
@@ -3909,6 +4295,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>IMP WMS GRN PAGE LOAD operation.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
        
         public IHttpActionResult IMP_WMS_GRN_PAGE_LOAD(string CMPCODE, string CITYCODE, string CITYCODE1, string MODE)
@@ -3927,6 +4315,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS GRN records.</summary>
+        /// <param name="GR">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GRN_INSERT([FromBody]GRN GR)
         {
@@ -3947,6 +4338,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS GRN records.</summary>
+        /// <param name="GR">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GRN_UPDATE([FromBody]GRN GR)
         {
@@ -3967,6 +4361,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for WMS GOODSISSUE records.</summary>
+        /// <param name="GINNO">GINNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSISSUE_VIEW(string GINNO, string CMPCODE, string CITYCODE, string VGUID)
         {
@@ -3984,6 +4384,14 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve WMS GOODSISSUE records.</summary>
+        /// <param name="GINNO">GINNO parameter.</param>
+        /// <param name="GINFROMDATE">Start date for the date range filter.</param>
+        /// <param name="GINTODATE">End date for the date range filter.</param>
+        /// <param name="SEARCHTYPE">Search type/column identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSISSUE_SEARCH(string GINNO, string GINFROMDATE, string GINTODATE, string SEARCHTYPE, string CITYCODE, string CMPCODE)
         {
@@ -4006,6 +4414,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for WMS GOODSISSUE records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSISSUE_RESET(string VGUID)
         {
@@ -4023,6 +4434,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS GOODSISSUE records.</summary>
+        /// <param name="GI">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GOODSISSUE_INSERT([FromBody]GOODSISSUE GI)
         {
@@ -4043,6 +4457,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update WMS GOODSISSUE records.</summary>
+        /// <param name="GI">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GOODSISSUE_UPDATE([FromBody]GOODSISSUE GI)
         {
@@ -4064,6 +4481,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Delete WMS GOODSISSUE ITEMDTLS TMP records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="GINDTLSID">GINDTLSID parameter.</param>
+        /// <param name="EAN">EAN parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSISSUE_ITEMDTLS_TMP_DEL(string ID, string VGUID, string GINDTLSID, string EAN)
         {
@@ -4098,6 +4521,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
         //    }
         //    return Ok(ds);
         //}
+        /// <summary>Insert or update WMS GOODSISSUE DTLS TMP records.</summary>
+        /// <param name="GISSUEITEM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult IMP_WMS_GOODSISSUE_DTLS_TMP_IU([FromBody]GOODISSUEITEM GISSUEITEM)
         {
@@ -4118,6 +4544,12 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform WMS GOODSISSUE PAGE LOAD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="MODE">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_WMS_GOODSISSUE_PAGE_LOAD(string CMPCODE, string CITYCODE, string CITYCODE1, string MODE)
         {
@@ -4135,6 +4567,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform MSW ITEM MASTER POPULATES records.</summary>
+        /// <param name="ItemId">Item Id parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MSW_ITEM_MASTER_POPULATES(String ItemId)
         {
@@ -4152,6 +4587,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve Wms Item Master records.</summary>
+        /// <param name="SEARCHTYPE">Search type/column identifier.</param>
+        /// <param name="SEARCHVALUE">SEARCHVALUE parameter.</param>
+        /// <param name="ITEMSUBGROUP">ITEMSUBGROUP parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Imp_Wms_Item_Master_SEARCH(string SEARCHTYPE, string SEARCHVALUE, string ITEMSUBGROUP)
         {
@@ -4169,6 +4609,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             return Ok(ds);
         } //
+        /// <summary>Load page reference data for WMS ITEMMASTER records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult WMS_ITEMMASTER_PAGELOAD()
         {
@@ -4207,6 +4649,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PRINT DOSSIER records.</summary>
+        /// <param name="CONSOLENO">CONSOLENO parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage PRINT_DOSSIER([FromUri]string CONSOLENO)
         {
@@ -4237,6 +4682,11 @@ namespace Manilal_V5NG.Controllers.ImportBLL
 
             return httpResponseMessage;
         }
+        /// <summary>Retrieve Fill Dropdown records.</summary>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="iu_mode">Operation mode or filter type.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Dropdown([FromUri]string mode, string iu_mode, string citycode)
         {
@@ -4260,6 +4710,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve GetLocalCurrency records.</summary>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetLocalCurrency([FromUri]string citycode1)
         {
@@ -4283,6 +4736,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve GetContainerType records.</summary>
+        /// <param name="container_size">container size parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetContainerType([FromUri]string container_size)
         {
@@ -4306,6 +4762,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform populate import records.</summary>
+        /// <param name="importid">importid parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult populate_import([FromUri]string importid)
         {
@@ -4329,6 +4788,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve filltables records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult filltables([FromBody]FillTable[] obj)
         {
@@ -4361,6 +4823,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(finalDs);
         }
 
+        /// <summary>Insert or update Import records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Import_Iu([FromBody]Import obj)
         {
@@ -5397,6 +5862,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return sql;
         }
 
+        /// <summary>Search and retrieve Fill Dropdown Report records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Dropdown_Report_Search([FromUri]string citycode)
         {
@@ -5420,6 +5888,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Search and retrieve Report records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Report_Search([FromBody]ImportSearch obj)
         {
@@ -5445,6 +5916,10 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform SeaAirDocketPrint records.</summary>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="importcode">importcode parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult SeaAirDocketPrint([FromUri]string mode, string importcode)
         {
@@ -5468,6 +5943,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve GetArrivalPort records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetArrivalPort()
         {
@@ -5490,6 +5967,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform VesselDetails records.</summary>
+        /// <param name="vessel_id">vessel id parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult VesselDetails([FromUri] string vessel_id)
         {
@@ -5512,6 +5992,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update Vessel records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Imp_Vessel_IU([FromBody]Vessel obj)
         {
@@ -5537,6 +6020,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Search and retrieve Vessel records.</summary>
+        /// <param name="search">search parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Imp_Vessel_Search([FromUri]string search)
         {
@@ -5560,6 +6046,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform CurrencyAndCity records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CurrencyAndCity()
         {
@@ -5582,6 +6070,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform CurrencyDetails records.</summary>
+        /// <param name="id">Primary key ID of the record.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CurrencyDetails([FromUri] string id)
         {
@@ -5604,6 +6095,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update Currency records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Imp_Currency_IU([FromBody]Currency obj)
         {
@@ -5628,6 +6122,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Search and retrieve Currency records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Imp_Currency_Search([FromBody]Currency obj)
         {
@@ -5651,6 +6148,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AirlineDetails records.</summary>
+        /// <param name="id">Primary key ID of the record.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult AirlineDetails([FromUri] string id)
         {
@@ -5673,6 +6173,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update Airline records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Imp_Airline_IU([FromBody]Airline obj)
         {
@@ -5696,6 +6199,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Search and retrieve Airline records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Imp_Airline_Search([FromBody]Airline obj)
         {
@@ -5719,6 +6225,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve GetClient records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetClient([FromUri] string citycode)
         {
@@ -5741,6 +6250,8 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform MiscellaneousDetails records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MiscellaneousDetails([FromUri]Miscellaneous obj)
         {
@@ -5763,6 +6274,9 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update Miscellaneous records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Imp_Miscellaneous_IU([FromBody]Miscellaneous obj)
         {

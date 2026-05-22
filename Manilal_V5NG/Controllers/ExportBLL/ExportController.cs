@@ -20,6 +20,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 {
     public class ExportController : ApiController
     {
+        /// <summary>Retrieve GetExportConsignmentNew records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetExportConsignmentNew([FromBody] ConsignmentDetails cd)
         {
@@ -40,6 +43,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform UpdateJob records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateJob([FromBody] Main cd)
         {
@@ -66,6 +72,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update EXPT SHIPMENTPROGRESS BLDETAILS records.</summary>
+        /// <param name="bl">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult EXPT_SHIPMENTPROGRESS_BLDETAILS_UPDATE([FromBody] bldetails bl)
         {
@@ -85,6 +94,14 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform EXPT SHIPMENT PROGRESS GETBLDATA records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="EXPT_VESSEL">EXPT VESSEL parameter.</param>
+        /// <param name="VSL_PORT">VSL PORT parameter.</param>
+        /// <param name="BLNO">Bill of lading number.</param>
+        /// <param name="BLDATE">BLDATE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult EXPT_SHIPMENT_PROGRESS_GETBLDATA(String CMPCODE, String CITYCODE, String EXPT_VESSEL, String VSL_PORT, String BLNO, String BLDATE)
         {
@@ -102,6 +119,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ExportEditCo2Update records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportEditCo2Update([FromBody]ActualFlightDate cd)
         {
@@ -129,6 +149,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve GetExportConsignment records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetExportConsignment([FromBody]ConsignmentDetails cd)
         {
@@ -150,6 +173,11 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform OrderBookingList records.</summary>
+        /// <param name="Concode">Concode parameter.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="Citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult OrderBookingList([FromUri]string Concode, string Mode, string Citycode)
         {
@@ -171,6 +199,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform OrderNoQcList records.</summary>
+        /// <param name="exptno">Export job number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult OrderNoQcList([FromUri]string exptno)
         {
@@ -192,6 +223,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform OrderNoQcListSubmit records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult OrderNoQcListSubmit([FromBody]CommonFour obj)
         {
@@ -217,6 +251,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Retrieve GetMainConsignment records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetMainConsignment([FromBody]MainConsignmentDetails obj)
         {
@@ -238,6 +275,11 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve GetMainConsignmentOrderList records.</summary>
+        /// <param name="concode">concode parameter.</param>
+        /// <param name="expcode">expcode parameter.</param>
+        /// <param name="exptmode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetMainConsignmentOrderList([FromUri]string concode, string expcode, string exptmode)
         {
@@ -261,6 +303,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         //---------------------vessel master
 
+        /// <summary>Retrieve dropdown data for GetExportVslpageload records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetExportVslpageload_fill([FromBody]ConsignmentDetails cd)
         {
@@ -282,6 +327,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ExportVslPortAgtDtls TmpIu records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportVslPortAgtDtls_TmpIu([FromBody]ConsignmentDetails cd)
         {
@@ -302,6 +350,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform ExportVslPortAgtDtls Tmpdelete records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportVslPortAgtDtls_Tmpdelete([FromBody]ConsignmentDetails cd)
         {
@@ -323,6 +374,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update ExportVslMst records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportVslMst_IU([FromBody]ConsignmentDetails cd)
         {
@@ -343,6 +397,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve ExportVslMst records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportVslMst_Search([FromBody]ConsignmentDetails cd)
         {
@@ -364,6 +421,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
 
         }
+        /// <summary>Populate form with existing data for ExportVslMst records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportVslMst_Populate([FromBody]ConsignmentDetails cd)
         {
@@ -386,6 +446,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             //------------- end of vessel 
         }
 
+        /// <summary>Perform ExportVslMst ResetAll records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportVslMst_ResetAll([FromBody]ConsignmentDetails cd)
         {
@@ -411,6 +474,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         //------------- end of vessel 
 
         //---------------------start FCR generation
+        /// <summary>Load page reference data for Export FCR records.</summary>
+        /// <param name="fg">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_FCR_Pageload([FromBody]FCRGeneration fg)
         {
@@ -433,6 +499,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
         //---------------------start FCR generation
+        /// <summary>Perform Export FCR GENERATION records.</summary>
+        /// <param name="fg">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_FCR_GENERATION([FromBody]FCRGeneration fg)
         {
@@ -453,6 +522,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform EXPORT SWICH FCR GENERATION records.</summary>
+        /// <param name="fg">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult EXPORT_SWICH_FCR_GENERATION([FromBody]swichFCRGeneration fg)
         {
@@ -473,6 +545,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform Export FCR PRINTPREVIEW records.</summary>
+        /// <param name="fg">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_FCR_PRINTPREVIEW([FromBody]FCRGeneration fg)
         {
@@ -494,6 +569,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Export FCR PRINTUPDATE records.</summary>
+        /// <param name="fp">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_FCR_PRINTUPDATE([FromBody]FCRPrintview fp)
         {
@@ -523,6 +601,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         //START CONTAINER GENERATION
 
 
+        /// <summary>Retrieve list of Export Vessel records.</summary>
+        /// <param name="vsl">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_Vessel_List([FromBody]vslSearch vsl)
         {
@@ -544,6 +625,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve print/view data for Export container records.</summary>
+        /// <param name="CN">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_container_View([FromBody]container CN)
         {
@@ -564,6 +648,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform Export container filldropdown records.</summary>
+        /// <param name="CN">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_container_filldropdown([FromBody]container CN)
         {
@@ -584,6 +671,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Populate form with existing data for Export container records.</summary>
+        /// <param name="CN">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_container_Populate([FromBody]container CN)
         {
@@ -604,6 +694,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update Export container records.</summary>
+        /// <param name="CN">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_container_IU([FromBody]containerIU CN)
         {
@@ -625,6 +718,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
         //
+        /// <summary>Populate form with existing data for Export containerCLP records.</summary>
+        /// <param name="CN">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_containerCLP_Populate([FromBody]containerIU CN)
         {
@@ -648,6 +744,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         //--------------------------------------------------START Consignment-------------------------------------------------------------
         //--------------Start Package No
+        /// <summary>Perform ConsignmentPackage records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentPackage([FromBody]Package cd)
         {
@@ -671,6 +770,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         //--------------End Package No
 
         //--------------Start ITC
+        /// <summary>Perform ConsignmentITC records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentITC([FromBody]Itc cd)
         {
@@ -694,6 +796,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         //--------------End ITC
 
         //--------------Start Order
+        /// <summary>Perform ConsignmentOrder records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentOrder([FromBody]Order cd)
         {
@@ -716,6 +821,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
         //--------------End Order
         //--------------Start Final Submit
+        /// <summary>Insert or update Mst Export records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Exp_Mst_Export_IU([FromBody]Consignment cd)
         {
@@ -760,6 +868,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ExportLogCompleted records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportLogCompleted([FromBody]ConsignmentLogCompleted obj)
         {
@@ -786,6 +897,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         //--------------End Final Submit
 
         //--------------Start Order
+        /// <summary>Perform ConsignmentSearchFillDropdown records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentSearchFillDropdown([FromBody]Search cd)
         {
@@ -808,6 +922,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
         //--------------End Order
         //--------------Start Search Shipper Consignee
+        /// <summary>Perform ConsignmentSearchShipperConsignee records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentSearchShipperConsignee([FromBody]Search cd)
         {
@@ -830,6 +947,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
         //--------------End Search Shipper Consignee
         //--------------Start Search Shipper Consignee List
+        /// <summary>Perform ConsignmentSearchList records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentSearchList([FromBody]CommonSearch cd)
         {
@@ -852,6 +972,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
         //--------------End Search Shipper Consignee List
         //--------------Start Edit Search
+        /// <summary>Perform ConsignmentEditSearchView records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentEditSearchView([FromBody]CommonSearch cd)
         {
@@ -874,6 +997,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
         //--------------End Edit Search
         //--------------Start Edit Fill Details
+        /// <summary>Perform ConsignmentEditFillDetail records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentEditFillDetail([FromBody]CommonSearch cd)
         {
@@ -895,6 +1021,10 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
         //--------------End Edit Fill Details
+        /// <summary>Perform ExportEditActualFlightDateData records.</summary>
+        /// <param name="ExptNo">Export job number.</param>
+        /// <param name="Citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ExportEditActualFlightDateData([FromUri]string ExptNo, string Citycode)
         {
@@ -915,6 +1045,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform ExportEditActualFlightDateUpdate records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportEditActualFlightDateUpdate([FromBody]ActualFlightDate cd)
         {
@@ -960,6 +1093,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
         //--------------Start Edit Fill Details
+        /// <summary>Perform SourceAgent records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult SourceAgent([FromBody]CommonSearch cd)
         {
@@ -981,6 +1117,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PortGoods FillDropDown records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PortGoods_FillDropDown([FromBody]CommonSearch cd)
         {
@@ -1002,6 +1141,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AirShipment Show OtherExptNo records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult AirShipment_Show_OtherExptNo([FromBody]CommonSearch cd)
         {
@@ -1023,6 +1165,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdateMarksNumber records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateMarksNumber([FromBody]CommonSearch cd)
         {
@@ -1044,6 +1189,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdateDocument records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateDocument([FromBody]CommonEight cd)
         {
@@ -1065,6 +1213,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ConsigneeView records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsigneeView([FromBody]CommonThree cd)
         {
@@ -1086,6 +1237,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdateConsigneeRemark records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateConsigneeRemark([FromBody]CommonFive cd)
         {
@@ -1107,6 +1261,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdateQuota records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateQuota([FromBody]CommonTen cd)
         {
@@ -1128,6 +1285,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdatePackage records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdatePackage([FromBody]CommonFour cd)
         {
@@ -1149,6 +1309,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdateOrder records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateOrder([FromBody]CommonSix cd)
         {
@@ -1170,6 +1333,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdateITC records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateITC([FromBody]CommonFour cd)
         {
@@ -1191,6 +1357,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdateShipmentClr records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateShipmentClr([FromBody]CommonSeven cd)
         {
@@ -1212,6 +1381,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform InvoiceFillDropdown records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult InvoiceFillDropdown([FromBody]CommonThree cd)
         {
@@ -1233,6 +1405,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdateInvoice records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateInvoice([FromBody]Consignment cd)
         {
@@ -1269,6 +1444,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve FillAgentDropdown records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult FillAgentDropdown([FromBody]CommonThree obj)
         {
@@ -1290,6 +1468,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdatePort records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdatePort([FromBody]Consignment cd)
         {
@@ -1322,6 +1503,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
 
         //
+        /// <summary>Perform UpdateMain records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateMain([FromBody]Main cd)
         {
@@ -1348,6 +1532,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Perform ConsignmentView records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentView([FromBody]CommonThree cd)
         {
@@ -1370,6 +1557,10 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PageConsignmentView records.</summary>
+        /// <param name="exptno">Export job number.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PageConsignmentView([FromUri]string exptno, int cmpid)
         {
@@ -1392,6 +1583,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ConsignmentInvoiceView records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentInvoiceView([FromBody]CommonThree cd)
         {
@@ -1415,6 +1609,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ConsignmentChronologyView records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentChronologyView([FromBody]CommonThree cd)
         {
@@ -1438,6 +1635,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform UpdateCancelshipment records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UpdateCancelshipment([FromBody]CommonThree cd)
         {
@@ -1460,6 +1660,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Perform ConsignmentCLPView records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentCLPView([FromBody]CommonFive cd)
         {
@@ -1483,6 +1686,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ConsignmentMAWBFill DROPDOWN records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsignmentMAWBFill_DROPDOWN([FromBody]CommonThree cd)
         {
@@ -1506,6 +1712,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve print/view data for Consignment MAWB PP CC records.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Consignment_MAWB_PP_CC_View([FromBody]CommonThree cd)
         {
@@ -1529,6 +1738,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update MST EXPORT MAWB PP CC records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult EXP_MST_EXPORT_MAWB_PP_CC_UPDATE([FromBody]MawbRating obj)
         {
@@ -1622,6 +1834,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ConsignmentHAWBFill DROPDOWN records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ConsignmentHAWBFill_DROPDOWN()
         {
@@ -1645,6 +1859,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve print/view data for Consignment HAWB PP CC records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Consignment_HAWB_PP_CC_View([FromUri]CommonThree obj)
         {
@@ -1669,6 +1885,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update MST EXPORT HAWB FRT records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult EXP_MST_EXPORT_HAWB_FRT_UPDATE([FromBody]HawbRating obj)
         {
@@ -1719,6 +1938,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve dropdown data for JOBFREIGHTRATE FILL DROPDOWN records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult JOBFREIGHTRATE_FILL_DROPDOWN()
         {
@@ -1742,6 +1963,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Populate form with existing data for JobFreightRate Populate data records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult JobFreightRate_Populate_data([FromUri]CommonThree obj)
         {
@@ -1765,6 +1988,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update MST EXPORT JOBFREIGHTRATE records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult EXP_MST_EXPORT_JOBFREIGHTRATE_UPDATE([FromBody]JobRating obj)
         {
@@ -1800,6 +2026,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         //--------------------------------------------------END Consignment-------------------------------------------------------------
 
         //--------------------------------------------------START Print Document-------------------------------------------------------------
+        /// <summary>Perform PrintDocumentAirMawbList records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PrintDocumentAirMawbList([FromUri]CommonThree obj)
         {
@@ -1823,6 +2051,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PrintDocumentAirMawbUpdatePageload records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PrintDocumentAirMawbUpdatePageload([FromUri]CommonThree obj)
         {
@@ -1847,6 +2077,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PrintDocumentAirMawbUpdateIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PrintDocumentAirMawbUpdateIU([FromBody]PrintMawbNo obj)
         {
@@ -1872,6 +2105,11 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
         //
 
+        /// <summary>Perform PrintDocumentAirMawbPrint records.</summary>
+        /// <param name="mawbno">Master airway bill number.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="isprint">isprint parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PrintDocumentAirMawbPrint([FromUri]string mawbno, string cmpid, string isprint)
         {
@@ -1895,6 +2133,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
         //
+        /// <summary>Perform MawbnoprintUpdate records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult MawbnoprintUpdate([FromBody]printupdateMawbno obj)
         {
@@ -1939,6 +2180,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PrintDocumentAirHawbList records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PrintDocumentAirHawbList([FromUri]CommonFour obj)
         {
@@ -1963,6 +2206,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PrintDocumentAirHawbUpdatePageload records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PrintDocumentAirHawbUpdatePageload([FromUri]CommonThree obj)
         {
@@ -1987,6 +2232,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PrintDocumentAirHawbUpdateIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PrintDocumentAirHawbUpdateIU([FromBody]PrintHawbNo obj)
         {
@@ -2016,6 +2264,10 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform hawbnoprintload records.</summary>
+        /// <param name="hawbno">House airway bill number.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult hawbnoprintload([FromUri]string hawbno, string cmpid)
         {
@@ -2037,6 +2289,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
         //(obj.HAWBNO != null) ? obj.HAWBNO : "",
+        /// <summary>Perform hawbnoprintUpdate records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult hawbnoprintUpdate([FromBody]printupdateHawbno obj)
         {
@@ -2075,6 +2330,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PrintDocumentPrealertPageload records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PrintDocumentPrealertPageload([FromUri]CommonThree obj)
         {
@@ -2101,6 +2358,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
 
 
+        /// <summary>Perform PrintDocumentPrealertPrepare records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PrintDocumentPrealertPrepare([FromBody]CommonThree obj)
         {
@@ -2131,6 +2391,10 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PrintDocumentPrealertPrepare word records.</summary>
+        /// <param name="Type1">Type1 parameter.</param>
+        /// <param name="Type2">Type2 parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage PrintDocumentPrealertPrepare_word([FromUri] string Type1, string Type2)
         {
@@ -2271,6 +2535,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Perform PrintDocumentPrealertAuto records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PrintDocumentPrealertAuto([FromBody]CommonFour obj)
         {
@@ -2295,6 +2562,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PrintDocumentPrealertSending oldDesign records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PrintDocumentPrealertSending_oldDesign([FromBody]CommonFour obj)
         {
@@ -2543,6 +2813,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PrintDocumentPrealertSending records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PrintDocumentPrealertSending([FromBody]CommonFour obj)
         {
@@ -2813,6 +3086,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PrintDocumentPrealertSending prev records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PrintDocumentPrealertSending_prev([FromBody]CommonFour obj)
         {
@@ -3222,6 +3498,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
         }
 
+        /// <summary>Perform PrintDocumentPrealertSendingView records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PrintDocumentPrealertSendingView([FromUri]CommonThree obj)
         {
@@ -3248,6 +3526,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         //--------------------------------------------------END Print Document-------------------------------------------------------------
 
         //--------------------------------------------------START Shipment Progress-----------------------------------------------------------
+        /// <summary>Perform ShipmentCommonSearch records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ShipmentCommonSearch([FromUri]CommonFive obj)
         {
@@ -3272,6 +3552,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ShipmentCommonView records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ShipmentCommonView([FromUri]CommonThree obj)
         {
@@ -3296,6 +3578,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ShipmentProgressPopulate records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ShipmentProgressPopulate([FromUri]CommonFour obj)
         {
@@ -3320,6 +3604,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ShippingBillShipmentProgressUpdate records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ShippingBillShipmentProgressUpdate([FromBody]ShippingBill obj)
         {
@@ -3345,6 +3632,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ReceiptCargoUpdateDtlsShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ReceiptCargoUpdateDtlsShipmentProgress([FromBody]ReceiptCargo obj)
         {
@@ -3370,6 +3660,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ReceiptCargoUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ReceiptCargoUpdateShipmentProgress([FromBody]CommonFive obj)
         {
@@ -3394,6 +3687,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ApprovalReceivedUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ApprovalReceivedUpdateShipmentProgress([FromBody]CommonSeven obj)
         {
@@ -3418,6 +3714,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform MeasurementUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult MeasurementUpdateShipmentProgress([FromBody]CommonFive obj)
         {
@@ -3442,6 +3741,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform OutOfChargeUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult OutOfChargeUpdateShipmentProgress([FromBody]CommonFive obj)
         {
@@ -3466,6 +3768,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform BlDetailsUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult BlDetailsUpdateShipmentProgress([FromBody]CommonTen obj)
         {
@@ -3491,6 +3796,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform CartingAirUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult CartingAirUpdateShipmentProgress([FromBody]CommonFive obj)
         {
@@ -3514,6 +3822,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PrepaidfrtdtUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PrepaidfrtdtUpdateShipmentProgress([FromBody]CommonFive obj)
         {
@@ -3537,6 +3848,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PrealertSentOnUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PrealertSentOnUpdateShipmentProgress([FromBody]CommonFive obj)
         {
@@ -3561,6 +3875,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform DestinationDocumentUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult DestinationDocumentUpdateShipmentProgress([FromBody]CommonFive obj)
         {
@@ -3585,6 +3902,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform TransferSeaToAirShipmentProgressPopulate records.</summary>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult TransferSeaToAirShipmentProgressPopulate([FromUri]string CityCode)
         {
@@ -3609,6 +3929,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform TransferSeaToAirUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult TransferSeaToAirUpdateShipmentProgress([FromBody]CommonSix obj)
         {
@@ -3634,6 +3957,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Perform ROCProvisionShipmentProgressFill records.</summary>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ROCProvisionShipmentProgressFill([FromUri]string CityCode)
         {
@@ -3658,6 +3984,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ScanDocSentShipmentProgressFill records.</summary>
+        /// <param name="ContainerNo">Container No parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ScanDocSentShipmentProgressFill([FromUri]string ContainerNo)
         {
@@ -3683,6 +4012,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Perform ScanDocSentUpdateShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ScanDocSentUpdateShipmentProgress([FromBody]CommonThree obj)
         {
@@ -3716,6 +4048,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Perform PendingShipment ShipmentProgressFill records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PendingShipment_ShipmentProgressFill([FromBody]CommonThree obj)
         {
@@ -3740,6 +4075,10 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PendingShipment ShipmentProgressView records.</summary>
+        /// <param name="VesselRtNo">Vessel Rt No parameter.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PendingShipment_ShipmentProgressView([FromUri]string VesselRtNo, string CityCode)
         {
@@ -3764,6 +4103,10 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PendingShipment ShipmentProgressView Agent records.</summary>
+        /// <param name="VesselRtNo">Vessel Rt No parameter.</param>
+        /// <param name="VesselPort">Vessel Port parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PendingShipment_ShipmentProgressView_Agent([FromUri]string VesselRtNo, string VesselPort)
         {
@@ -3788,6 +4131,12 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Populate form with existing data for PendingShipment ShipmentProgress ContainerNo records.</summary>
+        /// <param name="ExptVessel">Expt Vessel parameter.</param>
+        /// <param name="ContainerNo">Container No parameter.</param>
+        /// <param name="CmpId">Primary key of the company.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PendingShipment_ShipmentProgress_ContainerNo_Populate([FromUri]string ExptVessel, string ContainerNo, string CmpId, string CityCode)
         {
@@ -3813,6 +4162,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Perform PendingShipment ShipmentProgress ContainerNo records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PendingShipment_ShipmentProgress_ContainerNo([FromBody]ContainerNo obj)
         {
@@ -3837,6 +4189,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PendingShipment ShipmentProgress ExportNo records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PendingShipment_ShipmentProgress_ExportNo([FromBody]ExportNo obj)
         {
@@ -3862,6 +4217,10 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Perform ContainerLoadingConf ShipmentProgress records.</summary>
+        /// <param name="ExptVessel">Expt Vessel parameter.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ContainerLoadingConf_ShipmentProgress([FromUri]string ExptVessel, string CityCode)
         {
@@ -3886,6 +4245,13 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Populate form with existing data for ContainerLoadingConf ShipmentProgress records.</summary>
+        /// <param name="ExptVessel">Expt Vessel parameter.</param>
+        /// <param name="ContainerNo">Container No parameter.</param>
+        /// <param name="MultiDest">Multi Dest parameter.</param>
+        /// <param name="Dest">Dest parameter.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ContainerLoadingConf_ShipmentProgress_Populate([FromUri]string ExptVessel, string ContainerNo, string MultiDest, string Dest, string CityCode)
         {
@@ -3910,6 +4276,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update ContainerLoadingConf ShipmentProgress records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ContainerLoadingConf_ShipmentProgress_Update([FromBody]ContainerLoadingConfirmation obj)
         {
@@ -3938,6 +4307,16 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ContainerLoadingConf ShipmentProgress SendMail records.</summary>
+        /// <param name="mail_body">mail body parameter.</param>
+        /// <param name="ipadd">ipadd parameter.</param>
+        /// <param name="Frmmail">Frmmail parameter.</param>
+        /// <param name="Tomail">Tomail parameter.</param>
+        /// <param name="cc">cc parameter.</param>
+        /// <param name="bcc">bcc parameter.</param>
+        /// <param name="pwd">pwd parameter.</param>
+        /// <param name="subject">subject parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ContainerLoadingConf_ShipmentProgress_SendMail([FromUri]string mail_body, string ipadd, string Frmmail, string Tomail, string cc, string bcc, string pwd, string subject)
         {
@@ -4025,6 +4404,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         //--------------------------------------------------END Shipment Progress-------------------------------------------------------------
 
         /*
+        /// <summary>Perform ConvertHtmlToExcelDownload records.</summary>
+        /// <param name="id">Primary key ID of the record.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ConvertHtmlToExcelDownload([FromUri]string id)
         {
@@ -4059,6 +4441,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
          */
 
+        /// <summary>Insert or update Export containerCLP records.</summary>
+        /// <param name="CN">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_containerCLP_IU([FromBody]ContainerCLP CN)
         {
@@ -4080,6 +4465,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform Export containerCLP Pallets records.</summary>
+        /// <param name="CN">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_containerCLP_Pallets([FromBody]CLPPallet CN)
         {
@@ -4102,6 +4490,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update Export containerCLP Pallets records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_containerCLP_Pallets_IU(List<CLPPallet> Pallet)
         {
@@ -4170,6 +4560,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         //}
 
 
+        /// <summary>Perform ConvertHtmlToExcelDownload records.</summary>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage ConvertHtmlToExcelDownload([FromUri]ContainerCLP clp)
         {
@@ -4437,6 +4829,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Perform ServerIp records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ServerIp()
         {
@@ -4447,6 +4841,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
 
         //------------Start Carting Sea ----------------
+        /// <summary>Search and retrieve Carting SearchList records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Carting_SearchList_populate([FromUri]cartingSea cs)
         {
@@ -4470,6 +4866,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         }
 
+        /// <summary>Insert or update Carting Sea records.</summary>
+        /// <param name="cs">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Carting_Sea_IU([FromBody]cartingSea cs)
         {
@@ -4493,6 +4892,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         }
 
+        /// <summary>Delete Carting Sea records.</summary>
+        /// <param name="cs">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Carting_Sea_DELETE([FromBody]cartingSea cs)
         {
@@ -4516,6 +4918,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         }
 
+        /// <summary>Populate form with existing data for Carting vsl agent records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Carting_vsl_agent_populate([FromUri]vslSearch vs)
         {
@@ -4540,6 +4944,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
         //------------End Carting Sea ----------------
 
+        /// <summary>Perform Carting Sea VslTransfer records.</summary>
+        /// <param name="cs">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Carting_Sea_VslTransfer([FromBody]cartingSea cs)
         {
@@ -4563,6 +4970,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         }
 
+        /// <summary>Perform listcontainer records.</summary>
+        /// <param name="cs">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult listcontainer([FromBody]container cs)
         {
@@ -4586,6 +4996,12 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
         /******************Booking Start Here***********************/
+        /// <summary>Perform OrderBookingDropdownFill records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="edigroup">edigroup parameter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="optional">optional parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult OrderBookingDropdownFill([FromUri]string citycode, string edigroup, string cmpcode, string optional)
         {
@@ -4620,6 +5036,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform OrderBookingSearch records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult OrderBookingSearch([FromBody]OrderBookingSearch obj)
         {
@@ -4645,6 +5064,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Perform OrderBookingSearchList records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult OrderBookingSearchList([FromBody]OrderBookingSearch obj)
         {
@@ -4669,6 +5091,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform OrderBookingAdd records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult OrderBookingAdd([FromBody]OrderBookingAdd obj)
         {
@@ -4695,6 +5120,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform OrderBookingInsertUpdate records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult OrderBookingInsertUpdate([FromBody]OrderBooking obj)
         {
@@ -4725,6 +5153,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         /******************Booking End Here***********************/
 
         /******************PSS Start Here***********************/
+        /// <summary>Perform PssManage records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PssManage([FromBody]CommonFive obj)
         {
@@ -4761,6 +5192,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         /******************PSS End Here***********************/
 
         /******************Export Consignment JOB NO Start Here***********************/
+        /// <summary>Retrieve GetExportConsignmentJobClientData records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetExportConsignmentJobClientData([FromUri]string citycode)
         {
@@ -4786,6 +5220,11 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ExportConsignmentJobSearch records.</summary>
+        /// <param name="jobno">Job number.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ExportConsignmentJobSearch([FromUri]string jobno, string cmpcode, string citycode)
         {
@@ -4811,6 +5250,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ExportConsignmentJobIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportConsignmentJobIU([FromBody]ExportConsignmentJob obj)
         {
@@ -4838,6 +5280,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         /******************Export Consignment JOB NO End Here***********************/
 
         /******************Export Consignment BRANCH JOB TRANSFER Start Here***********************/
+        /// <summary>Retrieve GetExportConsignmentBranchFillDropdown records.</summary>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetExportConsignmentBranchFillDropdown([FromUri]string citycode1)
         {
@@ -4863,6 +5308,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ExportConsignmentBranchJobTransferI records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ExportConsignmentBranchJobTransferI([FromBody]BranchJobTransfer obj)
         {
@@ -4890,6 +5338,12 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         /******************Export Consignment BRANCH JOB TRANSFER End Here***********************/
 
         /******************Order Size Detail Start here****************************************/
+        /// <summary>Perform OrderSizeDetailsList records.</summary>
+        /// <param name="orderno">orderno parameter.</param>
+        /// <param name="styleno">styleno parameter.</param>
+        /// <param name="exptno">Export job number.</param>
+        /// <param name="concode">concode parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult OrderSizeDetailsList([FromUri]string orderno, string styleno, string exptno, string concode)
         {
@@ -4914,6 +5368,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform OrderSizeDetailsSubmit records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult OrderSizeDetailsSubmit([FromBody]OrderSizeDeatils obj)
         {
@@ -4940,6 +5397,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         /******************Order Size Detail end here****************************************/
 
         /******************Dockett Print start here****************************************/
+        /// <summary>Perform DocketPrint records.</summary>
+        /// <param name="exptno">Export job number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult DocketPrint([FromUri]string exptno)
         {
@@ -4966,6 +5426,10 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         /******************Dockett Print end here****************************************/
 
         /******************Annexure start here****************************************/
+        /// <summary>Perform AnnexureSearchList records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="exptno">Export job number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult AnnexureSearchList([FromUri]string citycode, string exptno)
         {
@@ -4990,6 +5454,10 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AnnexureEditPopulateData records.</summary>
+        /// <param name="exptno">Export job number.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult AnnexureEditPopulateData([FromUri]string exptno, string citycode)
         {
@@ -5014,6 +5482,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AnnexureEditIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult AnnexureEditIU([FromBody]Annexure obj)
         {
@@ -5042,6 +5513,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AnnexureItemDetailPopulateData records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult AnnexureItemDetailPopulateData([FromBody]AnnexureItemDetail obj)
         {
@@ -5066,6 +5540,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AnnexureItemDetailIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult AnnexureItemDetailIU([FromBody]AnnexureItemDetail obj)
         {
@@ -5089,6 +5566,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform AnnexureDrawbackPopulateData records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult AnnexureDrawbackPopulateData([FromBody]AnnexureDrawback obj)
         {
@@ -5113,6 +5593,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AnnexureDrawbackIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult AnnexureDrawbackIU([FromBody]AnnexureDrawback obj)
         {
@@ -5137,6 +5620,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AnnexureDeecEpcgPopulateData records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult AnnexureDeecEpcgPopulateData([FromBody]AnnexureDeecEpcg obj)
         {
@@ -5161,6 +5647,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AnnexureDeecEpcgIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult AnnexureDeecEpcgIU([FromBody]AnnexureDeecEpcg obj)
         {
@@ -5185,6 +5674,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AnnexureDfrcPopulateData records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult AnnexureDfrcPopulateData([FromBody]AnnexureDeecEpcg obj)
         {
@@ -5209,6 +5701,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AnnexureDfrcIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult AnnexureDfrcIU([FromBody]AnnexureDeecEpcg obj)
         {
@@ -5233,6 +5728,11 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform AnnexurePrintPage records.</summary>
+        /// <param name="exptno">Export job number.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="type">type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult AnnexurePrintPage([FromUri]string exptno, string citycode, string type)
         {
@@ -5259,6 +5759,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         /******************Annexure end here****************************************/
 
 
+        /// <summary>Perform printdoc mbl listview records.</summary>
+        /// <param name="bl">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult exp_printdoc_mbl_listview([FromBody]mbl bl)
         {
@@ -5281,6 +5784,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
 
         }
+        /// <summary>Insert or update printdoc mbl records.</summary>
+        /// <param name="bl">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult exp_printdoc_mbl_iu([FromBody]mbl bl)
         {
@@ -5305,6 +5811,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
 
         }
+        /// <summary>Perform printdoc mb printload records.</summary>
+        /// <param name="bl">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult exp_printdoc_mb_printload([FromBody]mbl bl)
         {
@@ -5327,6 +5836,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
 
         }
+        /// <summary>Insert or update printdoc mb print records.</summary>
+        /// <param name="blp">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult exp_printdoc_mb_print_update([FromBody]mblprint blp)
         {
@@ -5355,6 +5867,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         }
 
+        /// <summary>Perform Generate EpCopy records.</summary>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_EpCopy([FromUri]Epcopy ep)
         {
@@ -5592,6 +6106,11 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Perform EpCopySearch records.</summary>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="Searchtype">Search type/column identifier.</param>
+        /// <param name="SearchValue">Search Value parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult exp_EpCopySearch([FromUri]string CityCode, string Searchtype, string SearchValue)
         {
@@ -5615,6 +6134,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         }
 
+        /// <summary>Perform Epcopy recvddt Udate records.</summary>
+        /// <param name="ep">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult exp_Epcopy_recvddt_Udate([FromBody]EpcopyRecvdDt ep)
         {
@@ -5641,6 +6163,18 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         //--------------- Report---------------------1. Ep-Copy Excel
 
+        /// <summary>Perform Rpt EpCopy records.</summary>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <param name="Exporter">Exporter parameter.</param>
+        /// <param name="DateType">Date Type parameter.</param>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="City">City parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="Username">Username parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage exp_Rpt_EpCopy([FromUri]string Mode, string Type, string Exporter, string DateType, string FromDate, string ToDate, string City, string cmp_code, string CityCode, string Username)
         {
@@ -5746,6 +6280,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Retrieve Fill City records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_City()
         {
@@ -5768,6 +6304,11 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve Fill Exporter records.</summary>
+        /// <param name="Cmpid">Primary key of the company.</param>
+        /// <param name="Citycode">City/branch code.</param>
+        /// <param name="Citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Exporter([FromUri]string Cmpid, string Citycode, string Citycode1)
         {
@@ -5791,6 +6332,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
         //--------------------------2. DSR Report
+        /// <summary>Load page reference data for Fill dsr records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_dsr_PAGELOAD()
         {
@@ -5814,6 +6357,15 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
         //
+        /// <summary>Perform Rpt DSR records.</summary>
+        /// <param name="concode">concode parameter.</param>
+        /// <param name="expcode">expcode parameter.</param>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="origin">origin parameter.</param>
+        /// <param name="cmp_id">cmp id parameter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage exp_Rpt_DSR([FromUri]string concode, string expcode, string FromDate, string origin, string cmp_id, string cmpcode, string Mode)
         {
@@ -6081,6 +6633,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         //-------------------------3. TONNAGE REPORT
 
 
+        /// <summary>Load page reference data for Fill Tonnage records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Tonnage_PAGELOAD()
         {
@@ -6102,6 +6656,18 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }//
+        /// <summary>Perform Rpt AirTonnage records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="Origin">Origin parameter.</param>
+        /// <param name="Consignee">Consignee parameter.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <param name="WeekDay">Week Day parameter.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="destination">destination parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage exp_Rpt_AirTonnage([FromUri]string FromDate, string ToDate, string Mode, string Origin, string Consignee, string Type, string WeekDay, string cmpid, string cmpcode, string destination)
         {
@@ -6161,6 +6727,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         // -------------------shipment - status
 
 
+        /// <summary>Retrieve Fill ship status source agent records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_ship_status_source_agent()
         {
@@ -6184,6 +6752,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+        /// <summary>Retrieve Fill ship status business associate records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_ship_status_business_associate()
         {
@@ -6206,6 +6776,15 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
         /*
+        /// <summary>Perform Rpt shipment Status records.</summary>
+        /// <param name="ClientType">Client/exporter code.</param>
+        /// <param name="Client">Client/exporter code.</param>
+        /// <param name="Origin">Origin parameter.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="Nameclient">Client/exporter code.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage exp_Rpt_shipment_Status([FromUri]string ClientType, string Client, string Origin, string Mode, string FromDate, string cmpcode, string Nameclient)
         {
@@ -6369,6 +6948,15 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         }
         */
+        /// <summary>Perform Rpt shipment Status records.</summary>
+        /// <param name="ClientType">Client/exporter code.</param>
+        /// <param name="Client">Client/exporter code.</param>
+        /// <param name="Origin">Origin parameter.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="Nameclient">Client/exporter code.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage exp_Rpt_shipment_Status([FromUri]string ClientType, string Client, string Origin, string Mode, string FromDate, string cmpcode, string Nameclient)
         {
@@ -6411,6 +6999,8 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         // chargo on hang 
 
+        /// <summary>Retrieve Fill consignee cargo onhand records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_consignee_cargo_onhand()
         {
@@ -6433,6 +7023,12 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Rpt Cargo onhand records.</summary>
+        /// <param name="CONCODE">CONCODE parameter.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage exp_Rpt_Cargo_onhand([FromUri]string CONCODE, string citycode, string cmp_code, string Mode)
         {
@@ -6470,6 +7066,13 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Perform Generate Chronology records.</summary>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_Chronology([FromUri]string mode, string citycode1, string fromdate, string todate, string cmpcode)
         {
@@ -6535,6 +7138,13 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Perform Generate Delivery Status records.</summary>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="supplier">Supplier code.</param>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_Delivery_Status([FromUri]string mode, string citycode, string supplier, string fromdate, string todate)
         {
@@ -6653,6 +7263,16 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Perform Generate Shipment Progress records.</summary>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <param name="datetype">datetype parameter.</param>
+        /// <param name="displaytype">displaytype parameter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_Shipment_Progress([FromUri]string mode, string citycode1, string fromdate, string todate, string datetype, string displaytype, string cmpcode, string citycode)
         {
@@ -6737,6 +7357,13 @@ namespace Manilal_V5NG.Controllers.ExportBLL
 
         }
 
+        /// <summary>Perform Generate Air Cargo Status records.</summary>
+        /// <param name="client">Client/exporter code.</param>
+        /// <param name="agent">agent parameter.</param>
+        /// <param name="origin">origin parameter.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_Air_Cargo_Status([FromUri]string client, string agent, string origin, string cmpid, string cmpcode)
         {
@@ -6798,6 +7425,13 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Perform Generate Tracking Air Booking Report records.</summary>
+        /// <param name="client">Client/exporter code.</param>
+        /// <param name="agent">agent parameter.</param>
+        /// <param name="origin">origin parameter.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_Tracking_Air_Booking_Report([FromUri]string client, string agent, string origin, string cmpid, string cmpcode)
         {
@@ -6859,6 +7493,13 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Perform Generate Tracking Air Shipment Report records.</summary>
+        /// <param name="client">Client/exporter code.</param>
+        /// <param name="agent">agent parameter.</param>
+        /// <param name="origin">origin parameter.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_Tracking_Air_Shipment_Report([FromUri]string client, string agent, string origin, string cmpid, string cmpcode)
         {
@@ -6909,6 +7550,12 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Perform FCR printflagUpdate records.</summary>
+        /// <param name="fcr">fcr parameter.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="userid">userid parameter.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult FCR_printflagUpdate(string fcr, string citycode, string userid, string Type)
         {
@@ -6928,6 +7575,12 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
         //container factory stuffing
+        /// <summary>Retrieve dropdown data for ContainerFS records.</summary>
+        /// <param name="vsl">vsl parameter.</param>
+        /// <param name="port">port parameter.</param>
+        /// <param name="CMPCOD">CMPCOD parameter.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ContainerFS_Fill(string vsl, string port, string CMPCOD, string CITYCODE)
         {
@@ -6945,6 +7598,10 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform ContainerFS FillExptno records.</summary>
+        /// <param name="exptno">Export job number.</param>
+        /// <param name="userid">userid parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ContainerFS_FillExptno(string exptno, string userid)
         {
@@ -6963,6 +7620,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update Export containerFSTmp records.</summary>
+        /// <param name="CN">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_containerFSTmp_IU([FromBody]containerFSTmpIu CN)
         {
@@ -6984,6 +7644,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update Export containerFS records.</summary>
+        /// <param name="CN">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Export_containerFS_IU([FromBody]ContainerFS CN)
         {
@@ -7006,6 +7669,11 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Delete ContainerFS records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="userid">userid parameter.</param>
+        /// <param name="vguid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ContainerFS_DELETE(string ID, string userid, string vguid)
         {
@@ -7024,6 +7692,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             return Ok(ds);
         }
 
+        /// <summary>Load page reference data for ContainerFS records.</summary>
+        /// <param name="userid">userid parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ContainerFS_PAGELOAD(string userid)
         {
@@ -7041,6 +7712,9 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform EXPT EXPORT DASHBOARD Vessel records.</summary>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult EXPT_EXPORT_DASHBOARD_Vessel([FromUri]string CityCode)
         {

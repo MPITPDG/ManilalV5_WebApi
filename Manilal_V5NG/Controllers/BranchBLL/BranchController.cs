@@ -13,6 +13,9 @@ namespace Manilal_V5NG.Controllers
     public class BranchController : ApiController
     {
 
+        /// <summary>Retrieve branch/city list for the given company.</summary>
+        /// <param name="branch">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetBranch([FromBody]Branch branch)
         {
@@ -40,6 +43,9 @@ namespace Manilal_V5NG.Controllers
             return Ok(ds);
         }
 
+        /// <summary>Retrieve company list for the given city and company context.</summary>
+        /// <param name="branch">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetCompany([FromBody]Branch branch)
         {

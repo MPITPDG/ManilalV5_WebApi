@@ -16,6 +16,9 @@ namespace Manilal_V5NG.Controllers
 {
     public class LoginController : ApiController
     {
+        /// <summary>Verifies user credentials and returns session/user data including city, module, and rights information.</summary>
+        /// <param name="login">Login object containing _username and _password.</param>
+        /// <returns>DataSet with user session info: GUID, USERID, CMPTYPE, MODULEID, CMPCODE, CITYCODE1, MAKERIP, RIGHTS_CODE, CITYNAME, ISADMIN, STATE_CODE, COUNTRY.</returns>
         [HttpPost]
         public IHttpActionResult VerifyLogin([FromBody]Login login)
         {
@@ -47,11 +50,18 @@ namespace Manilal_V5NG.Controllers
             return Ok(ds);
         }
 
+        /// <summary>Health check endpoint to verify the API is running.</summary>
+        /// <returns>200 OK with message "API Working Successfully."</returns>
         [HttpGet]
         public IHttpActionResult Check_Api_Working()
         {
             return Ok("API Working Successfully.");
         }
+        /// <summary>Changes user password using old password verification.</summary>
+        /// <param name="oldpwd">Current (old) password.</param>
+        /// <param name="newpwd">New password to set.</param>
+        /// <param name="userencode">Encoded user identifier.</param>
+        /// <returns>DataSet with result of password change operation.</returns>
         [HttpGet]
         public IHttpActionResult changePassword([FromUri]string oldpwd, string newpwd, string userencode) //USP_CMP_VerifyLogin_35_CHANGE_PASSWORD
         {

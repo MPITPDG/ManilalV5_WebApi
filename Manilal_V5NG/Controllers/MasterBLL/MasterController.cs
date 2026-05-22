@@ -21,6 +21,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
 {
     public class MasterController : ApiController
     {
+        /// <summary>Retrieve quotation data for print view by quotation code.</summary>
+        /// <param name="QUOTCODE">QUOTCODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MASTER_QUOTATION_PRINT(string QUOTCODE)
         {
@@ -38,6 +41,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update a temporary TDS detail row for a general account.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult MST_GENERAL_ACCOUNT_TDS_TMP_IU_NG([FromBody]supplierchildTDS cd)
         {
@@ -59,6 +65,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary general account data for the given VGUID session.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST_GENERAL_ACCOUNT_RESET(string VGUID)
         {
@@ -76,6 +85,12 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Populate the general account form with existing record data (NG version).</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <param name="MAKERIP">IP address of the record maker.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST_GENERAL_ACCOUNT_POPULATE_NG(String ID, string MAKERID, string MAKERIP, string VGUID)
         {
@@ -93,6 +108,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Load dropdown reference data for the general account master page.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GenActMstpageload(string CMPID)
         {
@@ -111,6 +129,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update a general account master record (NG version).</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult MST_GENERAL_ACCOUNT_IU_NG([FromBody]GeneralAccountMaster cd)
         {
@@ -127,6 +148,8 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve the accounts item code list for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GET_MST_ACCOUNTS_ITEMCODE()
         {
@@ -146,6 +169,8 @@ namespace Manilal_V5NG.Controllers.MasterBLL
 
 
         /* drop down*/
+        /// <summary>Retrieve the country list for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult populatecountry( )
         {
@@ -168,6 +193,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
         /* PAGE LOAD FILL*/
+        /// <summary>Populate city details for the given city code.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult populateCity([FromUri]string citycode)
         {
@@ -191,6 +219,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
         }
 
         /* CITY SAVE */
+        /// <summary>Insert or update a city master record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult cityIU([FromBody]Master cd)
         {
@@ -213,6 +244,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
         }
 
         /* sEARCH lIST*/
+        /// <summary>Search city records by name.</summary>
+        /// <param name="strname">strname parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult searchlist([FromUri]string strname)
         {
@@ -237,6 +271,10 @@ namespace Manilal_V5NG.Controllers.MasterBLL
 
         /*-----EXPORTER /CLIENT ---------*/
         //
+        /// <summary>Retrieve exporter/client details for the given exporter code.</summary>
+        /// <param name="_ExpCode"> Exp Code parameter.</param>
+        /// <param name="RequestMode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Exp_Details([FromUri]string _ExpCode,string RequestMode)
         {
@@ -258,6 +296,8 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve the branch city list for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_BranchCity()
         {
@@ -279,6 +319,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update an exporter invoice address child record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult exporter_child_IU([FromBody]expoterchild cd)
         {
@@ -299,6 +342,11 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete a temporary exporter address child record.</summary>
+        /// <param name="id">Primary key ID of the record.</param>
+        /// <param name="guid">Session GUID for temporary record management.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult exporter_child_delete([FromUri]string id,string guid ,string makerid )
         {
@@ -319,6 +367,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
         /*
+        /// <summary>Insert or update an exporter/client master record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult exporter_Main_IU([FromBody]ExpoterMain cd)
         {
@@ -373,6 +424,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
        */
+        /// <summary>Insert or update an exporter/client master record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]        
         public IHttpActionResult Exporter_Main_IU([FromBody]ExpoterMain cd)
         {
@@ -436,6 +490,8 @@ namespace Manilal_V5NG.Controllers.MasterBLL
         }
 
 
+        /// <summary>Upload a file to the server and save it.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UploadFiles()
         {             
@@ -472,6 +528,12 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
 
+        /// <summary>Remove an uploaded document file from the server.</summary>
+        /// <param name="PKID">Primary key ID of the record.</param>
+        /// <param name="FILENAME">FILENAME parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult RemoveUploadFiles(string PKID,string FILENAME ,string CMPID ,string GUID )
         {            
@@ -490,6 +552,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+          /// <summary>Load dropdown reference data for the master page.</summary>
+          /// <param name="CMPID">Primary key of the company.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
         public IHttpActionResult masterpageload(string CMPID )
         {            
@@ -561,6 +626,8 @@ namespace Manilal_V5NG.Controllers.MasterBLL
         /*-------------END--- CONSIGNEE SATRT-------------------*/
 
 
+          /// <summary>Retrieve the consignee document type list.</summary>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult con_documentList_load()
           {
@@ -578,6 +645,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               }
               return Ok(ds);
           }
+          /// <summary>Insert or update a consignee master record.</summary>
+          /// <param name="cd">Request body model containing the record fields.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpPost]
           public IHttpActionResult Consignee_IU([FromBody]consigneemaster cd)
           {
@@ -616,6 +686,10 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               return Ok(ds);
           }//
 
+          /// <summary>Populate the consignee form with existing record data.</summary>
+          /// <param name="concode">concode parameter.</param>
+          /// <param name="RequestMode">Operation mode or filter type.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult consignee_populate(string concode, string RequestMode)
           {
@@ -633,6 +707,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               }
               return Ok(ds);
           }
+          /// <summary>Fill consignee details to add as an exporter record.</summary>
+          /// <param name="concode">concode parameter.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Fill_Consg_Details_AddAs_Expoter(string concode)
           {
@@ -650,6 +727,10 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               }
               return Ok(ds);
           }
+          /// <summary>Common master search across exporters, consignees, suppliers, and agents.</summary>
+          /// <param name="rqPage">rq Page parameter.</param>
+          /// <param name="strSearchTxt">str Search Txt parameter.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Master_Search_common(string rqPage, string strSearchTxt)
           {
@@ -667,6 +748,11 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               }
               return Ok(ds);
           } //
+          /// <summary>Delete an exporter request list entry.</summary>
+          /// <param name="strSearchTxt">str Search Txt parameter.</param>
+          /// <param name="makerid">User code of the record maker.</param>
+          /// <param name="makerip">IP address of the record maker.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Master_REQLIST_DELETE(string strSearchTxt,string makerid,string makerip)
           {
@@ -688,6 +774,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
         //SUPPLIER MASTER START HERE 
 
 
+          /// <summary>Insert or update a supplier address child record.</summary>
+          /// <param name="cd">Request body model containing the record fields.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpPost]
           public IHttpActionResult SUPPLIER_CHILD_IU([FromBody]supplierchild cd)
           {
@@ -715,6 +804,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               }
               return Ok(ds);
           }
+        /// <summary>Insert or update a supplier TDS detail child record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult SUPPLIER_CHILD_TDS_IU([FromBody]supplierchildTDS cd)
         {
@@ -736,6 +828,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update a supplier master record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
           public IHttpActionResult SUPPLIER_MASTER_IU([FromBody]suppliermaster cd)
           {
@@ -774,6 +869,12 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               return Ok(ds);
           }
 
+          /// <summary>Populate the supplier form with existing record data.</summary>
+          /// <param name="fkSup_code">fk Sup code parameter.</param>
+          /// <param name="RequestMode">Operation mode or filter type.</param>
+          /// <param name="makerid">User code of the record maker.</param>
+          /// <param name="vguid">Session GUID for temporary record management.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Master_supplier_Populate(string fkSup_code, string RequestMode,string  makerid, string vguid)
           {
@@ -792,6 +893,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               return Ok(ds);
           }
 
+          /// <summary>Load dropdown reference data for the supplier master page.</summary>
+          /// <param name="CMPID">Primary key of the company.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Supplierpageload(string CMPID)
           {
@@ -810,6 +914,11 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               return Ok(ds);
           }
 
+          /// <summary>Delete a consignee request list entry.</summary>
+          /// <param name="strSearchTxt">str Search Txt parameter.</param>
+          /// <param name="makerid">User code of the record maker.</param>
+          /// <param name="makerip">IP address of the record maker.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Master_REQLIST_DELETE_consignee(string strSearchTxt, string makerid, string makerip)
           {
@@ -827,6 +936,11 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               }
               return Ok(ds);
           }
+          /// <summary>Delete a supplier request list entry.</summary>
+          /// <param name="strSearchTxt">str Search Txt parameter.</param>
+          /// <param name="makerid">User code of the record maker.</param>
+          /// <param name="makerip">IP address of the record maker.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Master_REQLIST_DELETE_Supplier(string strSearchTxt, string makerid, string makerip)
           {
@@ -845,6 +959,11 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               return Ok(ds);
           }
 
+          /// <summary>Delete an agent request list entry.</summary>
+          /// <param name="strSearchTxt">str Search Txt parameter.</param>
+          /// <param name="makerid">User code of the record maker.</param>
+          /// <param name="makerip">IP address of the record maker.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Master_REQLIST_DELETE_Agent(string strSearchTxt, string makerid, string makerip)
           {
@@ -862,6 +981,11 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               }
               return Ok(ds);
           }
+          /// <summary>Delete a liner request list entry.</summary>
+          /// <param name="strSearchTxt">str Search Txt parameter.</param>
+          /// <param name="makerid">User code of the record maker.</param>
+          /// <param name="makerip">IP address of the record maker.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Master_REQLIST_DELETE_Liner(string strSearchTxt, string makerid, string makerip)
           {
@@ -882,6 +1006,8 @@ namespace Manilal_V5NG.Controllers.MasterBLL
 
           ///// Vessel agent  
 
+          /// <summary>Retrieve the liner list for vessel agent dropdown population.</summary>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult AgentFill()
           {
@@ -900,6 +1026,10 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               return Ok(ds);
           }
 
+          /// <summary>Populate the vessel agent form with existing record data.</summary>
+          /// <param name="fkAgt_code">fk Agt code parameter.</param>
+          /// <param name="RequestMode">Operation mode or filter type.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Master_VesselAgent_Populate(string fkAgt_code, string RequestMode)
           {
@@ -921,6 +1051,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
         //
 
 
+          /// <summary>Insert or update a vessel agent master record.</summary>
+          /// <param name="cd">Request body model containing the record fields.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpPost]
           public IHttpActionResult Vessel_Agent_MASTER_IU([FromBody]VesselAgent cd)
           {
@@ -958,6 +1091,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               return Ok(ds);
           }
         //liner 
+          /// <summary>Insert or update a shipping liner master record.</summary>
+          /// <param name="cd">Request body model containing the record fields.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpPost]
           public IHttpActionResult Shiping_liner_IU([FromBody]Linermaster cd)
           {
@@ -984,6 +1120,10 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               }
               return Ok(ds);
           }
+          /// <summary>Populate the liner form with existing record data.</summary>
+          /// <param name="fkliner_code">fkliner code parameter.</param>
+          /// <param name="RequestMode">Operation mode or filter type.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Master_Liner_Populate(string fkliner_code, string RequestMode)
           {
@@ -1003,6 +1143,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
           }
 
         // CONSIGNEE BANK
+          /// <summary>Insert or update a consignee bank master record.</summary>
+          /// <param name="cd">Request body model containing the record fields.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpPost]
           public IHttpActionResult Consignee_bank_IU([FromBody]Bank_master cd)
           {
@@ -1039,6 +1182,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
               }
               return Ok(ds);
           }
+          /// <summary>Populate the consignee bank form with existing record data.</summary>
+          /// <param name="fkbankcode">fkbankcode parameter.</param>
+          /// <returns>DataSet with the requested data serialized as JSON.</returns>
           [HttpGet]
           public IHttpActionResult Master_bankdet_Populate(string fkbankcode)
           {
@@ -1059,6 +1205,8 @@ namespace Manilal_V5NG.Controllers.MasterBLL
 
 
         /*ADDED FOR GENERAL ACCOUNT PAGE*/
+        /// <summary>Retrieve the full list of general accounts for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST_GENERAL_ACCOUNT_FILL()
         {
@@ -1079,6 +1227,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
 
 
 
+        /// <summary>Insert or update a general account master record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult MST_GENERAL_ACCOUNT_IU([FromBody]GeneralAccountMaster cd)
         {
@@ -1096,6 +1247,26 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
 
+        /// <summary>Search general account records with multiple filter criteria.</summary>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="AccName">Acc Name parameter.</param>
+        /// <param name="AccOption">Acc Option parameter.</param>
+        /// <param name="UnderGroup">Under Group parameter.</param>
+        /// <param name="Invoice">Invoice parameter.</param>
+        /// <param name="Bank">Bank parameter.</param>
+        /// <param name="JobRpt">Job Rpt parameter.</param>
+        /// <param name="invreg_isreport">invreg isreport parameter.</param>
+        /// <param name="IsExpenseLock">Is Expense Lock parameter.</param>
+        /// <param name="IsPurchase_Show">Is Purchase Show parameter.</param>
+        /// <param name="IsEmployee">Is Employee parameter.</param>
+        /// <param name="MUM">MUM parameter.</param>
+        /// <param name="DEL">DEL parameter.</param>
+        /// <param name="MAA">MAA parameter.</param>
+        /// <param name="BLR">BLR parameter.</param>
+        /// <param name="AMD">AMD parameter.</param>
+        /// <param name="DAC">DAC parameter.</param>
+        /// <param name="Company">Company parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST_GENERAL_ACCOUNT_SEARCH(String Mode, String AccName, string AccOption, string UnderGroup, string Invoice, string Bank, string JobRpt, string invreg_isreport, string IsExpenseLock, string IsPurchase_Show, string IsEmployee, string MUM, string DEL, string MAA, string BLR, string AMD, string DAC, string Company)
 
@@ -1114,6 +1285,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Populate the general account form with existing record data.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST_GENERAL_ACCOUNT_POPULATE(String ID)
         {
@@ -1132,6 +1306,8 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
         /*ADDED FOR ITEM CODE PAGE*/
+        /// <summary>Retrieve item codes for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST__ACCOUNTS_ITEMCODE_FILL_DROPDOWN()
         {
@@ -1150,6 +1326,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve item codes for the given company for dropdown population.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST_ACCOUNTS_ITEMCODE_FILL_DROPDOWN_CITY(string CMPCODE)
         {
@@ -1168,6 +1347,13 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
 
+        /// <summary>Search and retrieve item code records for the grid display.</summary>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="AccCode">Acc Code parameter.</param>
+        /// <param name="ItemName">Item Name parameter.</param>
+        /// <param name="SearchType">Search type/column identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST_ACCOUNTS_ITEMCODE_FILL_GRID(string CmpCode, string CityCode, string AccCode, string ItemName, string SearchType)
         {
@@ -1188,6 +1374,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
 
 
 
+        /// <summary>Insert a new accounts item code record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult MST_ACCOUNTS_ITEMCODE_IU([FromBody]ItemCode cd)
         {
@@ -1206,6 +1395,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
 
+        /// <summary>Update an existing accounts item code record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult MST_ACCOUNTS_ITEMCODE_UPDATE([FromBody]ItemCode cd)
         {
@@ -1225,6 +1417,8 @@ namespace Manilal_V5NG.Controllers.MasterBLL
         }
 
 
+        /// <summary>Retrieve the charge master account list for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CHARGEMASTER_ACCOUNT_FILL()
         {
@@ -1244,6 +1438,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
         }
 
 
+        /// <summary>Insert or update a charge master record.</summary>
+        /// <param name="CM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_CHARGE_MASTER_IU([FromBody]ChargeMaster CM)
         {
@@ -1263,6 +1460,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
         }
 
 
+        /// <summary>Populate the charge master form with existing record data.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CHARGE_MASTER_POPULATE(String ID)
         {
@@ -1281,6 +1481,12 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
 
+        /// <summary>Search charge master records with filter criteria.</summary>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="ChargeName">Charge Name parameter.</param>
+        /// <param name="ChargeOption">Charge Option parameter.</param>
+        /// <param name="UnderAccount">Under Account parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CHARGE_MASTER_SEARCH(String Mode, String ChargeName, string ChargeOption, string UnderAccount)
         {
@@ -1299,6 +1505,9 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             return Ok(ds);
         }
         /* added on 14-jul-2022 for tds details insert update*/
+        /// <summary>Insert or update a supplier TDS detail record (NG version).</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult SUPPLIER_CHILD_TDS_IU_NG([FromBody]supplierchildTDS cd)
         {
@@ -1319,6 +1528,13 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete a temporary supplier address child record.</summary>
+        /// <param name="id">Primary key ID of the record.</param>
+        /// <param name="guid">Session GUID for temporary record management.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="SUP_CODE">SUP CODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult supplier_TempAddress_delete([FromUri]string id, string guid, string makerid, string Mode, string SUP_CODE)
         {
@@ -1338,6 +1554,13 @@ namespace Manilal_V5NG.Controllers.MasterBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete a confirmed supplier address record.</summary>
+        /// <param name="id">Primary key ID of the record.</param>
+        /// <param name="guid">Session GUID for temporary record management.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="SUP_CODE">SUP CODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult supplier_Address_delete([FromUri]string id, string guid, string makerid, string Mode, string SUP_CODE)
         {

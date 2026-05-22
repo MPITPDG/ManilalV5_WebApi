@@ -29,6 +29,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
    
     public class AccountsController : ApiController
     {
+        /// <summary>Perform MIS INVOICE PENDING JOB records.</summary>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="MODE">Operation mode or filter type.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_MIS_INVOICE_PENDING_JOB(String FROMDATE, String TODATE, String MODE, String CMPCODE, String CITYCODE, string CITYCODE1)
         {
@@ -46,6 +54,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform DownloadZip records.</summary>
+        /// <param name="fileName">file Name parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         [Route("DownloadZip")]
         public HttpResponseMessage DownloadZip(string fileName)
@@ -88,6 +99,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return zipFilePath;
         }
 
+        /// <summary>Perform GenerateConsigneeJobProfit records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GenerateConsigneeJobProfit([FromBody] consigneejobprofit obj
       )
@@ -221,6 +235,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return strFileName;
         }
 
+        /// <summary>Retrieve print/view data for CREDITNOTE VIEW OLDENTRY records.</summary>
+        /// <param name="CREDITNOTENO">CREDITNOTENO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CREDITNOTE_VIEW_OLDENTRY(String CREDITNOTENO, String CMPCODE, String CITYCODE, String CMPID, String VGUID)
         {
@@ -237,6 +258,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for CRTNOTE RESET INVOICE records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CRTNOTE_RESET_INVOICE(string CMPID, string VGUID)
         {
@@ -254,6 +279,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update CRTNOTE INVOICE records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_CRTNOTE_INVOICE_IU([FromBody]creditnote obj)
         {
@@ -274,6 +302,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CashBook BankRecousillationAsOnDate records.</summary>
+        /// <param name="_ourbank"> ourbank parameter.</param>
+        /// <param name="_FromDt">Start date for the date range filter.</param>
+        /// <param name="_ToDt">End date for the date range filter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CashBook_BankRecousillationAsOnDate(string _ourbank, string _FromDt, string _ToDt, string cmpcode, string citycode, string citycode1, string Fin_StartDate, string Fin_EndDate)
         {
@@ -292,6 +330,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CashBook BankRecousillation UpdateNew records.</summary>
+        /// <param name="_reconsillationstr"> reconsillationstr parameter.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CashBook_BankRecousillation_UpdateNew(string _reconsillationstr, string OURBANK, string FROMDATE, string TODATE)
         {
@@ -313,6 +357,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform CREDITNOTE GETINVOICE BALAMOUNT records.</summary>
+        /// <param name="invno">Invoice number.</param>
+        /// <param name="crtno">crtno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CREDITNOTE_GETINVOICE_BALAMOUNT(string invno, string crtno)
         {
@@ -330,6 +378,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform ECREDITNOTERESETDATA FORJSON records.</summary>
+        /// <param name="JSONFILEID">JSONFILEID parameter.</param>
+        /// <param name="CRNOTEID">CRNOTEID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_ECREDITNOTERESETDATA_FORJSON(string JSONFILEID, string CRNOTEID)
         {
@@ -347,6 +399,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform ECreditNote ResetJsonList records.</summary>
+        /// <param name="FINSTARTDT">Start date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_ECreditNote_ResetJsonList(string FINSTARTDT, string CMPCODE, string CITYCODE)
         {
@@ -364,6 +421,8 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Upload UploadBnkReconcilFile records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UploadBnkReconcilFile()
         {
@@ -1064,6 +1123,21 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return dsupdate;
         }
+        /// <summary>Perform MIS REPORT CLIENTJOBPROFIT records.</summary>
+        /// <param name="Client">Client/exporter code.</param>
+        /// <param name="SearchType">Search type/column identifier.</param>
+        /// <param name="Frmdt">Start date for the date range filter.</param>
+        /// <param name="Todt">End date for the date range filter.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="JobNoFrom">Job number.</param>
+        /// <param name="JobNoTo">Job number.</param>
+        /// <param name="FromVal">From Val parameter.</param>
+        /// <param name="ToVal">To Val parameter.</param>
+        /// <param name="CMP_CODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="rpttype">rpttype parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MIS_REPORT_CLIENTJOBPROFIT(string Client, string SearchType, string Frmdt, string Todt, string Mode, string JobNoFrom, string JobNoTo, string FromVal, string ToVal, string CMP_CODE, string CITYCODE1, string CMPID, string rpttype)
         {
@@ -1105,6 +1179,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds1);
         }
+        /// <summary>Perform CLIENT BR GETLIST records.</summary>
+        /// <param name="BILLNO">BILLNO parameter.</param>
+        /// <param name="CLIENT">Client/exporter code.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CLIENT_BR_GETLIST(string BILLNO, string CLIENT, string CMPCODE, string CITYCODE)
         {
@@ -1123,6 +1203,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform BRBP GETBILLAMOUNT records.</summary>
+        /// <param name="BILLNO">BILLNO parameter.</param>
+        /// <param name="ACC_CODE">ACC CODE parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="BANKDTLSID">BANKDTLSID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BRBP_GETBILLAMOUNT(string BILLNO, string ACC_CODE, string CMPCODE, string CITYCODE, string BANKDTLSID)
         {
@@ -1141,6 +1228,8 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform SUPPLIER AS AGENT records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_SUPPLIER_AS_AGENT()
         {
@@ -1159,6 +1248,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform bankreconcillation exporttoxl records.</summary>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage acc_bankreconcillation_exporttoxl(string OURBANK, string FROMDATE, string TODATE)
         {
@@ -1189,6 +1283,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform BANKRECONCILLATION UPLOAD GETDATA records.</summary>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BANKRECONCILLATION_UPLOAD_GETDATA(string OURBANK, string FROMDATE, string TODATE)
         {
@@ -1367,6 +1466,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return dataString;
             // Console.WriteLine(dataString1);
         }
+        /// <summary>Perform ECREDITNOTEGETDATA FORJSON records.</summary>
+        /// <param name="CRTNO">CRTNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="MAKERIP">IP address of the record maker.</param>
+        /// <param name="FINSTARTDT">Start date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_ECREDITNOTEGETDATA_FORJSON(string CRTNO, string CMPCODE, string CITYCODE, string CMPID, string MAKERIP, string FINSTARTDT)
         {
@@ -1386,6 +1493,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
 
         }
+        /// <summary>Retrieve list of ECreditNote records.</summary>
+        /// <param name="FINSTARTDT">Start date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_ECreditNote_List(string FINSTARTDT, string CMPCODE, string CITYCODE)
         {
@@ -1712,6 +1824,8 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         //    return Ok(ds1);
 
         //}
+        /// <summary>UploadBnkReconcilFileold operation.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
 
         public IHttpActionResult UploadBnkReconcilFileold()
@@ -1823,6 +1937,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return response;
         }
+        /// <summary>Retrieve list of EInvoice records.</summary>
+        /// <param name="FINSTARTDT">Start date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_EInvoice_List(string FINSTARTDT, string CMPCODE, string CITYCODE)
         {
@@ -1840,6 +1959,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform EInvoice ResetJsonList records.</summary>
+        /// <param name="FINSTARTDT">Start date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_EInvoice_ResetJsonList(string FINSTARTDT, string CMPCODE, string CITYCODE)
         {
@@ -1857,6 +1981,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform EINVOICERESETDATA FORJSON records.</summary>
+        /// <param name="JSONFILEID">JSONFILEID parameter.</param>
+        /// <param name="INVOICEID">INVOICEID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_EINVOICERESETDATA_FORJSON(string JSONFILEID, string INVOICEID)
         {
@@ -1875,6 +2003,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform EINVOICEGETDATA FORJSON records.</summary>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="MAKERIP">IP address of the record maker.</param>
+        /// <param name="FINSTARTDT">Start date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_EINVOICEGETDATA_FORJSON(string INVNO, string CMPCODE, string CITYCODE, string CMPID, string MAKERIP, string FINSTARTDT)
         {
@@ -2292,6 +2428,8 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
             return Item;
         }
+        /// <summary>UploadIRNFile operation.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         // [Route("api/Accounts")]
         public IHttpActionResult UploadIRNFile()
@@ -2586,6 +2724,17 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         //}
         /* Added for bankpayment tds */
 
+        /// <summary>Load page reference data for CHEQUE PREVIEWPRINT PAGELOAD records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="STRCHEQUENO">STRCHEQUENO parameter.</param>
+        /// <param name="COUNT">COUNT parameter.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="STRVALUE">STRVALUE parameter.</param>
+        /// <param name="MAKERIP">IP address of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CHEQUE_PREVIEWPRINT_PAGELOAD_NG(string CMPID, string CMPCODE, string CITYCODE1, string STRCHEQUENO, string COUNT, string OURBANK, string ENTRYNO, string STRVALUE, string MAKERIP)//CHQUE STATUS
         {
@@ -2605,6 +2754,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Reset temporary data for BRBPCRCPCE RESET records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BRBPCRCPCE_RESET_NG(string VGUID)
         {
@@ -2622,6 +2774,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Generate BRBPCRCPCE PAYORDER GENERATE records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="BPReqNo">BPReq No parameter.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <param name="MAKERIP">IP address of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BRBPCRCPCE_PAYORDER_GENERATE_NG(string CMPID, string CMPCODE, string CITYCODE1, string OURBANK, String BPReqNo, String MAKERID, String MAKERIP)//CHQUE STATUS
         {
@@ -2640,6 +2801,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete BRBPCRCPCE TMP DEL records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_BANKDTLS_ID">ACC BANKDTLS ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BRBPCRCPCE_TMP_DEL_NG(string ID, string VGUID, string ACC_BANKDTLS_ID)
         {
@@ -2658,6 +2824,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Reset temporary data for BPDIIDE TDS RESET records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BPDIIDE_TDS_RESET_NG(string VGUID)
         {
@@ -2673,6 +2842,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for BRBPCRCPCE View records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BRBPCRCPCE_View_NG(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS, String CMPID)
         {
@@ -2691,6 +2868,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update BRBPCRCPCE IU records.</summary>
+        /// <param name="BR">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_BRBPCRCPCE_IU_NG([FromBody]BRBPCRCPCE BR)
         {
@@ -2720,6 +2900,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update BPDIIDE TDS TMP IU records.</summary>
+        /// <param name="PID">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_BPDIIDE_TDS_TMP_IU_NG([FromBody]StaffPurchaseInvoiceDtls PID)
         {
@@ -2737,6 +2920,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update BRBPCRCPCE TMP IU records.</summary>
+        /// <param name="BRD">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_BRBPCRCPCE_TMP_IU_NG([FromBody]BRBPCRCPCEDTL BRD)
         {
@@ -2766,6 +2952,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform BP TDSCAL records.</summary>
+        /// <param name="ENTRYDT">ENTRYDT parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BP_TDSCAL(string ENTRYDT, string VGUID, string CMPCODE, string CMPID, string CITYCODE, string STATUS)
         {
@@ -2784,6 +2978,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform BP TDSCAL records.</summary>
+        /// <param name="SUPPCODE">SUPPCODE parameter.</param>
+        /// <param name="PURCHASEDT">PURCHASEDT parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BP_TDSCAL_NG(string SUPPCODE, string PURCHASEDT, string VGUID, string CMPCODE, string CMPID, string CITYCODE)
         {
@@ -2803,6 +3005,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
         /*  Added For Staff Purchase Request  14/08/2020*/
 
+        /// <summary>Load page reference data for PURCHASE records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="PSTATUS">PSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_PAGELOAD(string cmp_code, string citycode, string citycode1, string PSTATUS)
         {
@@ -2821,6 +3029,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve print/view data for PURCHASE records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_VIEW(string cmp_code, string citycode, string ENTRYNO, string VGUID, string STATUS,string CMPID)
         {
@@ -2839,6 +3055,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update PURCHASE records.</summary>
+        /// <param name="PIM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_INSERT([FromBody]StaffPurchaseInvoiceMaster PIM)
         {
@@ -2861,6 +3080,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Insert or update PURCHASE records.</summary>
+        /// <param name="PIM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_UPDATE([FromBody]StaffPurchaseInvoiceMaster PIM)
         {
@@ -2883,6 +3105,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Delete PURCHASE TMP records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_PURCHASEDTLS_ID">ACC PURCHASEDTLS ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_TMP_DEL(string ID, string VGUID, string ACC_PURCHASEDTLS_ID)
         {
@@ -2902,6 +3129,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Reset temporary data for PURCHASE records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_RESET(string VGUID)
         {
@@ -2921,6 +3151,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
        
 
+        /// <summary>Insert or update PURCHASE TMP records.</summary>
+        /// <param name="PID">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_TMP_IU([FromBody]StaffPurchaseInvoiceDtls PID)
         {
@@ -2943,6 +3176,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Perform PURCHASE TMP IUOLD records.</summary>
+        /// <param name="PID">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_TMP_IUOLD([FromBody]StaffPurchaseInvoiceDtls PID)
         {
@@ -2963,6 +3199,24 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve PURCHASE SEARCH RPI records.</summary>
+        /// <param name="PUR_CODE">PUR CODE parameter.</param>
+        /// <param name="PUR_SUPPLIER">Supplier code.</param>
+        /// <param name="PUR_INVNO">Invoice number.</param>
+        /// <param name="PUR_JOBNO">Job number.</param>
+        /// <param name="AMOUNT">AMOUNT parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="DISPLAYTYPE">DISPLAYTYPE parameter.</param>
+        /// <param name="YEAR_ID">YEAR ID parameter.</param>
+        /// <param name="FIN_STARTDATE">Start date for the date range filter.</param>
+        /// <param name="FIN_ENDDATE">End date for the date range filter.</param>
+        /// <param name="USERID">USERID parameter.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_SEARCH_RPI(string PUR_CODE, string PUR_SUPPLIER, string PUR_INVNO, string PUR_JOBNO, string AMOUNT, string FROMDATE, string TODATE, string cmp_code, string citycode, string TYPE, string DISPLAYTYPE, string YEAR_ID, string FIN_STARTDATE, string FIN_ENDDATE, string USERID, string STATUS)
         {
@@ -2980,6 +3234,22 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve PURCHASE SEARCH PI records.</summary>
+        /// <param name="PUR_CODE">PUR CODE parameter.</param>
+        /// <param name="PUR_SUPPLIER">Supplier code.</param>
+        /// <param name="PUR_INVNO">Invoice number.</param>
+        /// <param name="PUR_JOBNO">Job number.</param>
+        /// <param name="AMOUNT">AMOUNT parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="DISPLAYTYPE">DISPLAYTYPE parameter.</param>
+        /// <param name="YEAR_ID">YEAR ID parameter.</param>
+        /// <param name="FIN_STARTDATE">Start date for the date range filter.</param>
+        /// <param name="FIN_ENDDATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_SEARCH_PI(string PUR_CODE, string PUR_SUPPLIER, string PUR_INVNO, string PUR_JOBNO, string AMOUNT, string FROMDATE, string TODATE, string cmp_code, string citycode, string TYPE, string DISPLAYTYPE, string YEAR_ID, string FIN_STARTDATE, string FIN_ENDDATE)
         {
@@ -2997,6 +3267,17 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for PURCHASE PRINT PI records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="PUR_CODE">PUR CODE parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="PUR_SUPPLIER">Supplier code.</param>
+        /// <param name="PUR_INVNO">Invoice number.</param>
+        /// <param name="DISPLAYTYPE">DISPLAYTYPE parameter.</param>
+        /// <param name="YEAR_ID">YEAR ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_PRINT_PI(string cmp_code, string citycode,string PUR_CODE, string FROMDATE, string TODATE, string PUR_SUPPLIER, string PUR_INVNO, string DISPLAYTYPE, string YEAR_ID)
         {
@@ -3014,6 +3295,17 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for PURCHASE PRINT RPI records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="PUR_CODE">PUR CODE parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="PUR_SUPPLIER">Supplier code.</param>
+        /// <param name="PUR_INVNO">Invoice number.</param>
+        /// <param name="DISPLAYTYPE">DISPLAYTYPE parameter.</param>
+        /// <param name="YEAR_ID">YEAR ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_PRINT_RPI(string cmp_code, string citycode, string PUR_CODE, string FROMDATE, string TODATE, string PUR_SUPPLIER, string PUR_INVNO, string DISPLAYTYPE, string YEAR_ID)
         {
@@ -3031,6 +3323,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Validate PURCHASE SUPINVNO records.</summary>
+        /// <param name="SUPCODE">SUPCODE parameter.</param>
+        /// <param name="SUPINVNO">Invoice number.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_SUPINVNO_VALIDATE(string SUPCODE,string SUPINVNO,string ENTRYNO)
         {
@@ -3048,6 +3345,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform Purchase Check Input VoucherNo records.</summary>
+        /// <param name="VoucherNo">Voucher No parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Purchase_Check_Input_VoucherNo(string VoucherNo)
         {
@@ -3065,6 +3365,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve PURCHASE SEARCH PERDAY records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="FIN_STARTDATE">Start date for the date range filter.</param>
+        /// <param name="FIN_ENDDATE">End date for the date range filter.</param>
+        /// <param name="DAY">DAY parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_SEARCH_PERDAY(string cmp_code, string citycode, string TYPE, string FIN_STARTDATE, string FIN_ENDDATE, string DAY)
         {
@@ -3082,6 +3390,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PURCHASE RESTALL records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_RESTALL(string CMPID)
         {
@@ -3099,6 +3410,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of PURCHASE MAWBNO records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="MAWBNO">Master airway bill number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MAWBNO_LIST(string CMPID, string CMPCODE, string CITYCODE , string TYPE, string MAWBNO )
         {
@@ -3117,6 +3435,21 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Load page reference data for PURCHASE MAWBNO records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="MAWBNO">Master airway bill number.</param>
+        /// <param name="FREIGHT">FREIGHT parameter.</param>
+        /// <param name="SURCHARGE">SURCHARGE parameter.</param>
+        /// <param name="AIRFRTCOMM_G100153">AIRFRTCOMM G100153 parameter.</param>
+        /// <param name="FRTREBATE_G100186">FRTREBATE G100186 parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="DOCUMENT_G100179">DOCUMENT G100179 parameter.</param>
+        /// <param name="AMSENSEXP_G102024">AMSENSEXP G102024 parameter.</param>
+        /// <param name="MISCEXP_G102025">MISCEXP G102025 parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MAWBNO_PAGELOAD(string CMPID, string CMPCODE, string CITYCODE,string MAWBNO,string FREIGHT, string SURCHARGE,string AIRFRTCOMM_G100153,string FRTREBATE_G100186,string VGUID,string STATUS,string DOCUMENT_G100179,string AMSENSEXP_G102024, string MISCEXP_G102025 )
         {
@@ -3137,6 +3470,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
         //--MULTICONTAIER PUCHASE 
         /*
+        /// <summary>Insert or update PURCHASE MULTICONTAINER TMP records.</summary>
+        /// <param name="PID">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_TMP_IU([FromBody]StaffPurchaseInvoiceDtls PID)
         {
@@ -3157,6 +3493,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }*/
+        /// <summary>Insert or update PURCHASE MULTICONTAINER TMP records.</summary>
+        /// <param name="PID">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_TMP_IU([FromBody]StaffPurchaseInvoiceDtls PID)
         {
@@ -3177,6 +3516,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update PURCHASE MULTICONTAINER records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_IU(string CMPCODE, string CITYCODE1,string VGUID,string TYPE,String CMPID)
         {
@@ -3199,6 +3545,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
 
 
+        /// <summary>Retrieve list of invoice auth records.</summary>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="RoleType">Role Type parameter.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_invoice_auth_list(string  cmpid , string cmp_code, string RoleType , string Type )
         {
@@ -3217,6 +3569,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve print/view data for invoice Proforma Print records.</summary>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="RoleType">Role Type parameter.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_invoice_Proforma_Print_list(string cmpid, string cmp_code, string RoleType, string Type)
         {
@@ -3234,6 +3592,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update invoice Authorisation records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_invoice_Authorisation_Update([FromBody]Authorisation obj)
         {
@@ -3254,6 +3615,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for invoice records.</summary>
+        /// <param name="invoiceno">invoiceno parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_invoice_view(string invoiceno, string cmp_code )
         {
@@ -3272,6 +3637,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         //CreditNote UNAuthorisation 
+        /// <summary>Insert or update CN Authorisation records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_CN_Authorisation_Update([FromBody]Authorisation obj)
         {
@@ -3292,6 +3660,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for CN records.</summary>
+        /// <param name="CNno">CNno parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="type">type parameter.</param>
+        /// <param name="finstartdt">Start date for the date range filter.</param>
+        /// <param name="fin_enddt">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CN_view(string CNno, string cmp_code,string citycode,string type,string finstartdt,string fin_enddt)
         {
@@ -3310,6 +3686,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         //invoice UNAuthorisation 
+        /// <summary>Retrieve list of invoice unauth records.</summary>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="RoleType">Role Type parameter.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_invoice_unauth_list(string cmpid, string cmp_code, string RoleType, string Type)
         {
@@ -3327,6 +3709,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update invoice UnAuthorisation records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_invoice_UnAuthorisation_Update([FromBody]Authorisation obj)
         {
@@ -3348,6 +3733,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform invoice AUTHORISATION CHECK records.</summary>
+        /// <param name="invno">Invoice number.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_invoice_AUTHORISATION_CHECK(string invno, string cmp_code )
         {
@@ -3366,6 +3755,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform invoice Chk Inv NONINR records.</summary>
+        /// <param name="invno">Invoice number.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_invoice_Chk_Inv_NONINR(string invno, string cmp_code,string citycode)
         {
@@ -3383,6 +3777,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for invoice records.</summary>
+        /// <param name="invno">Invoice number.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_invoice_Print(string invno, string cmp_code, string citycode)
         {
@@ -3402,6 +3801,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
        
 
         /*INVOICE */
+        /// <summary>Perform INVOICE PAGE LOAD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="type">type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_PAGE_LOAD(string CMPCODE, string CITYCODE,string CITYCODE1,string cmpid,string INVNO,string type)
         {
@@ -3419,6 +3826,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of INVOICE LIST JOB records.</summary>
+        /// <param name="frmdt">Start date for the date range filter.</param>
+        /// <param name="todt">End date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_LIST_JOB(string frmdt,string todt ,string CMPCODE, string CITYCODE, string CITYCODE1 ,string Type )
         {
@@ -3437,6 +3852,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Populate form with existing data for INVOICE JOB records.</summary>
+        /// <param name="JOBSTR">JOBSTR parameter.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_JOB_POPULATE(string JOBSTR, string TYPE, string CMPID,string GUID, string INVNO,string CMPCODE )
         {
@@ -3454,6 +3877,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform INVOICE PAYBYDATE GET records.</summary>
+        /// <param name="clientcode">Client/exporter code.</param>
+        /// <param name="invdt">invdt parameter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="ISPAYBYDT_AIR">ISPAYBYDT AIR parameter.</param>
+        /// <param name="ISPAYBYDT_SEA">ISPAYBYDT SEA parameter.</param>
+        /// <param name="CREDITPERIOD_SEA">CREDITPERIOD SEA parameter.</param>
+        /// <param name="CREDITPERIOD_AIR">CREDITPERIOD AIR parameter.</param>
+        /// <param name="HAWBDT">HAWBDT parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_PAYBYDATE_GET(string clientcode, string invdt, string mode, string ISPAYBYDT_AIR, string ISPAYBYDT_SEA,string CREDITPERIOD_SEA,string CREDITPERIOD_AIR, string HAWBDT)
         {
@@ -3472,6 +3905,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
          
+        /// <summary>Perform invoice Job TMP records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_invoice_Job_TMP([FromBody]InvJobDtls obj)
         {
@@ -3492,6 +3928,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform invoice Charge TMP records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_invoice_Charge_TMP([FromBody]InvChrgeDtls obj)
         {
@@ -3512,6 +3951,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete INVOICE JOB records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_JOBDTLS_ID">ACC JOBDTLS ID parameter.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_JOB_DELETE(string ID ,string  GUID, string   ACC_JOBDTLS_ID,string MAKERID )
         {
@@ -3530,6 +3975,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Delete INVOICE CHARGES records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_CHARGS_ID">ACC CHARGS ID parameter.</param>
+        /// <param name="INV_CHRGCODE">INV CHRGCODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_CHARGES_DELETE(string ID, string GUID, string ACC_CHARGS_ID,string INV_CHRGCODE)
         {
@@ -3548,6 +3999,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform invoice enclosure TMPIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_invoice_enclosure_TMPIU([FromBody]InvEnclosure obj)
         {
@@ -3568,6 +4022,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete INVOICE ENCLOSURE records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_ENCLDTLS_ID">ACC ENCLDTLS ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_ENCLOSURE_DELETE(string ID, string GUID, string ACC_ENCLDTLS_ID)
         {
@@ -3585,6 +4044,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform invoice Dispatch TMPIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_invoice_Dispatch_TMPIU([FromBody]InvDispatch obj)
         {
@@ -3605,6 +4067,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete INVOICE dispatch records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_DESPDTLS_ID">ACC DESPDTLS ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_dispatch_DELETE(string ID, string GUID, string ACC_DESPDTLS_ID)
         {
@@ -3623,6 +4090,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         
+        /// <summary>Insert or update invoice records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_invoice_INSERT([FromBody]InvoiceMain obj)
         {
@@ -3643,6 +4113,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         } 
+        /// <summary>Insert or update invoice records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_invoice_UPDATE([FromBody]InvoiceMain obj)
         {
@@ -3663,6 +4136,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve INVOICE Search Pageloag records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_Search_Pageloag(string cmp_code,string citycode,string citycode1)
         {
@@ -3680,6 +4158,20 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         } 
+        /// <summary>Search and retrieve INVOICE Search records.</summary>
+        /// <param name="InvoiceNo">Invoice No parameter.</param>
+        /// <param name="Client">Client/exporter code.</param>
+        /// <param name="JobNo">Job number.</param>
+        /// <param name="Amount">Amount parameter.</param>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_Search_List(string InvoiceNo, string Client, string JobNo, string Amount, string FromDate, string ToDate, string cmp_code, string citycode, string TYPE, string Fin_StartDate, string Fin_EndDate, string cmpid)
         {
@@ -3698,6 +4190,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Populate form with existing data for INVOICE Edit records.</summary>
+        /// <param name="InvoiceNo">Invoice No parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <param name="vguid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_Edit_Populate(string InvoiceNo, string cmp_code, string citycode,string makerid,string vguid)
         {
@@ -3715,6 +4214,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve INVOICE SEARCH PERDAY records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="FIN_STARTDATE">Start date for the date range filter.</param>
+        /// <param name="FIN_ENDDATE">End date for the date range filter.</param>
+        /// <param name="DAY">DAY parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet] 
         public IHttpActionResult ACC_INVOICE_SEARCH_PERDAY(string cmp_code, string citycode, string FIN_STARTDATE, string FIN_ENDDATE, string DAY)
         {
@@ -3734,6 +4240,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
         /*AIR FREIGHT INVOICE*/
         /*Freight Invoice  step1*/
+        /// <summary>Load page reference data for INV MAWB AIRFRT CONS PUR records.</summary>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="MakerIP">IP address of the record maker.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INV_MAWB_AIRFRT_CONS_PUR_PAGELOAD(string cmpid, string MakerIP, string cmpcode, string citycode, string citycode1)
         {
@@ -3753,6 +4266,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         /*AF invoice History*/
+        /// <summary>Retrieve list of INV MAWB AIRFRT CONS PUR records.</summary>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INV_MAWB_AIRFRT_CONS_PUR_LIST(string cmpid, string cmpcode, string citycode1)
         {
@@ -3841,6 +4359,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         //    return Ok(ds);
         //}
         /*AFAutoviewInv */
+        /// <summary>Retrieve print/view data for INV MAWB AIRFRT CN SHAREOFPROFIT INV records.</summary>
+        /// <param name="INVCNCONPI_LOGID">INVCNCONPI LOGID parameter.</param>
+        /// <param name="INVTYPE">INVTYPE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_INV_VIEW(string INVCNCONPI_LOGID, string INVTYPE)
         {
@@ -3861,6 +4383,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
         /*AFAutoview Inv v2 */
+        /// <summary>Retrieve print/view data for INV MAWB AIRFRT INV records.</summary>
+        /// <param name="INVCNCONPI_LOGID">INVCNCONPI LOGID parameter.</param>
+        /// <param name="FRTINVNO">Invoice number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INV_MAWB_AIRFRT_INV_VIEW(string INVCNCONPI_LOGID, string FRTINVNO)
         {
@@ -3880,6 +4406,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         /* AIRFRT_CN_SHAREOFPROFIT_CN_VIEW */
+        /// <summary>Retrieve print/view data for INV MAWB AIRFRT CN SHAREOFPROFIT CN records.</summary>
+        /// <param name="INVCNCONPI_LOGID">INVCNCONPI LOGID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CN_VIEW(string INVCNCONPI_LOGID)
         {
@@ -3899,6 +4428,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         /* AIRFREIGHT_CONSOLE_PURCAHSE_VIEW*/
+        /// <summary>Retrieve print/view data for INV CN MAWB AIRFREIGHT CONSOLE PURCAHSE records.</summary>
+        /// <param name="INVCNCONPI_LOGID">INVCNCONPI LOGID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCT_INV_CN_MAWB_AIRFREIGHT_CONSOLE_PURCAHSE_VIEW(string INVCNCONPI_LOGID)
         {
@@ -3919,6 +4451,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
         /* AIRFRT_CN_SHAREOFPROFIT_CONS_PUR */
+        /// <summary>Perform INV MAWB AIRFRT CN SHAREOFPROFIT CONS PUR records.</summary>
+        /// <param name="FK_LOGID">FK LOGID parameter.</param>
+        /// <param name="MAWBNO">Master airway bill number.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INV_MAWB_AIRFRT_CN_SHAREOFPROFIT_CONS_PUR(string FK_LOGID, string MAWBNO, string CMPID)
         {
@@ -3938,6 +4475,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         /*FRT INVOICE DETAIL INVCN RESET*/
+        /// <summary>Perform INV MAWB AIRFRT CN SOF INVCN REST records.</summary>
+        /// <param name="FK_LOGID">FK LOGID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INV_MAWB_AIRFRT_CN_SOF_INVCN_REST(string FK_LOGID)
         {
@@ -3959,6 +4499,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
 
         /*FRT INVOICE DETAIL CN GENERATE*/
+        /// <summary>Generate INV MAWB AIRFRT CN SOF CONS PUR records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="FK_LOGID">FK LOGID parameter.</param>
+        /// <param name="LOCALIPADD">LOCALIPADD parameter.</param>
+        /// <param name="ROUTERIPADD">ROUTERIPADD parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INV_MAWB_AIRFRT_CN_SOF_CONS_PUR_GENERATE(string CMPID, string CMPCODE, string CITYCODE1, string CITYCODE, string FK_LOGID, string LOCALIPADD, string ROUTERIPADD)
         {
@@ -3978,6 +4527,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         /*FRT INVOICE PURCHASE*/
+        /// <summary>Retrieve print/view data for TRAN PURCHASE records.</summary>
+        /// <param name="entryno">entryno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_TRAN_PURCHASE_PRINT(string entryno)
         {
@@ -3999,6 +4551,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
 
         /*CREDIT NOTE*/
+        /// <summary>Search and retrieve CREDITNOTE SEARCH PERDAY records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="DAY">DAY parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CREDITNOTE_SEARCH_PERDAY(string cmp_code, string citycode , string DAY)
         {
@@ -4016,6 +4573,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Populate form with existing data for CRTNOTE JOB records.</summary>
+        /// <param name="JOBSTR">JOBSTR parameter.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CRTNOTE_JOB_POPULATE(string JOBSTR, string TYPE, string CMPID, string GUID, string INVNO, string CMPCODE)
         {
@@ -4034,6 +4599,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         /*
+       /// <summary>Perform CRTNOTE JOB TMP records.</summary>
+       /// <param name="obj">Request body model containing the record fields.</param>
+       /// <returns>DataSet with the requested data serialized as JSON.</returns>
        [HttpPost]
        public IHttpActionResult ACC_CRTNOTE_JOB_TMP([FromBody]InvJobDtls obj)
        {
@@ -4054,6 +4622,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
            }
            return Ok(ds);
        }*/
+        /// <summary>Perform CRTNOTE JOB TMP records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_CRTNOTE_JOB_TMP([FromBody]InvJobDtls obj)
         {
@@ -4074,6 +4645,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CRTNOTE CHARGE TMP records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_CRTNOTE_CHARGE_TMP([FromBody]InvChrgeDtls obj)
         {
@@ -4094,6 +4668,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete CRTNOTE JOB records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_JOBDTLS_ID">ACC JOBDTLS ID parameter.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CRTNOTE_JOB_DELETE(string ID, string GUID, string ACC_JOBDTLS_ID, string MAKERID)
         {
@@ -4112,6 +4692,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Delete CRTNOTE CHARGES records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_CHARGS_ID">ACC CHARGS ID parameter.</param>
+        /// <param name="INV_CHRGCODE">INV CHRGCODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CRTNOTE_CHARGES_DELETE(string ID, string GUID, string ACC_CHARGS_ID, string INV_CHRGCODE)
         {
@@ -4131,6 +4717,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Perform CRTNOTE INVOICE TMP records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_CRTNOTE_INVOICE_TMP([FromBody]creditnoteBillno obj)
         {
@@ -4152,6 +4741,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Delete CRTNOTE INV records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_INVDTLS_ID">ACC INVDTLS ID parameter.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CRTNOTE_INV_DELETE(string ID, string GUID, string ACC_INVDTLS_ID, string MAKERID)
         {
@@ -4169,6 +4764,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update CRTNOTE Final records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_CRTNOTE_Final_IU([FromBody]creditnote obj)
         {
@@ -4190,6 +4788,20 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Search and retrieve CREDITNOTE Search records.</summary>
+        /// <param name="CREDITNO">CREDITNO parameter.</param>
+        /// <param name="Client">Client/exporter code.</param>
+        /// <param name="JobNo">Job number.</param>
+        /// <param name="Amount">Amount parameter.</param>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="yearid">yearid parameter.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CREDITNOTE_Search_List(string CREDITNO, string Client, string JobNo, string Amount, string FromDate, string ToDate, string cmp_code, string citycode, string TYPE, string yearid, string Fin_StartDate, string Fin_EndDate)
         {
@@ -4207,6 +4819,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Populate form with existing data for CRTNOTE Edit records.</summary>
+        /// <param name="CRTNOTE">CRTNOTE parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <param name="vguid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CRTNOTE_Edit_Populate(string CRTNOTE, string cmp_code, string citycode, string makerid, string vguid)
         {
@@ -4224,6 +4843,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform creditNote Chk Inv NONINR records.</summary>
+        /// <param name="invno">Invoice number.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_creditNote_Chk_Inv_NONINR(string invno, string cmp_code, string citycode)
         {
@@ -4242,6 +4866,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         /* JV start */
+        /// <summary>Load page reference data for JV records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="PSTATUS">PSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_JV_PAGELOAD(string cmp_code, string citycode, string citycode1, string PSTATUS)
         {
@@ -4261,6 +4891,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Insert or update JV records.</summary>
+        /// <param name="JVM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_JV_IU([FromBody]JournalVoucherMaster JVM)
         {
@@ -4292,6 +4925,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Insert or update JV TMP records.</summary>
+        /// <param name="JVD">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_JV_TMP_IU([FromBody]JournalVoucherDtls JVD)
         {
@@ -4323,6 +4959,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Delete JV TMP records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="JV_DTLS_ID">JV DTLS ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_JV_TMP_DEL(string ID, string VGUID, string JV_DTLS_ID)
         {
@@ -4341,6 +4982,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Reset temporary data for JV records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_JV_RESET(string VGUID)
         {
@@ -4360,6 +5004,20 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Search and retrieve JV records.</summary>
+        /// <param name="CODE">CODE parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="TYPEVALUE">TYPEVALUE parameter.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="Details_flag">Details flag parameter.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CMP_CODE">Company code identifier.</param>
+        /// <param name="YEAR_ID">YEAR ID parameter.</param>
+        /// <param name="FIN_STARTDATE">Start date for the date range filter.</param>
+        /// <param name="FIN_ENDDATE">End date for the date range filter.</param>
+        /// <param name="USERID">USERID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_JV_SEARCH(string CODE, string FROMDATE, string TODATE, string TYPEVALUE, string TYPE, string Details_flag, string CITYCODE, string CMP_CODE, string YEAR_ID, string FIN_STARTDATE, string FIN_ENDDATE, string USERID)
         {
@@ -4388,6 +5046,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Retrieve print/view data for JV records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_JV_View(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS)
         {
@@ -4406,6 +5071,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Validate JV JOBNO records.</summary>
+        /// <param name="JVJOBNO">Job number.</param>
+        /// <param name="JVACCOUNT">JVACCOUNT parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_JV_JOBNO_VALIDATE(string JVJOBNO, string JVACCOUNT)
         {
@@ -4425,6 +5094,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
         /*   Added on 07092020 for BankReceipt */
 
+        /// <summary>Load page reference data for CASHBOOK BRBPCRCPCE records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="PSTATUS">PSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CASHBOOK_BRBPCRCPCE_PAGELOAD(string CMPCODE, string CITYCODE, string CITYCODE1, string PSTATUS)
         {
@@ -4444,6 +5119,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Insert or update BRBPCRCPCE records.</summary>
+        /// <param name="BR">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_BRBPCRCPCE_IU([FromBody]BRBPCRCPCE BR)
         {
@@ -4474,6 +5152,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Delete BRBPCRCPCE TMP records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_BANKDTLS_ID">ACC BANKDTLS ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BRBPCRCPCE_TMP_DEL(string ID, string VGUID, string ACC_BANKDTLS_ID)
         {
@@ -4494,6 +5177,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
 
 
+        /// <summary>Insert or update BRBPCRCPCE TMP records.</summary>
+        /// <param name="BRD">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_BRBPCRCPCE_TMP_IU([FromBody]BRBPCRCPCEDTL BRD)
         {
@@ -4524,6 +5210,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Reset temporary data for BRBPCRCPCE records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BRBPCRCPCE_RESET(string VGUID)
         {
@@ -4542,6 +5231,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve print/view data for BRBPCRCPCE records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BRBPCRCPCE_View(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS)
         {
@@ -4561,6 +5257,22 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Search and retrieve CASHBOOK records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="CLIENT">Client/exporter code.</param>
+        /// <param name="CHEQUENO">CHEQUENO parameter.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="JOBNO">Job number.</param>
+        /// <param name="AMOUNT">AMOUNT parameter.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="MODE">Operation mode or filter type.</param>
+        /// <param name="DISPLAYTYPE">DISPLAYTYPE parameter.</param>
+        /// <param name="YEARID">YEARID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CASHBOOK_SEARCH(string CMPCODE, string CITYCODE, string ENTRYNO, string FROMDATE, string TODATE, string CLIENT, string CHEQUENO, string OURBANK, string JOBNO, string AMOUNT, string STATUS, string MODE, string DISPLAYTYPE, string YEARID)
         {
@@ -4580,6 +5292,23 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve print/view data for CASHBOOK RCP records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="CLIENT">Client/exporter code.</param>
+        /// <param name="CHEQUENO">CHEQUENO parameter.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="JOBNO">Job number.</param>
+        /// <param name="AMOUNT">AMOUNT parameter.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="MODE">Operation mode or filter type.</param>
+        /// <param name="DISPLAYTYPE">DISPLAYTYPE parameter.</param>
+        /// <param name="YEARID">YEARID parameter.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CASHBOOK_RCP_PRINT(string CMPCODE, string CITYCODE, string ENTRYNO, string FROMDATE, string TODATE, string CLIENT, string CHEQUENO, string OURBANK, string JOBNO, string AMOUNT, string STATUS, string MODE, string DISPLAYTYPE, string YEARID,string cmpid)
         {
@@ -4599,6 +5328,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         /*----------------------*/
+        /// <summary>Perform CASHBOOK AUTOGENERATE BIND records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="FRDT">Start date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CASHBOOK_AUTOGENERATE_BIND(string CMPCODE, string CITYCODE, string FRDT)
         {
@@ -4617,6 +5351,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve FillCE Employees records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult FillCE_Employees(string CMPCODE, string CITYCODE)
         {
@@ -4635,6 +5373,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CE STAEMENT records.</summary>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <param name="usr_StartDate">Start date for the date range filter.</param>
+        /// <param name="usr_EndDate">End date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ACCTCODE">ACCTCODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CE_STAEMENT(string Fin_StartDate, string Fin_EndDate, string usr_StartDate, string usr_EndDate, string CMPCODE, string CITYCODE, string ACCTCODE)
         {
@@ -4654,6 +5401,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform EMPLOYEE STAEMENT records.</summary>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <param name="usr_StartDate">Start date for the date range filter.</param>
+        /// <param name="usr_EndDate">End date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult EMPLOYEE_STAEMENT(string Fin_StartDate, string Fin_EndDate, string usr_StartDate, string usr_EndDate, string CMPCODE, string CITYCODE1)
         {
@@ -4674,6 +5429,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         
+        /// <summary>Perform BRBPCRCPCE CE AutoGenerateCR records.</summary>
+        /// <param name="BRD">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_BRBPCRCPCE_CE_AutoGenerateCR([FromBody]BRBPCRCPCE BRD)
         {
@@ -4696,6 +5454,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
         /*----------------Auto CR----------------------*/
+        /// <summary>Populate form with existing data for RECEIPT POPULATE CLIENTBILL records.</summary>
+        /// <param name="CLIENT">Client/exporter code.</param>
+        /// <param name="FINSTARTDATE">Start date for the date range filter.</param>
+        /// <param name="FINENDDATE">End date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_RECEIPT_POPULATE_CLIENTBILL(string CLIENT, string FINSTARTDATE, string FINENDDATE, string CMPCODE, string CITYCODE)
         {
@@ -4716,6 +5481,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Perform RECEIPT BIND CLIENTBILL records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_RECEIPT_BIND_CLIENTBILL(string VGUID, string CMPCODE)
         {
@@ -4735,6 +5504,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update BR BLHELP TMP records.</summary>
+        /// <param name="BRD">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_BR_BLHELP_TMP_IU([FromBody]BRBPCRCPCEDTL BRD)
         {
@@ -4757,6 +5529,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Perform CASHBOOK VALIDATECHQ records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CHQNO">CHQNO parameter.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CASHBOOK_VALIDATECHQ(string CMPCODE, string CITYCODE, string CHQNO, string STATUS, string OURBANK, string ENTRYNO)
         {
@@ -4776,6 +5556,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Validate CASHBOOK BILLNO VALIDATION records.</summary>
+        /// <param name="BILLNO">BILLNO parameter.</param>
+        /// <param name="ACC_CODE">ACC CODE parameter.</param>
+        /// <param name="ENTRYTYPE">ENTRYTYPE parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CASHBOOK_BILLNO_VALIDATION(string BILLNO, string ACC_CODE, string ENTRYTYPE, string CMPCODE, string CITYCODE)
         {
@@ -4796,6 +5583,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
         /*CR*/
+        /// <summary>Perform CASHBOOK CR CHECKISAUTOGENERATED records.</summary>
+        /// <param name="Entryno">Entryno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CASHBOOK_CR_CHECKISAUTOGENERATED(string Entryno)
         {
@@ -4817,6 +5607,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
         //  Computerised Cheque
 
+        /// <summary>Perform CHEQUESTOCK FILLOURBANK records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CHEQUESTOCK_FILLOURBANK(string cmpcode, string citycode, string citycode1)
         {
@@ -4836,6 +5631,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update CHEQUESTOCK records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_CHEQUESTOCK_IU([FromBody]ChequeStock obj)
         {
@@ -4857,6 +5655,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of CHEQUESTOCK records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CHEQUNO">CHEQUNO parameter.</param>
+        /// <param name="BANK">BANK parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CHEQUESTOCK_LIST(string CMPCODE, string CITYCODE, string CHEQUNO, string BANK)//BANK=''
         {
@@ -4874,6 +5678,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Load page reference data for CASHBOOK BRBPCRCPCE PAGELOAD RBP records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="PSTATUS">PSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CASHBOOK_BRBPCRCPCE_PAGELOAD_RBP(string CMPCODE, string CITYCODE, string CITYCODE1, string PSTATUS)//CC
         {
@@ -4891,6 +5701,23 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve ReqBP records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="CLIENT">Client/exporter code.</param>
+        /// <param name="CHEQUENO">CHEQUENO parameter.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="JOBNO">Job number.</param>
+        /// <param name="AMOUNT">AMOUNT parameter.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="MODE">Operation mode or filter type.</param>
+        /// <param name="DISPLAYTYPE">DISPLAYTYPE parameter.</param>
+        /// <param name="YEARID">YEARID parameter.</param>
+        /// <param name="Cmpid">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_ReqBP_SEARCH(string CMPCODE, string CITYCODE, string ENTRYNO, string FROMDATE, string TODATE, string CLIENT, string CHEQUENO, string OURBANK, string JOBNO, string AMOUNT, string STATUS, string MODE, string DISPLAYTYPE, string YEARID,string Cmpid)
         {
@@ -4910,6 +5737,22 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         
+            /// <summary>Search and retrieve BP SEARCH DAY records.</summary>
+            /// <param name="CMPCODE">Company code identifier.</param>
+            /// <param name="CITYCODE">City/branch code.</param>
+            /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+            /// <param name="FROMDATE">Start date for the date range filter.</param>
+            /// <param name="TODATE">End date for the date range filter.</param>
+            /// <param name="CLIENT">Client/exporter code.</param>
+            /// <param name="CHEQUENO">CHEQUENO parameter.</param>
+            /// <param name="OURBANK">OURBANK parameter.</param>
+            /// <param name="JOBNO">Job number.</param>
+            /// <param name="AMOUNT">AMOUNT parameter.</param>
+            /// <param name="STATUS">STATUS parameter.</param>
+            /// <param name="MODE">Operation mode or filter type.</param>
+            /// <param name="DISPLAYTYPE">DISPLAYTYPE parameter.</param>
+            /// <param name="YEARID">YEARID parameter.</param>
+            /// <returns>DataSet with the requested data serialized as JSON.</returns>
             [HttpGet]
         public IHttpActionResult ACC_BP_SEARCH_DAY(string CMPCODE, string CITYCODE, string ENTRYNO, string FROMDATE, string TODATE, string CLIENT, string CHEQUENO, string OURBANK, string JOBNO, string AMOUNT, string STATUS, string MODE, string DISPLAYTYPE, string YEARID)
         {
@@ -4928,6 +5771,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for CMPBP Fill Vouchers Authorisation records.</summary>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="status">status parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CMPBP_Fill_Vouchers_Authorisation(string cmpid,string CMPCODE,  string citycode, string status)
         {
@@ -4946,6 +5795,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CMPBP Assign Authorisation ChqPrint records.</summary>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="status">status parameter.</param>
+        /// <param name="EntryNo">Entry No parameter.</param>
+        /// <param name="CHKAuthorityFlag">CHKAuthority Flag parameter.</param>
+        /// <param name="AuthorisationDt">Authorisation Dt parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CMPBP_Assign_Authorisation_ChqPrint(string cmpid, string CMPCODE, string citycode, string status, string EntryNo, string CHKAuthorityFlag, string AuthorisationDt)
         {
@@ -4964,6 +5822,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CMPBP REJECT BPREQUEST records.</summary>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="status">status parameter.</param>
+        /// <param name="EntryNo">Entry No parameter.</param>
+        /// <param name="CHKAuthorityFlag">CHKAuthority Flag parameter.</param>
+        /// <param name="AuthorisationDt">Authorisation Dt parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CMPBP_REJECT_BPREQUEST(string cmpid, string CMPCODE, string citycode, string status, string EntryNo, string CHKAuthorityFlag, string AuthorisationDt)
         {
@@ -4983,6 +5850,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+	/// <summary>Perform CMPBP REJECT BPView records.</summary>
+	/// <param name="cmpid">Primary key of the company.</param>
+	/// <param name="CMPCODE">Company code identifier.</param>
+	/// <param name="citycode">City/branch code.</param>
+	/// <param name="status">status parameter.</param>
+	/// <returns>DataSet with the requested data serialized as JSON.</returns>
 	[HttpGet]
         public IHttpActionResult Acc_CMPBP_REJECT_BPView(string cmpid, string CMPCODE, string citycode, string status)
         {
@@ -5001,6 +5874,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+	/// <summary>Perform CMPBP BPView records.</summary>
+	/// <param name="EntryNo">Entry No parameter.</param>
+	/// <returns>DataSet with the requested data serialized as JSON.</returns>
 	[HttpGet]
         public IHttpActionResult Acc_CMPBP_BPView(string EntryNo)
         {
@@ -5020,6 +5896,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+	/// <summary>Perform CMPBP BPlISTView records.</summary>
+	/// <param name="EntryNo">Entry No parameter.</param>
+	/// <returns>DataSet with the requested data serialized as JSON.</returns>
 	[HttpGet]
         public IHttpActionResult Acc_CMPBP_BPlISTView(string EntryNo)
         {
@@ -5039,6 +5918,17 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
          
+        /// <summary>Search and retrieve BP CMP CHEQUE SEARCH PRINTING records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="FROMDT">Start date for the date range filter.</param>
+        /// <param name="TODAT">TODAT parameter.</param>
+        /// <param name="OURBNK">OURBNK parameter.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="STATUStype">STATUStype parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BP_CMP_CHEQUE_SEARCH_PRINTING(string CMPID, string CMPCODE, string CITYCODE, string ENTRYNO, string FROMDT,String TODAT ,String OURBNK,string TYPE,string STATUStype)
         {
@@ -5057,6 +5947,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform BP CHEQUE AVAILABILITY records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="CHEQUNO">CHEQUNO parameter.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="PRINTCNTVAL">PRINTCNTVAL parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BP_CHEQUE_AVAILABILITY( string CMPCODE, string CITYCODE1, string CHEQUNO,string OURBANK, String PRINTCNTVAL)//CHQUE STATUS
         {
@@ -5075,6 +5972,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Generate BRBPCRCPCE PAYORDER records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="BPReqNo">BPReq No parameter.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <param name="MAKERIP">IP address of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BRBPCRCPCE_PAYORDER_GENERATE(string CMPID ,string CMPCODE, string CITYCODE1, string OURBANK, String BPReqNo,string MAKERID,string MAKERIP)//CHQUE STATUS
         {
@@ -5093,6 +5999,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of CMP BP CHEQUENO ASSIGNTOPRINT records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="chequNo">chequ No parameter.</param>
+        /// <param name="count">count parameter.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="BPReqNo">BPReq No parameter.</param>
+        /// <param name="Pstatus">Pstatus parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CMP_BP_CHEQUENO_ASSIGNTOPRINT_LIST( string CMPCODE, string CITYCODE1, string chequNo ,string count,string OURBANK, string BPReqNo,string Pstatus)//CHQUE STATUS
         {
@@ -5111,6 +6026,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CHEQUE STOCK HELPVIEW records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="OURBANK">OURBANK parameter.</param>
+        /// <param name="chequeno">chequeno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CHEQUE_STOCK_HELPVIEW(string CMPCODE, string CITYCODE1, string OURBANK, String chequeno)//CHQUE STATUS
         {
@@ -5131,6 +6052,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Load page reference data for CHEQUE PREVIEWPRINT records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="COUNT">COUNT parameter.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="MAKERIP">IP address of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CHEQUE_PREVIEWPRINT_PAGELOAD(string CMPID, string CMPCODE, string CITYCODE1, string COUNT , string ENTRYNO,string MAKERIP)//CHQUE STATUS
         {
@@ -5150,6 +6079,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Load page reference data for CPJVPI REQUEST AUTHORISATION records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="AUTHORISATIONSTATUS">AUTHORISATIONSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CPJVPI_REQUEST_AUTHORISATION_PAGELOAD(string CMPID, string CMPCODE, string CITYCODE, string STATUS, string AUTHORISATIONSTATUS)
         {
@@ -5169,6 +6105,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform CPJVPI REQUEST AUTHORISATION records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="AUTHORISATIONSTATUS">AUTHORISATIONSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CPJVPI_REQUEST_AUTHORISATION(string CMPID, string CMPCODE, string CITYCODE, string STATUS, string AUTHORISATIONSTATUS)
         {
@@ -5187,6 +6130,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update CPJVPI REQUEST Authorisation records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="JVREQNO">JVREQNO parameter.</param>
+        /// <param name="AUTHORISATIONDT">AUTHORISATIONDT parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="AUTHORISATIONSTATUS">AUTHORISATIONSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CPJVPI_REQUEST_Authorisation_Update(string CMPCODE, string CITYCODE1, string CITYCODE, string STATUS, string JVREQNO, string AUTHORISATIONDT, string CMPID, string AUTHORISATIONSTATUS)
         {
@@ -5206,6 +6159,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform CPJVPI REQUEST Authorisation REJECT records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="JVREQNO">JVREQNO parameter.</param>
+        /// <param name="AUTHORISATIONDT">AUTHORISATIONDT parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="AUTHORISATIONSTATUS">AUTHORISATIONSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CPJVPI_REQUEST_Authorisation_REJECT(string CMPCODE, string CITYCODE1, string CITYCODE, string STATUS, string JVREQNO, string AUTHORISATIONDT, string CMPID, string AUTHORISATIONSTATUS)
         {
@@ -5226,6 +6189,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Insert or update CPJVPI REQUEST Management records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="JVREQNO">JVREQNO parameter.</param>
+        /// <param name="AUTHORISATIONDT">AUTHORISATIONDT parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="AUTHORISATIONSTATUS">AUTHORISATIONSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CPJVPI_REQUEST_Management_UPDATE(string CMPCODE, string CITYCODE1, string CITYCODE, string STATUS, string JVREQNO, string AUTHORISATIONDT, string CMPID, string AUTHORISATIONSTATUS)
         {
@@ -5246,6 +6219,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Perform CMPBP Cheque Report records.</summary>
+        /// <param name="SearchType">Search type/column identifier.</param>
+        /// <param name="FromVal">From Val parameter.</param>
+        /// <param name="ToVal">To Val parameter.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CMPBP_Cheque_Report(string SearchType, string FromVal, string ToVal, string Type, string CMPCODE)
         {
@@ -5265,6 +6245,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform  ChequePrintError Report records.</summary>
+        /// <param name="ChequeNo">Cheque No parameter.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="MakerIP">IP address of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc__ChequePrintError_Report(string ChequeNo, string cmpid, string MakerIP)
         {
@@ -5285,6 +6270,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Perform BP CMP CHEQUENO CANCEL records.</summary>
+        /// <param name="USERID">USERID parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="Remark">Remark parameter.</param>
+        /// <param name="MakerIP">IP address of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BP_CMP_CHEQUENO_CANCEL(string USERID, string CMPCODE, string citycode, string ENTRYNO, string Remark, string MakerIP)
         {
@@ -5304,6 +6297,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform BP CMP REQNO GET records.</summary>
+        /// <param name="EntryNo">Entry No parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BP_CMP_REQNO_GET(string EntryNo)
         {
@@ -5323,6 +6319,17 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Search and retrieve BP CMP CHEQUE SEARCH READYTO REPRINT records.</summary>
+        /// <param name="USERID">USERID parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="OURBNK">OURBNK parameter.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="STATUSTYPE">STATUSTYPE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BP_CMP_CHEQUE_SEARCH_READYTO_REPRINT(string USERID, string CMPCODE, string citycode, string ENTRYNO, string FROMDATE, string TODATE, string OURBNK, string TYPE, string STATUSTYPE)
         {
@@ -5345,6 +6352,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
 
 
+        /// <summary>Retrieve print/view data for BP CMP CHEQUE READYTO PRINT LIST 35 records.</summary>
+        /// <param name="strentryNo">strentry No parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BP_CMP_CHEQUE_READYTO_PRINT_LIST_35(string strentryNo)
         {
@@ -5366,6 +6376,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
 
 
+        /// <summary>Perform SETDEFAULT records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_SETDEFAULT(string cmpcode, string citycode, string citycode1)
         {
@@ -5389,6 +6404,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         /*report start here*/
         /* Reports Register from Invoice to CN  */
 
+        /// <summary>Search and retrieve fn Acc Rpt Invoice Register XL Search records.</summary>
+        /// <param name="_FromDt">Start date for the date range filter.</param>
+        /// <param name="_ToDt">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="FINSTARTDATE">Start date for the date range filter.</param>
+        /// <param name="FINENDDATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult fn_Acc_Rpt_Invoice_Register_XL_Search_Register(string _FromDt, string _ToDt, string cmp_code, string citycode, string FINSTARTDATE, string FINENDDATE)
         {
@@ -5408,6 +6431,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         } 
 
+        /// <summary>Search and retrieve fn Acc Rpt Invoice Register ActDetail XL Search Acct details records.</summary>
+        /// <param name="_FromDt">Start date for the date range filter.</param>
+        /// <param name="_ToDt">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult fn_Acc_Rpt_Invoice_Register_ActDetail_XL_Search_Acct_details(string _FromDt, string _ToDt, string cmp_code, string citycode, string Fin_StartDate, string Fin_EndDate)
         {
@@ -5426,6 +6457,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for fn Acc Rpt CashBook Register XL Fill CashBook records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult fn_Acc_Rpt_CashBook_Register_XL_Fill_CashBook(string FromDate, string ToDate, string CmpCode, string CityCode, string Fin_StartDate, string Fin_EndDate)
         {
@@ -5445,6 +6484,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve dropdown data for fn Acc Rpt Purchase Register XL records.</summary>
+        /// <param name="_FromDt">Start date for the date range filter.</param>
+        /// <param name="_ToDt">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="FINSTARTDATE">Start date for the date range filter.</param>
+        /// <param name="FINENDDATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult fn_Acc_Rpt_Purchase_Register_XL_Fill(string _FromDt, string _ToDt, string cmp_code, string citycode, string FINSTARTDATE, string FINENDDATE)
         {
@@ -5463,6 +6510,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for fn Acc Rpt storage Register XL records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult fn_Acc_Rpt_storage_Register_XL_Fill(string FromDate, string ToDate, string CmpCode, string CityCode, string Fin_StartDate, string Fin_EndDate)
         {
@@ -5481,6 +6536,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for fn frm Acc Rpt Brokerage Register XL records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult fn_frm_Acc_Rpt_Brokerage_Register_XL_Fill(string FromDate, string ToDate, string CmpCode, string CityCode, string Fin_StartDate, string Fin_EndDate)
         {
@@ -5500,6 +6563,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve list of fn Acc Rpt CN Register AcctDetail XL records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult fn_Acc_Rpt_CN_Register_AcctDetail_XL(string FromDate, string ToDate, string CmpCode, string CityCode, string Fin_StartDate, string Fin_EndDate)
         {
@@ -5519,6 +6590,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform fn Acc Rpt Common CompanyDetails records.</summary>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult fn_Acc_Rpt_Common_CompanyDetails(string CmpCode, string CityCode)
         {
@@ -5538,6 +6613,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         //job profit
+        /// <summary>Retrieve dropdown data for ACCOUNT FILL JOBPROFIT records.</summary>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="CityCode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_ACCOUNT_FILL_JOBPROFIT_Fill(string CmpCode, string CityCode, string CityCode1)
         {
@@ -5557,6 +6637,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         
+        /// <summary>Perform RPT JOBWISE ACCOUNT JOBNO records.</summary>
+        /// <param name="ACCTCODE">ACCTCODE parameter.</param>
+        /// <param name="BRANCH_CODE">BRANCH CODE parameter.</param>
+        /// <param name="DATE_TYPE">DATE TYPE parameter.</param>
+        /// <param name="FRDATE_U">FRDATE U parameter.</param>
+        /// <param name="TODATE_U">End date for the date range filter.</param>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCT_RPT_JOBWISE_ACCOUNT_JOBNO(string ACCTCODE, string BRANCH_CODE, string DATE_TYPE, string FRDATE_U, string TODATE_U,string CmpCode, string CityCode, string cmpid)
         {
@@ -5576,6 +6666,19 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform RPT JOBPROFITS NEW records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="JobNoFrom">Job number.</param>
+        /// <param name="JobNoTo">Job number.</param>
+        /// <param name="SearchType">Search type/column identifier.</param>
+        /// <param name="DateType">Date Type parameter.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="con_code">con code parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_RPT_JOBPROFITS_NEW(string FromDate, string ToDate, string JobNoFrom, string JobNoTo, string SearchType, string DateType, string Mode, string citycode1, string CityCode, string CmpCode, string con_code)
         {
@@ -5595,6 +6698,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform RPT JOBPROFITS JOBWISE records.</summary>
+        /// <param name="JOBNO">Job number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_RPT_JOBPROFITS_JOBWISE(string JOBNO  )
         {
@@ -5613,6 +6719,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform RPT MAWBPROFITS JOBWISE records.</summary>
+        /// <param name="SearchType">Search type/column identifier.</param>
+        /// <param name="searchno">searchno parameter.</param>
+        /// <param name="strVessel">str Vessel parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_RPT_MAWBPROFITS_JOBWISE(string SearchType, String searchno, String strVessel)
         {
@@ -5631,6 +6742,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for CMP FillClient records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CMP_FillClient(string cmpcode, string citycode, string citycode1)
         {
@@ -5649,6 +6765,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of Rpt ClientOutstandingALL AllCITY records.</summary>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="User_StartDate">Start date for the date range filter.</param>
+        /// <param name="User_EndDate">End date for the date range filter.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_ClientOutstandingALL_AllCITY_LIST(string ClientCode, string cmp_code, string User_StartDate, string User_EndDate, string Fin_StartDate, string Fin_EndDate)
         {
@@ -5668,6 +6792,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve print/view data for Rpt TrialBalance With Advance Print GetAll records.</summary>
+        /// <param name="ClCode">Cl Code parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="STARTDATE">Start date for the date range filter.</param>
+        /// <param name="ENDDATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_TrialBalance_With_Advance_Print_GetAll(string ClCode, string cmp_code, string citycode1, string STARTDATE, string ENDDATE)
         {
@@ -5688,6 +6819,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Retrieve print/view data for Rpt TrialBalance With Advance Print Get records.</summary>
+        /// <param name="ClCode">Cl Code parameter.</param>
+        /// <param name="FINSTARTDATE">Start date for the date range filter.</param>
+        /// <param name="FINENDDATE">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="STARTDATE">Start date for the date range filter.</param>
+        /// <param name="ENDDATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_TrialBalance_With_Advance_Print_Get(string ClCode, string FINSTARTDATE, string FINENDDATE, string cmp_code, string citycode1, string STARTDATE, string ENDDATE)
         {
@@ -5707,6 +6847,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Rpt ClientOutstandingList GetAll records.</summary>
+        /// <param name="ClCode">Cl Code parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="STARTDATE">Start date for the date range filter.</param>
+        /// <param name="ENDDATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_ClientOutstandingList_GetAll(string ClCode, string cmp_code, string citycode1, string STARTDATE, string ENDDATE)
         {
@@ -5726,6 +6873,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Rpt ClientOutstandingList Get records.</summary>
+        /// <param name="ClCode">Cl Code parameter.</param>
+        /// <param name="FINSTARTDATE">Start date for the date range filter.</param>
+        /// <param name="FINENDDATE">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="STARTDATE">Start date for the date range filter.</param>
+        /// <param name="ENDDATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_ClientOutstandingList_Get(string ClCode, string FINSTARTDATE, string FINENDDATE, string cmp_code, string citycode1, string STARTDATE, string ENDDATE)
         {
@@ -5745,6 +6901,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Rpt TrialBalance ClientOutstandingList Remark Add records.</summary>
+        /// <param name="Remark">Remark parameter.</param>
+        /// <param name="ClCode">Cl Code parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="UserName">User Name parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_TrialBalance_ClientOutstandingList_Remark_Add(string Remark, string ClCode, string cmp_code, string citycode, string UserName)
         {
@@ -5764,6 +6927,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Rpt TrialBalance ClientOutstandingList Remark Get records.</summary>
+        /// <param name="ClCode">Cl Code parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_TrialBalance_ClientOutstandingList_Remark_Get(string ClCode, string cmp_code, string citycode)
         {
@@ -5783,6 +6951,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Rpt ClientOutstandingList Get AllCITY records.</summary>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="User_StartDate">Start date for the date range filter.</param>
+        /// <param name="User_EndDate">End date for the date range filter.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <param name="cmpname">cmpname parameter.</param>
+        /// <param name="subhead1">subhead1 parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Acc_Rpt_ClientOutstandingList_Get_AllCITY([FromUri]string ClientCode, string cmp_code, string User_StartDate, string User_EndDate, string Fin_StartDate, string Fin_EndDate,string cmpname ,string subhead1)
 
@@ -5891,6 +7069,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Retrieve list of Rpt ItemWise Statement records.</summary>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="ItemCode">Item Code parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="city_code">city code parameter.</param>
+        /// <param name="User_StartDate">Start date for the date range filter.</param>
+        /// <param name="User_EndDate">End date for the date range filter.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_ItemWise_Statement_List(string ClientCode, string ItemCode, string cmp_code, string city_code,string User_StartDate, string User_EndDate, string Fin_StartDate, string Fin_EndDate)
         {
@@ -5908,6 +7096,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of Rpt AccountWise ItemStatement records.</summary>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="User_StartDate">Start date for the date range filter.</param>
+        /// <param name="User_EndDate">End date for the date range filter.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_AccountWise_ItemStatement_List(string ClientCode, string cmp_code, string User_StartDate, string User_EndDate, string Fin_StartDate, string Fin_EndDate)
         {
@@ -5926,6 +7122,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve Fill ITEMACCOUNT records.</summary>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="CityCode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_ITEMACCOUNT(string CmpCode, string CityCode, string CityCode1)
         {
@@ -5946,6 +7147,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve Fill ACCOUNTWISE ITEM records.</summary>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="CityCode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_ACCOUNTWISE_ITEM(string CmpCode, string CityCode, string CityCode1)
         {
@@ -5966,6 +7172,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of Rpt NotOver records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_NotOver_List(string cmpcode, string citycode)
         {
@@ -5983,6 +7193,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Rpt Receivable AdvFromClients records.</summary>
+        /// <param name="Jobno">Job number.</param>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="All">All parameter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_Receivable_AdvFromClients(string Jobno, string ClientCode, string All, string cmpcode, string citycode)
         {
@@ -6001,6 +7218,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+	/// <summary>Perform Rpt ClientOutstandingAll 35 Special ledger records.</summary>
+	/// <param name="ClientCode">Client/exporter code.</param>
+	/// <param name="cmpcode">Company code identifier.</param>
+	/// <param name="UserStartDate">Start date for the date range filter.</param>
+	/// <param name="UserEndDate">End date for the date range filter.</param>
+	/// <param name="FinStartDate">Start date for the date range filter.</param>
+	/// <param name="FinEndDate">End date for the date range filter.</param>
+	/// <returns>DataSet with the requested data serialized as JSON.</returns>
 	[HttpGet]
         public IHttpActionResult Acct_Rpt_ClientOutstandingAll_35_Special_ledger(string ClientCode,string cmpcode,string UserStartDate,string UserEndDate ,string FinStartDate,string FinEndDate)
         {
@@ -6020,6 +7245,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve dropdown data for FILL UNDERGROUP ACCOUNTS records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_FILL_UNDERGROUP_ACCOUNTS(string cmpcode, string citycode, string citycode1)
         {
@@ -6038,6 +7268,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform MIS INCOME TAX records.</summary>
+        /// <param name="AccountCode">Account Code parameter.</param>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_MIS_INCOME_TAX(string AccountCode, string FromDate, string ToDate, string cmpcode, string citycode, string mode)
         {
@@ -6057,6 +7295,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve dropdown data for CMP FillClient records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CMP_FillClient(string cmpcode, string citycode, string citycode1)
         {
@@ -6075,6 +7318,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform RPT CLIENT OUTSTANDING ALLCITY ACCOUNT WISE records.</summary>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_RPT_CLIENT_OUTSTANDING_ALLCITY_ACCOUNT_WISE(string ClientCode, string cmpcode, string FromDate, string ToDate, string Fin_StartDate, string Fin_EndDate)
         {
@@ -6093,6 +7344,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform MIS INVOICE DELAY records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_MIS_INVOICE_DELAY(string FromDate, string ToDate, string Mode, string cmpcode, string citycode)
         {
@@ -6111,6 +7369,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform MIS MAWB NET FREGHT records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="Branch">Branch parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_MIS_MAWB_NET_FREGHT(string cmpcode, string citycode1, string FromDate, string ToDate, string Branch)
         {
@@ -6130,6 +7395,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
 
         }
+        /// <summary>Perform MIS AIRFREIGHT STATEMENT records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_MIS_AIRFREIGHT_STATEMENT(string FromDate, string ToDate, string cmpcode)
         {
@@ -6148,6 +7418,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of RPT AIRFRT INVO SERACH records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_RPT_AIRFRT_INVO_SERACH_LIST(string FromDate, string ToDate, string citycode1)
         {
@@ -6166,6 +7441,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform MIS SUNDRY EXPENSES records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="NoOfDays">No Of Days parameter.</param>
+        /// <param name="Department">Department parameter.</param>
+        /// <param name="cmpcitycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_MIS_SUNDRY_EXPENSES(string FromDate, string ToDate, string NoOfDays, string Department, string cmpcitycode)
         {
@@ -6184,6 +7466,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CMP FillGenralAccount records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CMP_FillGenralAccount(string cmpcode, string citycode, string citycode1)
         {
@@ -6203,6 +7490,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform ServiceTaxRegSupport records.</summary>
+        /// <param name="Frmdt">Start date for the date range filter.</param>
+        /// <param name="Todt">End date for the date range filter.</param>
+        /// <param name="FinFrndt">Fin Frndt parameter.</param>
+        /// <param name="FinTodt">End date for the date range filter.</param>
+        /// <param name="CMP_CODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ServiceTaxRegSupport(string Frmdt, string Todt, string FinFrndt ,string FinTodt,string CMP_CODE,string CITYCODE1,string CMPID )
         {
@@ -6236,6 +7532,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds1);
         }
+        /// <summary>Perform REPORT LOG SCRIPT records.</summary>
+        /// <param name="fkID">fk ID parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult REPORT_LOG_SCRIPT(string fkID, string CMPID)
         {
@@ -6254,6 +7554,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform REPORT LOG DOWNLOAD records.</summary>
+        /// <param name="fkID">fk ID parameter.</param>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult REPORT_LOG_DOWNLOAD(string fkID, string Mode, string CMPID)
         {
@@ -6272,6 +7577,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform GstRegister records.</summary>
+        /// <param name="Frmdt">Start date for the date range filter.</param>
+        /// <param name="Todt">End date for the date range filter.</param>
+        /// <param name="FinFrndt">Fin Frndt parameter.</param>
+        /// <param name="FinTodt">End date for the date range filter.</param>
+        /// <param name="CMP_CODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GstRegister(string Frmdt, string Todt, string FinFrndt, string FinTodt, string CMP_CODE, string CITYCODE, string CMPID)
         {
@@ -6303,6 +7617,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds1);
         }
+        /// <summary>Perform Receivable AnyOneClient AllBranch records.</summary>
+        /// <param name="ClientName">Client/exporter code.</param>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="CMP_CODE">Company code identifier.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Receivable_AnyOneClient_AllBranch(string ClientName, string ClientCode, string CMP_CODE, string CMPID)
         {
@@ -6335,6 +7655,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds1);
         }
 
+        /// <summary>Perform MIS Receivable AnyOneClient Branch AsOn records.</summary>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="ClientName">Client/exporter code.</param>
+        /// <param name="CMP_CODE">Company code identifier.</param>
+        /// <param name="AsOnDate">As On Date parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_MIS_Receivable_AnyOneClient_Branch_AsOn(string ClientCode, string ClientName, string CMP_CODE, string AsOnDate, string CMPID)
         {
@@ -6367,6 +7694,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds1);
         }
 
+        /// <summary>Perform Rpt Receivable AnyOneClient XL Client Oustanding ClientBill 35 Branch records.</summary>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_Receivable_AnyOneClient_XL_Client_Oustanding_ClientBill_35_Branch(string ClientCode, string cmp_code, string citycode1)
         {
@@ -6387,6 +7719,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
 
+        /// <summary>Perform Rpt Receivable AgeWise XL 35 records.</summary>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="FinStartDate">Start date for the date range filter.</param>
+        /// <param name="FinEndDate">End date for the date range filter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_Receivable_AgeWise_XL_35(string ClientCode, string FinStartDate, string FinEndDate, string cmpcode, string citycode1)
         {
@@ -6405,6 +7744,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform Rpt TrialBalance DateWise records.</summary>
+        /// <param name="Usr_StartDate">Start date for the date range filter.</param>
+        /// <param name="Usr_EndDate">End date for the date range filter.</param>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="FinStartDate">Start date for the date range filter.</param>
+        /// <param name="FinEndDate">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_TrialBalance_DateWise(string Usr_StartDate, string Usr_EndDate, string ClientCode, string FinStartDate, string FinEndDate, string cmp_code, string citycode1)
         {
@@ -6423,6 +7771,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform Rpt TrialBalance DateWise All records.</summary>
+        /// <param name="Usr_StartDate">Start date for the date range filter.</param>
+        /// <param name="Usr_EndDate">End date for the date range filter.</param>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="FinStartDate">Start date for the date range filter.</param>
+        /// <param name="FinEndDate">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_TrialBalance_DateWise_All(string Usr_StartDate, string Usr_EndDate, string ClientCode, string FinStartDate, string FinEndDate, string cmp_code)
         {
@@ -6442,6 +7798,17 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform TrialBalance Datewise records.</summary>
+        /// <param name="Frmdt">Start date for the date range filter.</param>
+        /// <param name="Todt">End date for the date range filter.</param>
+        /// <param name="FinFrndt">Fin Frndt parameter.</param>
+        /// <param name="FinTodt">End date for the date range filter.</param>
+        /// <param name="CMP_CODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CityName">City Name parameter.</param>
+        /// <param name="chkcity">chkcity parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult TrialBalance_Datewise(string Frmdt, string Todt, string FinFrndt, string FinTodt, string CMP_CODE, string CITYCODE1, string CMPID, string CityName, string chkcity)
         {
@@ -6481,6 +7848,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds1);
         }
+        /// <summary>Perform Rpt TrialBalance GrpWiseDtls All ToExcel TrialBalanceGroupDetail records.</summary>
+        /// <param name="FinStartDate">Start date for the date range filter.</param>
+        /// <param name="FinEndDate">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="CityCode1">Secondary city/branch code.</param>
+        /// <param name="FinEndDate1">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_TrialBalance_GrpWiseDtls_All_ToExcel_TrialBalanceGroupDetail(string FinStartDate, string FinEndDate, string cmp_code, string CityCode1, string FinEndDate1)
         {
@@ -6500,6 +7874,18 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Rpt ItemStatement records.</summary>
+        /// <param name="ACCTCODE">ACCTCODE parameter.</param>
+        /// <param name="ITEMCODE">ITEMCODE parameter.</param>
+        /// <param name="Frmdt">Start date for the date range filter.</param>
+        /// <param name="Todt">End date for the date range filter.</param>
+        /// <param name="FINSTARTDATE">Start date for the date range filter.</param>
+        /// <param name="FINENDDATE">End date for the date range filter.</param>
+        /// <param name="CMP_CODE">Company code identifier.</param>
+        /// <param name="ITEMNAME">ITEMNAME parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Rpt_ItemStatement(string ACCTCODE, string ITEMCODE, string Frmdt, string Todt, string FINSTARTDATE, string FINENDDATE, string CMP_CODE, string ITEMNAME, string CMPID,string CITYCODE)
         {
@@ -6532,6 +7918,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds1);
         }
 
+        /// <summary>Load page reference data for CMP FILL GACCOUNT SPECIAL LEDGER records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CMP_FILL_GACCOUNT_SPECIAL_LEDGER_PAGELOAD(string cmpcode, string citycode, string citycode1, string cmpid)
         {
@@ -6553,6 +7945,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
 
          
 
+        /// <summary>Retrieve dropdown data for Fill Export records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_Fill_Export(string cmpcode, string citycode, string citycode1)
         {
@@ -6571,6 +7968,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+           /// <summary>Perform RPT CLIENTOUTSTANDING AGEING records.</summary>
+           /// <param name="cmpcode">Company code identifier.</param>
+           /// <returns>DataSet with the requested data serialized as JSON.</returns>
            [HttpGet]
         public IHttpActionResult ACC_RPT_CLIENTOUTSTANDING_AGEING(string cmpcode)
         {
@@ -6589,6 +7989,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for JV records.</summary>
+        /// <param name="JVCode">JVCode parameter.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_JV_PRINT(string JVCode, string Type)
         {
@@ -6612,6 +8016,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for REPORT LOG records.</summary>
+        /// <param name="CmpId">Primary key of the company.</param>
+        /// <param name="FormId">Form Id parameter.</param>
+        /// <param name="ReportMode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult REPORT_LOG_FILL(string CmpId, string FormId, string ReportMode)
         {
@@ -6630,6 +8039,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CashBook FillOurbank records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CashBook_FillOurbank(string cmpcode, string citycode, string citycode1)
         {
@@ -6648,6 +8062,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CashBook BankRecousillation records.</summary>
+        /// <param name="_ourbank"> ourbank parameter.</param>
+        /// <param name="_FromDt">Start date for the date range filter.</param>
+        /// <param name="_ToDt">End date for the date range filter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CashBook_BankRecousillation(string _ourbank, string _FromDt, string _ToDt, string cmpcode, string citycode, string citycode1, string Fin_StartDate, string Fin_EndDate)
         {
@@ -6666,6 +8090,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update CashBook BankRecousillation records.</summary>
+        /// <param name="_reconsillationstr"> reconsillationstr parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CashBook_BankRecousillation_Update(string _reconsillationstr)
         {
@@ -6686,6 +8113,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve Fill CashBook BankRecRpt records.</summary>
+        /// <param name="_ourbank"> ourbank parameter.</param>
+        /// <param name="_FromDt">Start date for the date range filter.</param>
+        /// <param name="_ToDt">End date for the date range filter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_CashBook_BankRecRpt(string _ourbank, string _FromDt, string _ToDt, string cmpcode, string citycode1, string citycode, string Fin_StartDate, string Fin_EndDate)
         {
@@ -6704,6 +8141,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve Fill CashBook BankRecRptNew1 records.</summary>
+        /// <param name="_ourbank"> ourbank parameter.</param>
+        /// <param name="_FromDt">Start date for the date range filter.</param>
+        /// <param name="_ToDt">End date for the date range filter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_CashBook_BankRecRptNew1(string _ourbank, string _FromDt, string _ToDt, string cmpcode, string citycode1, string citycode, string Fin_StartDate, string Fin_EndDate)
         {
@@ -6723,6 +8170,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Load page reference data for CMP FILL GACCOUNT records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CMP_FILL_GACCOUNT_PAGELOAD(string cmpcode, string citycode, string citycode1, string cmpid)
         {
@@ -6742,6 +8195,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve dropdown data for EXP MST EXPORT MISC JOB FILL CLIENT records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_EXP_MST_EXPORT_MISC_JOB_FILL_CLIENT( string citycode)
         {
@@ -6760,6 +8216,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform TRA CLIENT STATUS FOLLOWUP GETDTLS records.</summary>
+        /// <param name="EXP_CODE">EXP CODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_TRA_CLIENT_STATUS_FOLLOWUP_GETDTLS(string EXP_CODE)
         {
@@ -6779,6 +8238,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update TRA CLIENT STATUS FOLLOWUP records.</summary>
+        /// <param name="CmpId">Primary key of the company.</param>
+        /// <param name="Exp_Code">Exp Code parameter.</param>
+        /// <param name="AssignTo">Assign To parameter.</param>
+        /// <param name="Client_Status">Client/exporter code.</param>
+        /// <param name="AssignOn">Assign On parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_TRA_CLIENT_STATUS_FOLLOWUP_IU(string CmpId,string Exp_Code, string AssignTo, string Client_Status,string AssignOn)
         {
@@ -6797,6 +8263,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Load page reference data for REQUEST FILL TO GENERATE records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="AUTHORISATIONSTATUS">AUTHORISATIONSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_REQUEST_FILL_TO_GENERATE_PAGELOAD(string CMPID, string CMPCODE, string CITYCODE, string CITYCODE1, string STATUS, string AUTHORISATIONSTATUS)
         {
@@ -6817,6 +8291,17 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
   
 
+    /// <summary>Generate GENERATE FINAL CODE CPJVPI records.</summary>
+    /// <param name="CMPID">Primary key of the company.</param>
+    /// <param name="CMPCODE">Company code identifier.</param>
+    /// <param name="CITYCODE1">Secondary city/branch code.</param>
+    /// <param name="CITYCODE">City/branch code.</param>
+    /// <param name="MAKERIP">IP address of the record maker.</param>
+    /// <param name="REQCODE">REQCODE parameter.</param>
+    /// <param name="STATUS">STATUS parameter.</param>
+    /// <param name="AUTHORISATIONSTATUS">AUTHORISATIONSTATUS parameter.</param>
+    /// <param name="FormId">Form Id parameter.</param>
+    /// <returns>DataSet with the requested data serialized as JSON.</returns>
     [HttpGet]
     public IHttpActionResult ACC_GENERATE_FINAL_CODE_CPJVPI(string CMPID,string CMPCODE,string CITYCODE1,string CITYCODE,string MAKERIP,string REQCODE,string STATUS,string AUTHORISATIONSTATUS,string FormId)
     {
@@ -6855,6 +8340,16 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         return Ok(ds);
     }
 
+        /// <summary>Perform CPJVPI REQUEST AUTHORISATION UPDATEMULTI records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="JVREQNO">JVREQNO parameter.</param>
+        /// <param name="AUTHORISATIONDT">AUTHORISATIONDT parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="AUTHORISATIONSTATUS">AUTHORISATIONSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Acc_CPJVPI_REQUEST_AUTHORISATION_UPDATEMULTI(string CMPCODE, string CITYCODE1, string CITYCODE, string STATUS, string JVREQNO, string AUTHORISATIONDT, string CMPID, string AUTHORISATIONSTATUS)
         {
@@ -6873,6 +8368,17 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for PURCHASE PRINT SRPI records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="PUR_CODE">PUR CODE parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <param name="PUR_SUPPLIER">Supplier code.</param>
+        /// <param name="PUR_INVNO">Invoice number.</param>
+        /// <param name="DISPLAYTYPE">DISPLAYTYPE parameter.</param>
+        /// <param name="YEAR_ID">YEAR ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_PRINT_SRPI(string cmp_code, string citycode, string PUR_CODE, string FROMDATE, string TODATE, string PUR_SUPPLIER, string PUR_INVNO, string DISPLAYTYPE, string YEAR_ID)
         {
@@ -6890,6 +8396,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve Export Search List acct records.</summary>
+        /// <param name="searchtype">Search type/column identifier.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Export_Search_List_acct(string searchtype,string searchval,string cmp_code, string CityCode)
         {
@@ -6907,6 +8419,8 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of MST RPT CLIENT records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCT_MST_RPT_CLIENT_REGISTER()
         {
@@ -6924,6 +8438,8 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of USP MST RPT SUPPLIER records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCT_USP_MST_RPT_SUPPLIER_REGISTER()
         {
@@ -6941,6 +8457,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for BRBPCRCPCE View OLD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_BRBPCRCPCE_View_OLD(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS)
         {
@@ -6958,6 +8481,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for JV View OLD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_JV_View_OLD(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS)
         {
@@ -6975,6 +8505,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for PURCHASE VIEW OLD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_VIEW_OLD(string CMPCODE, string CITYCODE, string ENTRYNO, string VGUID, string STATUS,string CMPID)
         {
@@ -6993,6 +8531,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Populate form with existing data for PAYMENT POPULATE SUPPLIERBILL records.</summary>
+        /// <param name="SUPPLIER">Supplier code.</param>
+        /// <param name="FINSTARTDATE">Start date for the date range filter.</param>
+        /// <param name="FINENDDATE">End date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PAYMENT_POPULATE_SUPPLIERBILL(string SUPPLIER, string FINSTARTDATE, string FINENDDATE, string CMPCODE, string CITYCODE)
         {
@@ -7012,6 +8557,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform OutstandingReceivableOverseasAgent records.</summary>
+        /// <param name="ClientName">Client/exporter code.</param>
+        /// <param name="ClientCode">Client/exporter code.</param>
+        /// <param name="CmpCode">Company code identifier.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult OutstandingReceivableOverseasAgent(string ClientName, string ClientCode, string CmpCode, string CMPID)
         {
@@ -7045,6 +8596,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds1);
         }
 
+        /// <summary>Perform FILLEXPOTERCITY OVERSEAS AGENT records.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_FILLEXPOTERCITY_OVERSEAS_AGENT(string cmpcode, string citycode, string citycode1)
         {
@@ -7063,6 +8619,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Validate PURCHASE MContainer records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CONTAINERNO">CONTAINERNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MContainer_Validate(string CMPCODE, string CITYCODE, string CONTAINERNO)
         {
@@ -7080,6 +8641,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for PURCHASE MultiContainer records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MultiContainer_RESET(string VGUID)
         {
@@ -7098,6 +8662,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Reset temporary data for PURCHASE MULTICONTAINER NG records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_NG_RESET(string VGUID)
         {
@@ -7115,6 +8682,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Load page reference data for PURCHASE PAGELOAD MAWB records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="PSTATUS">PSTATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_PAGELOAD_MAWB(string cmp_code, string citycode, string citycode1, string PSTATUS)
         {
@@ -7132,6 +8705,15 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Load page reference data for PURCHASE MAWBNO PAGELOAD TDS records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="MAWBNO">Master airway bill number.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="STR">STR parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MAWBNO_PAGELOAD_TDS(string CMPID, string CMPCODE, string CITYCODE, string MAWBNO, string VGUID, string STATUS, string STR)
         {
@@ -7150,6 +8732,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Reset temporary data for PURCHASE MAWB NG records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MAWB_NG_RESET(string VGUID)
         {
@@ -7168,6 +8753,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Reset temporary data for PURCHASE MAWB RESET STEP1 records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MAWB_RESET_STEP1(string VGUID)
         {
@@ -7186,6 +8774,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Load page reference data for PURCHASE MAWBNO PAGELOAD records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="MAWBNO">Master airway bill number.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MAWBNO_PAGELOAD_NG(string CMPID, string CMPCODE, string CITYCODE, string MAWBNO, string VGUID, string STATUS)
         {
@@ -7204,6 +8800,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Validate PURCHASE MAWB records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="MAWBNO">Master airway bill number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MAWB_VALIDATE(string CMPCODE, string CITYCODE, string MAWBNO)
         {
@@ -7221,6 +8822,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PURCHASE RESETMAWB records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_RESETMAWB(string CMPID)
         {
@@ -7239,6 +8843,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         /* ADDED FOR TDS PART IN NG  */
+        /// <summary>Insert or update PURCHASE TMP IU records.</summary>
+        /// <param name="PID">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_TMP_IU_NG([FromBody]StaffPurchaseInvoiceDtls PID)
         {
@@ -7276,6 +8883,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         //    }
         //    return Ok(ds);
         //}
+        /// <summary>Perform PIBP GET TDSDATA records.</summary>
+        /// <param name="SUPPCODE">SUPPCODE parameter.</param>
+        /// <param name="PURCHASEDT">PURCHASEDT parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PIBP_GET_TDSDATA_NG(string SUPPCODE, string PURCHASEDT, string VGUID, string CMPCODE, string CMPID, string CITYCODE)
         {
@@ -7293,6 +8908,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update PURCHASE TMP TDSMULTI IU records.</summary>
+        /// <param name="PID">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_TMP_TDSMULTI_IU_NG([FromBody]StaffPurchaseInvoiceDtls PID)
         {
@@ -7308,6 +8926,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for PURCHASE TDS RESET records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_TDS_RESET_NG(string VGUID)
         {
@@ -7326,6 +8947,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
         /* MULTICONTAINER */
+        /// <summary>Insert or update PURCHASE MULTICONTAINER TMP IU records.</summary>
+        /// <param name="PID">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_TMP_IU_NG([FromBody]StaffPurchaseInvoiceDtls PID)
         {
@@ -7346,6 +8970,13 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update PURCHASE MULTICONTAINER IU records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_IU_NG(string CMPCODE, string CITYCODE1, string VGUID, string TYPE, string CMPID)
         {
@@ -7364,6 +8995,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update PURCHASE MAWB TMP IU records.</summary>
+        /// <param name="PID">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_MAWB_TMP_IU_NG([FromBody]StaffPurchaseInvoiceDtls PID)
         {
@@ -7384,6 +9018,10 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete PURCHASEE MAWB TMP DEL records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASEE_MAWB_TMP_DEL_NG(string ID, string VGUID)
         {
@@ -7401,6 +9039,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete PURCHASE TMP DEL records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_PURCHASEDTLS_ID">ACC PURCHASEDTLS ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_TMP_DEL_NG(string ID, string VGUID, string ACC_PURCHASEDTLS_ID)
         {
@@ -7418,6 +9061,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update PURCHASE UPDATE records.</summary>
+        /// <param name="PIM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_UPDATE_NG([FromBody]StaffPurchaseInvoiceMaster PIM)
         {
@@ -7438,6 +9084,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update PURCHASE INSERT records.</summary>
+        /// <param name="PIM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_PURCHASE_INSERT_NG([FromBody]StaffPurchaseInvoiceMaster PIM)
         {
@@ -7458,6 +9107,14 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for PURCHASE VIEW records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="ENTRYNO">ENTRYNO parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="STATUS">STATUS parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_VIEW_NG(string cmp_code, string citycode, string ENTRYNO, string VGUID, string STATUS, string CMPID)
         {
@@ -7473,6 +9130,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PURCHASE GETTDSTYPE records.</summary>
+        /// <param name="SUPPCODE">SUPPCODE parameter.</param>
+        /// <param name="PURCHASEDT">PURCHASEDT parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_GETTDSTYPE(string SUPPCODE, string PURCHASEDT, string CMPCODE)
         {
@@ -7491,6 +9153,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+        /// <summary>Reset temporary data for PURCHASE MULTICONTAINER RESET STEP1 records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_MULTICONTAINER_RESET_STEP1(string VGUID)
         {
@@ -7508,6 +9173,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PURCHASE RESETMAWB records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_RESETMAWB_NG(string VGUID)
         {
@@ -7525,6 +9193,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PURCHASE RESETMULTICONTAINER records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_PURCHASE_RESETMULTICONTAINER_NG(string VGUID)
         {
@@ -7542,6 +9213,9 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for INVOICE NG records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_NG_RESET(string VGUID)
         {
@@ -7559,6 +9233,11 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for INVOICE RESET CHRGCURRENCY records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="CURRENCY">CURRENCY parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_INVOICE_RESET_CHRGCURRENCY(string CMPID, string VGUID, string CURRENCY)
         {

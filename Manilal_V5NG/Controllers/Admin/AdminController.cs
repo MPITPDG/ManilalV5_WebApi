@@ -22,6 +22,9 @@ namespace Manilal_V5NG.Controllers.Admin
 {
     public class AdminController : ApiController
     {
+        /// <summary>Insert or update a quotation client record.</summary>
+        /// <param name="QC">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ADMIN_QUOTATION_CLIENT_IU([FromBody] Quotation_Client QC)
         {
@@ -45,6 +48,12 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Export the sales enquiry search list to an Excel file.</summary>
+        /// <param name="SEARCHVAL">Search field/column identifier.</param>
+        /// <param name="SEARCHTXT">Search text value.</param>
+        /// <param name="STARTDT">Start date for the date range filter.</param>
+        /// <param name="ENDDT">End date for the date range filter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage ADMIN_SALESENQUIRY_LIST_XL(string SEARCHVAL, string SEARCHTXT, string STARTDT, string ENDDT)
         {
@@ -76,6 +85,12 @@ namespace Manilal_V5NG.Controllers.Admin
 
         }
 
+        /// <summary>Search and retrieve the sales enquiry list.</summary>
+        /// <param name="SEARCHVAL">Search field/column identifier.</param>
+        /// <param name="SEARCHTXT">Search text value.</param>
+        /// <param name="STARTDT">Start date for the date range filter.</param>
+        /// <param name="ENDDT">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ADMIN_SALESENQUIRY_SEARCHLIST(string SEARCHVAL, string SEARCHTXT, string STARTDT, string ENDDT)
         {
@@ -97,6 +112,11 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Populate the sales enquiry form with existing record data.</summary>
+        /// <param name="EnqNo">Enq No parameter.</param>
+        /// <param name="Makerid">User code of the record maker.</param>
+        /// <param name="VGuid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ADMIN_SALESENQUIRY_POPULATE(string EnqNo, string Makerid, string VGuid)
         {
@@ -118,6 +138,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update a sales enquiry record.</summary>
+        /// <param name="se">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Admin_SalesEnquiry_IU([FromBody] SalesEnquiry se)
         {
@@ -138,6 +161,11 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Load dropdown and reference data for the sales enquiry page.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ADMIN_SALESENQUIRY_PAGELOAD(string CMPCODE, string CITYCODE, string CITYCODE1)
         {
@@ -159,6 +187,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Load dropdown and reference data for the sales enquiry page (POST variant).</summary>
+        /// <param name="se">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetAdmingSalesEnquiryPageload([FromBody] SalesEnquiry se)
         {
@@ -179,6 +210,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary quotation data for the given VGUID session.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ADMIN_QUOTATION_RESET(string VGUID)
         {
@@ -197,6 +231,11 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Delete a temporary quotation detail row.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="QUOTDTLID">QUOTDTLID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ADMIN_QUOTATION_TMP_DEL(string ID, string VGUID, string QUOTDTLID)
         {
@@ -214,6 +253,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Load dropdown reference data for the quotation page.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ADMIN_QUOTATION_PAGELOAD(string CMPID)
         {
@@ -235,6 +277,12 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve the quotation list.</summary>
+        /// <param name="SearchVal">Search field/column identifier.</param>
+        /// <param name="SearchText">Search text value.</param>
+        /// <param name="efftfrdt">efftfrdt parameter.</param>
+        /// <param name="effttodt">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ADMIN_QUOTATION_SEARCHLIST(string SearchVal, string SearchText, string efftfrdt, string effttodt)
         {
@@ -256,6 +304,12 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Populate the quotation form with existing record data.</summary>
+        /// <param name="pkid">Primary key ID of the record.</param>
+        /// <param name="Makerid">User code of the record maker.</param>
+        /// <param name="VGuid">Session GUID for temporary record management.</param>
+        /// <param name="QuotNo">Quot No parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ADMIN_QUOTATION_POPULATE(string pkid, string Makerid, string VGuid, string QuotNo)
         {
@@ -277,6 +331,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update a temporary quotation charge detail row.</summary>
+        /// <param name="QD">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ADMIN_QUOTATION_CHILD_IU([FromBody] Quotation_Details QD)
         {
@@ -295,6 +352,9 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Insert a new quotation master record.</summary>
+        /// <param name="QM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ADMIN_QUOTATION_MST_INSERT([FromBody] Quotation_Master QM)
         {
@@ -313,6 +373,9 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Update an existing quotation master record.</summary>
+        /// <param name="QM">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ADMIN_QUOTATION_MST_UPDATE([FromBody] Quotation_Master QM)
         {
@@ -330,6 +393,8 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve the list of user cities for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Usercity()
         {
@@ -351,6 +416,8 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve the list of user locations for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Location()
         {
@@ -372,6 +439,8 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve the list of all users for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_UserPopulate()
         {
@@ -397,6 +466,9 @@ namespace Manilal_V5NG.Controllers.Admin
 
 
         //
+        /// <summary>Populate user profile details for the given user code.</summary>
+        /// <param name="CMP_USERCODE">CMP USERCODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Profile_details_populate([FromUri]string CMP_USERCODE)
         {
@@ -419,6 +491,9 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Insert or update a user profile record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Admin_Profile_IU([FromBody]IAdmin cd)
         {
@@ -439,6 +514,8 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Upload a file to the server and save it.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult UploadFiles()
         {
@@ -516,6 +593,9 @@ namespace Manilal_V5NG.Controllers.Admin
         //    return Ok(ds);
         //}
         /* ADDED FOR FINANCIAL YEAR PAGE*/
+        /// <summary>Retrieve city list for the given user.</summary>
+        /// <param name="userid">userid parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult FillCity(string userid)
         {
@@ -536,6 +616,10 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve all companies for the given city code.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult FillCompanyAll(string citycode, string cmpcode)
         {
@@ -556,6 +640,10 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve all companies for edit mode dropdown.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult FillCompanyAllEDIT(string citycode, string cmpcode)
         {
@@ -577,6 +665,9 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Add a new financial year record for the given company and city.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Acc_AddFinanceYear([FromBody]FinancialYear cd)
         {
@@ -598,6 +689,8 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>ADMIN FINANCIALYEAR Search operation.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
 
         public IHttpActionResult ADMIN_FINANCIALYEAR_Search(string StartDate, string EndDate)
@@ -641,6 +734,9 @@ namespace Manilal_V5NG.Controllers.Admin
         //    return Ok(ds);
         //}
 
+        /// <summary>Retrieve financial year details for the given year ID.</summary>
+        /// <param name="yearid">yearid parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Admin_FinancialYearDetails(string yearid)
         {
@@ -663,6 +759,9 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
         /* ADDED FOR COMPANY MAASTER PAGE*/
+        /// <summary>Insert or update a company master record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Company_Master_IU([FromBody]companymain cd)
         {
@@ -692,6 +791,9 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Insert a new company branch address record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Company_Address_IU([FromBody]companychild cd)
         {
@@ -712,6 +814,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Update an existing company branch address record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Company_Address_UPDATE([FromBody]companychild cd)
         {
@@ -733,6 +838,12 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Delete a company branch address record.</summary>
+        /// <param name="id">Primary key ID of the record.</param>
+        /// <param name="guid">Session GUID for temporary record management.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Company_Address_delete([FromUri]string id, string guid, string makerid, string ID)
         {
@@ -753,6 +864,12 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Permanently delete a company branch address record.</summary>
+        /// <param name="id">Primary key ID of the record.</param>
+        /// <param name="guid">Session GUID for temporary record management.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Company_Address_deleteNew([FromUri]string id, string guid, string makerid, string ID)
         {
@@ -772,6 +889,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve company master details for the given company code.</summary>
+        /// <param name="_CmpCode">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Company_Details([FromUri]string _CmpCode)
         {
@@ -792,6 +912,8 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Search and retrieve all company master records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Company_MST_Search()
         {
@@ -813,6 +935,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Load company branch details at page load.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_CompanyBranch_DetailsPageLoad(string ID)
         {
@@ -834,6 +959,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Load company page data for the given maker/user.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Companypageload([FromBody]companymain cd)
         {
@@ -851,6 +979,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Search company master records by company name.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Company_MST_Search1([FromBody]companymain cd)
         {
@@ -874,6 +1005,10 @@ namespace Manilal_V5NG.Controllers.Admin
         }
 
         //Bank Payment Group 
+        /// <summary>Retrieve cheque print authority list for the given company and city.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
             public IHttpActionResult ADMIN_Fill_ChequePrintAuthority(string cmpcode, string citycode1)
         {
@@ -895,6 +1030,11 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve bank payment group data for the given company.</summary>
+        /// <param name="fkGroupCmpId">Primary key of the company.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ADMIN_BP_Bank_Payment_Group_FILL(string fkGroupCmpId ,string cmpcode, string citycode)
         {
@@ -917,6 +1057,9 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Add or update a bank payment group entry.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Admin_BP_Bank_Payment_Group_Add([FromBody]BP_Bank_Payment_Group cd)
         {
@@ -937,6 +1080,9 @@ namespace Manilal_V5NG.Controllers.Admin
 
 
 
+        /// <summary>Load dropdown reference data for the client rate page.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CLIENT_RATE_PAGELOAD( string CMPID)
         {
@@ -958,6 +1104,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update a temporary client rate charge detail row.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_CLIENT_RATE_CHILD_IU([FromBody]Client_Rate_Details cd)
         {
@@ -975,6 +1124,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update a client rate master record.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_CLIENT_RATE_MST_IU([FromBody]Client_Rate_Master cd)
         {
@@ -993,6 +1145,12 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Search and retrieve the client rate list.</summary>
+        /// <param name="SearchVal">Search field/column identifier.</param>
+        /// <param name="SearchText">Search text value.</param>
+        /// <param name="efftfrdt">efftfrdt parameter.</param>
+        /// <param name="effttodt">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CLIENT_RATE_SEARCHLIST(string SearchVal, string SearchText,string efftfrdt, string effttodt)
         {
@@ -1015,6 +1173,11 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Populate the client rate form with existing record data.</summary>
+        /// <param name="pkid">Primary key ID of the record.</param>
+        /// <param name="Makerid">User code of the record maker.</param>
+        /// <param name="VGuid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_CLIENT_RATE_POPULATE(string pkid,string Makerid ,string VGuid)
         {
@@ -1036,6 +1199,8 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Load dropdown reference data for the master quotation rate page.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST_QUOT_RATE_PAGELOAD()
         {
@@ -1055,6 +1220,9 @@ namespace Manilal_V5NG.Controllers.Admin
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update a master quotation rate record.</summary>
+        /// <param name="QR">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult MST_QUOTATION_RATE_IU([FromBody]QUOT_RATE_MASTER QR)
         {
@@ -1071,6 +1239,9 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Delete a master quotation rate record by ID.</summary>
+        /// <param name="PKRTID">PKRTID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST_QUOTATION_RATE_DELETE(string PKRTID)
         {
@@ -1091,6 +1262,15 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
         }
 
+        /// <summary>Retrieve master quotation rate data to populate client origin rates.</summary>
+        /// <param name="ShippingLine">Shipping Line parameter.</param>
+        /// <param name="shiptype">shiptype parameter.</param>
+        /// <param name="shipmode">Operation mode or filter type.</param>
+        /// <param name="frmdt">Start date for the date range filter.</param>
+        /// <param name="todt">End date for the date range filter.</param>
+        /// <param name="MakerId">User code of the record maker.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult MST_QUOTATION_RATE_GETDATAFORCLIENT(string ShippingLine,string shiptype ,string shipmode,string frmdt,string todt,string MakerId,string VGUID)
         {

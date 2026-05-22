@@ -22,6 +22,10 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
     public class AccountsFraController : ApiController
     {
         /**************************************Master API Start Here****************************************/
+        /// <summary>Perform deliverynotinvoiced exporttoxl records.</summary>
+        /// <param name="frmdt">Start date for the date range filter.</param>
+        /// <param name="todt">End date for the date range filter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage acc_deliverynotinvoiced_exporttoxl(string frmdt, string todt)
         {
@@ -52,6 +56,10 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform DELIVERY NOTINVOICED records.</summary>
+        /// <param name="Fromdt">Start date for the date range filter.</param>
+        /// <param name="Todt">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_DELIVERY_NOTINVOICED(string Fromdt, string Todt)
         {
@@ -69,6 +77,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform BRAND ORIGIN MONTH WISE TONNAGE SUMMARY records.</summary>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage ACCFRA_BRAND_ORIGIN_MONTH_WISE_TONNAGE_SUMMARY([FromUri]string fromdate, string todate, string mode)
         {
@@ -99,6 +112,13 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
 
             return httpResponseMessage;
         }
+        /// <summary>Perform GENERAL ACCOUNT WISE TURNOVER SUMMARY records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="GAccount">GAccount parameter.</param>
+        /// <param name="Client">Client/exporter code.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage ACCFRA_GENERAL_ACCOUNT_WISE_TURNOVER_SUMMARY(string FromDate, string ToDate, string GAccount, string Client, string Type)
         {
@@ -137,6 +157,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
 
             return httpResponseMessage;
         }
+        /// <summary>Populate form with existing data for FILLCLIENT GENERAL ACCOUNT records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_FILLCLIENT_GENERAL_ACCOUNT_POPULATE()
         {
@@ -159,6 +181,10 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
 
             return Ok(ds);
         }
+        /// <summary>Perform CLIENT WISE TURNOVER SUMMARY records.</summary>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CLIENT_WISE_TURNOVER_SUMMARY(string FromDate, string ToDate)
         {
@@ -181,6 +207,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
 
             return Ok(ds);
         }
+        /// <summary>Retrieve list of REPORT REGISTER INVOICE records.</summary>
+        /// <param name="CLIENT">Client/exporter code.</param>
+        /// <param name="FROMDT">Start date for the date range filter.</param>
+        /// <param name="TODT">End date for the date range filter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage IMP_REPORT_REGISTER_INVOICE_NG(string CLIENT, string FROMDT, string TODT)
         {
@@ -211,6 +242,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Retrieve list of CLIENT INVOICE REGISTER records.</summary>
+        /// <param name="client">Client/exporter code.</param>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CLIENT_INVOICE_REGISTER_NG(string client, string fromdate, string todate)
         {
@@ -228,6 +264,12 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of RPT CREDIT NOTE records.</summary>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="type">type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_RPT_CREDIT_NOTE_REGISTER(string fromdate, string todate, string citycode, string type)
         {
@@ -245,6 +287,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for TRAN PURCHASE EXL RESET ALL records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_TRAN_PURCHASE_EXL_RESET_ALL([FromBody]PurchaseDetailsIu obj)
         {
@@ -265,6 +310,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update TRANS PURCHASE EXL records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_TRANS_PURCHASE_EXL_IU([FromBody]AutoPurchase obj)
         {
@@ -291,6 +339,10 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
        
+        /// <summary>Perform CONSPUR EXL VAL CHK TMP records.</summary>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="StrFileName">Str File Name parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CONSPUR_EXL_VAL_CHK_TMP(string GUID, string StrFileName)
         {
@@ -312,6 +364,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Upload UploadExcel records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         [Route("api/AccountsFra/UploadExcel")]
         public IHttpActionResult UploadExcel()
@@ -451,6 +505,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return ds_fst;
         }
 
+        /// <summary>Upload UploadCSV records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         [Route("api/AccountsFra/UploadCSV")]
         public IHttpActionResult UploadCSV()
@@ -521,6 +577,13 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
 
 
         }
+        /// <summary>Retrieve print/view data for CREDIT records.</summary>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CREDIT_VIEW(string INVNO, string cmp_code, string CMPID, string citycode1, string VGUID)
         {
@@ -538,6 +601,12 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for CREDITNOTE PRINTVIEW records.</summary>
+        /// <param name="CRTNO">CRTNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CREDITNOTE_PRINTVIEW(string CRTNO, string CMPCODE, string CMPID, string CITYCODE1)
         {
@@ -555,6 +624,12 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve CREDIT SEARCH records.</summary>
+        /// <param name="SearchType">Search type/column identifier.</param>
+        /// <param name="Value">Search filter value.</param>
+        /// <param name="Value1">Search filter value.</param>
+        /// <param name="Value2">Search filter value.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CREDIT_SEARCH_LIST(string SearchType, string Value, string Value1, string Value2)
         {
@@ -572,6 +647,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
         }
 
 
+        /// <summary>Retrieve dropdown data for CLIENT IMP Common FillClient records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CLIENT_IMP_Common_FillClient(string citycode)
         {
@@ -588,6 +666,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }        
 
+        /// <summary>Perform CREDITNOTE AUTHORISE ASSIGN records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_CREDITNOTE_AUTHORISE_ASSIGN([FromBody]Authorisation obj)
         {
@@ -608,6 +689,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CREDIT GET BILLNO records.</summary>
+        /// <param name="b">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_CREDIT_GET_BILLNO([FromBody] creditnotebill b)
         {
@@ -625,6 +709,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update AUTO CREDIT ACCOUNTDET TMP records.</summary>
+        /// <param name="n">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_AUTO_CREDIT_ACCOUNTDET_TMP_IU([FromBody] creditnotechr n)
         {
@@ -643,6 +730,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
         }
 
 
+        /// <summary>Insert or update AUTO CREDIT ENCLOSURE TMP records.</summary>
+        /// <param name="c">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_AUTO_CREDIT_ENCLOSURE_TMP_IU([FromBody] Creditnoteclosure c)
         {
@@ -660,6 +750,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve dropdown data for CREDIT FILL JOB records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CREDIT_FILL_JOB([FromUri]Filjobcreditnote m)
         {
@@ -681,6 +773,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for CREDIT records.</summary>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CREDIT_RESET(string INVNO, string CMPID, string VGUID)
         {
@@ -698,6 +795,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Delete CREDIT BILLNO records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CREDIT_BILLNO_DELETE(string ID, string VGUID, string CMPID)
         {
@@ -715,6 +817,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update CREDIT records.</summary>
+        /// <param name="S">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_CREDIT_IU([FromBody] Creditubmit S)
         {
@@ -731,6 +836,12 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete CREDIT DELETE ACCOUNTDET records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="EXCHANGE_RATE">EXCHANGE RATE parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CREDIT_DELETE_ACCOUNTDET(string ID, string CMPID, string EXCHANGE_RATE, string VGUID)
         {
@@ -748,6 +859,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve dropdown data for CREDIT FILL JOB ModelPop records.</summary>
+        /// <param name="client">Client/exporter code.</param>
+        /// <param name="JOBNO">Job number.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CREDIT_FILL_JOB_ModelPop(string client, string JOBNO, string CITYCODE)
         {
@@ -769,6 +885,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete CREDIT DELETE ENCLOSURE records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_CREDIT_DELETE_ENCLOSURE(string ID, string CMPID, string VGUID)
         {
@@ -788,6 +909,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
         }
 
        
+        /// <summary>Perform PrintPurchase records.</summary>
+        /// <param name="EntryNo">Entry No parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_PrintPurchase(string EntryNo)
         {
@@ -805,6 +929,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform INVOICE CLIENT REFRESH records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <param name="EXPCODE">EXPCODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_INVOICE_CLIENT_REFRESH(string VGUID, string MAKERID, string EXPCODE)
         {
@@ -822,6 +951,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for Print Purchase records.</summary>
+        /// <param name="EntryNo">Entry No parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_Print_Purchase(string EntryNo)
         {
@@ -839,6 +971,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for TRAN PURCHASE records.</summary>
+        /// <param name="EntryNo">Entry No parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_TRAN_PURCHASE_VIEW(string EntryNo)
         {
@@ -856,6 +991,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform CONS INVOICE AUTHORISE ASSIGN records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_CONS_INVOICE_AUTHORISE_ASSIGN([FromBody]Authorisation obj)
         {
@@ -876,6 +1014,10 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for INV PRINT AUTHORISATION records.</summary>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_INV_PRINT_AUTHORISATION(string cmpid, string Type)
         {
@@ -893,6 +1035,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for Print Invoice records.</summary>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="Printeuro">Printeuro parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_Print_Invoice(string INVNO, string Printeuro, string CMPID)
         {
@@ -910,6 +1057,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for Common FillClient Address records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMP_Common_FillClient_Address(string citycode)
         {
@@ -927,6 +1077,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Validate INVOICE DATE records.</summary>
+        /// <param name="DATE">DATE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_INVOICE_DATE_VALIDATE(string DATE)
         {
@@ -944,6 +1097,12 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Search and retrieve INVOICE SEARCH records.</summary>
+        /// <param name="SearchType">Search type/column identifier.</param>
+        /// <param name="Value">Search filter value.</param>
+        /// <param name="Value1">Search filter value.</param>
+        /// <param name="Value2">Search filter value.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_INVOICE_SEARCH_LIST(string SearchType, string Value, string Value1, string Value2)
         {
@@ -961,6 +1120,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for INVOICE RESET JSON records.</summary>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_INVOICE_RESET_JSON(string INVNO, string CMPID, string VGUID)
         {
@@ -976,6 +1140,12 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete INVOICE DELETE ACCOUNTDET JSON records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="EXCHANGERATE">EXCHANGERATE parameter.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_INVOICE_DELETE_ACCOUNTDET_JSON(string ID, string CMPID, string EXCHANGERATE, string VGUID)
         {
@@ -993,6 +1163,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete INVOICE DELETE ENCLOSURE JSON records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_INVOICE_DELETE_ENCLOSURE_JSON(string ID, string CMPID, string VGUID)
         {
@@ -1010,6 +1185,12 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for INVOICE records.</summary>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_INVOICE_VIEW(string INVNO, string CMPCODE, string CMPID, string CITYCODE1)
         {
@@ -1027,6 +1208,13 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for AUTO INVOICE records.</summary>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_AUTO_INVOICE_VIEW(string INVNO, string CMPCODE, string CMPID, string CITYCODE1, string VGUID)
         {
@@ -1044,6 +1232,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Load page reference data for INVOICE records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_INVOICE_PAGELOAD([FromUri]Filjobdata b)
         {
@@ -1065,6 +1255,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for INVOICE FILL JOB records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_INVOICE_FILL_JOB([FromUri]Filjob j)
         {
@@ -1086,6 +1278,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Load page reference data for AUTO INVOICE RATE ENTRY records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_AUTO_INVOICE_RATE_ENTRY_PAGELOAD()
         {
@@ -1102,6 +1296,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for CLIENT  IMP Common FillClient records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CLIENT__IMP_Common_FillClient(string citycode)
         {
@@ -1119,6 +1316,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update INVOICE IU JSON records.</summary>
+        /// <param name="main">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_INVOICE_IU_JSON([FromBody] InvFraMain main)
         {
@@ -1137,6 +1337,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
         }
 
 
+        /// <summary>Insert or update AUTO INVOICE ACCOUNTDET TMP records.</summary>
+        /// <param name="invchrg">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_AUTO_INVOICE_ACCOUNTDET_TMP_IU([FromBody] InvFraChrgeDtls invchrg)
         {
@@ -1154,6 +1357,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update AUTO INVOICE ENCLOSURE TMP IU JSON records.</summary>
+        /// <param name="invenc">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACCFRA_AUTO_INVOICE_ENCLOSURE_TMP_IU_JSON([FromBody] InvFraEnclosure invenc)
         {
@@ -1170,6 +1376,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for CLIENT  INVOICE REGISTER FILL DROPDOWN records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CLIENT__INVOICE_REGISTER_FILL_DROPDOWN()
         {
@@ -1187,6 +1395,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of CLIENT INVOICE records.</summary>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <param name="client">Client/exporter code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CLIENT_INVOICE_REGISTER(string fromdate, string todate, string client)
         {
@@ -1205,6 +1418,12 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve list of CREDIT NOTE records.</summary>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="type">type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult CREDIT_NOTE_REGISTER(string fromdate, string todate, string citycode, string type)
         {
@@ -1223,6 +1442,12 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve list of INVOICE REGISTER SUMMARY records.</summary>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="type">type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult INVOICE_REGISTER_SUMMARY(string fromdate, string todate, string citycode, string type)
         {
@@ -1240,6 +1465,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of PURCHASE records.</summary>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PURCHASE_REGISTER(string fromdate, string todate, string citycode)
         {
@@ -1361,6 +1591,14 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform REPORT CONSOLE SUMMARY XL records.</summary>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="CONSOLENOFR">CONSOLENOFR parameter.</param>
+        /// <param name="CONSOLENOTO">CONSOLENOTO parameter.</param>
+        /// <param name="CONS_MODE">Operation mode or filter type.</param>
+        /// <param name="CITY">CITY parameter.</param>
+        /// <param name="IMPOTERCODE">IMPOTERCODE parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage ACCFRA_REPORT_CONSOLE_SUMMARY_XL([FromUri]string TYPE, string CONSOLENOFR, string CONSOLENOTO, string CONS_MODE, string CITY, string IMPOTERCODE)
         {
@@ -1392,6 +1630,14 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform REPORT EXPORT SUMMARY XL records.</summary>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="CONSOLENOFR">CONSOLENOFR parameter.</param>
+        /// <param name="CONSOLENOTO">CONSOLENOTO parameter.</param>
+        /// <param name="CONS_MODE">Operation mode or filter type.</param>
+        /// <param name="CITY">CITY parameter.</param>
+        /// <param name="IMPOTERCODE">IMPOTERCODE parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage ACCFRA_REPORT_EXPORT_SUMMARY_XL([FromUri]string TYPE, string CONSOLENOFR, string CONSOLENOTO, string CONS_MODE, string CITY, string IMPOTERCODE)
         {
@@ -1423,6 +1669,13 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Retrieve list of MST INVOICE EXCHRATE DAILY records.</summary>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="forcurreny">forcurreny parameter.</param>
+        /// <param name="fromdate">Start date for the date range filter.</param>
+        /// <param name="todate">End date for the date range filter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACC_MST_INVOICE_EXCHRATE_DAILY_LIST([FromUri]string cmpid, string forcurreny, string fromdate, string todate, string mode)
         {
@@ -1448,6 +1701,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform MST INVOICE EXCHRATE records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ACC_MST_INVOICE_EXCHRATE([FromBody]MasterInvoiceExchangRate obj)
         {
@@ -1474,6 +1730,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
         /**************************************Master API Ends Here****************************************/
 
         /**************************************Transaction API Start Here****************************************/
+        /// <summary>Perform PurchaseDropdownFill records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PurchaseDropdownFill([FromUri]string citycode)
         {
@@ -1506,6 +1765,10 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PurchaseJobNoSearch records.</summary>
+        /// <param name="searchtype">Search type/column identifier.</param>
+        /// <param name="code">code parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PurchaseJobNoSearch([FromUri]string searchtype, string code)
         {
@@ -1531,6 +1794,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update PurchaseDetails records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PurchaseDetails_IU([FromBody]PurchaseDetailsIu obj)
         {
@@ -1556,6 +1822,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PurchaseDetailsDeleteIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PurchaseDetailsDeleteIU([FromBody]PurchaseDetailsIu obj)
         {
@@ -1580,6 +1849,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PurchaseResetAllIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PurchaseResetAllIU([FromBody]PurchaseDetailsIu obj)
         {
@@ -1604,6 +1876,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PurchaseEditData records.</summary>
+        /// <param name="entryno">entryno parameter.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="guid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PurchaseEditData([FromUri]string entryno, string cmpid, string guid)
         {
@@ -1629,6 +1906,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PurchaseIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PurchaseIU([FromBody]PurchaseIu obj)
         {
@@ -1655,6 +1935,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PurchaseSupplierData records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PurchaseSupplierData()
         {
@@ -1679,6 +1961,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform PurchaseSearchList records.</summary>
+        /// <param name="searchtype">Search type/column identifier.</param>
+        /// <param name="searchvalue">searchvalue parameter.</param>
+        /// <param name="searchvalue1">searchvalue1 parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult PurchaseSearchList([FromUri]string searchtype, string searchvalue, string searchvalue1)
         {
@@ -1724,6 +2011,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve dropdown data for REPORT IMPORTER SUMMARY FILL DROPDOWN records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_REPORT_IMPORTER_SUMMARY_FILL_DROPDOWN()
         {
@@ -1740,6 +2029,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform REPORT ANOMALY SUMMARY records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_REPORT_ANOMALY_SUMMARY()
         {
@@ -1756,6 +2047,8 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for REPORT ACCOUNTWISE RECOVERY FILL DROPDOWN records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_REPORT_ACCOUNTWISE_RECOVERY_FILL_DROPDOWN()
         {
@@ -1772,6 +2065,11 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform REPORT ACCOUNTWISE RECOVERY records.</summary>
+        /// <param name="ACCTCODE">ACCTCODE parameter.</param>
+        /// <param name="FROMDATE">Start date for the date range filter.</param>
+        /// <param name="TODATE">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_REPORT_ACCOUNTWISE_RECOVERY(string ACCTCODE, string FROMDATE, string TODATE)
         {
@@ -1788,6 +2086,9 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform REPORT JOBWISE RECOVERY records.</summary>
+        /// <param name="JOBNO">Job number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ACCFRA_REPORT_JOBWISE_RECOVERY(string JOBNO)
         {

@@ -52,6 +52,8 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
                 }
             }
         }
+        /// <summary>Retrieve GetConsolePrintCommonview instructionduone records.</summary>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpPost]
         public HttpResponseMessage GetConsolePrintCommonview_instructionduone(ImportInstructionModel model)
         {
@@ -359,6 +361,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
         }
 
+        /// <summary>Retrieve print/view data for IMPFRA PRINT ORDERDTRANSPORT SEA records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="jobno">Job number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMPFRA_PRINT_ORDERDTRANSPORT_SEA([FromUri] string citycode, string jobno)
         {
@@ -381,6 +387,25 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsolePrint ordredrtrasport Multi records.</summary>
+        /// <param name="searchtxt">Search text value.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="supplier">Supplier code.</param>
+        /// <param name="supaddrs">supaddrs parameter.</param>
+        /// <param name="warehouse">warehouse parameter.</param>
+        /// <param name="warehouseaddress">warehouseaddress parameter.</param>
+        /// <param name="dtelevnt">dtelevnt parameter.</param>
+        /// <param name="statut">statut parameter.</param>
+        /// <param name="documents">documents parameter.</param>
+        /// <param name="lieu">lieu parameter.</param>
+        /// <param name="dtheure">dtheure parameter.</param>
+        /// <param name="Tderef">Tderef parameter.</param>
+        /// <param name="conteneur">conteneur parameter.</param>
+        /// <param name="tarif">tarif parameter.</param>
+        /// <param name="username">username parameter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage GetConsolePrint_ordredrtrasport_Multi([FromUri] string searchtxt, string searchval, string citycode, string supplier, string supaddrs, string warehouse, string warehouseaddress, string dtelevnt, string statut, string documents, string lieu, string dtheure, string Tderef, string conteneur, string tarif, string username, string mode,
          string makerid, string makerip, string jobno, string co2emissionlevel, string biofuel)
@@ -518,6 +543,71 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
             return httpResponseMessage;
         }
+        /// <summary>Retrieve GetConsolePrintCommonview instructionduone records.</summary>
+        /// <param name="searchtxt">Search text value.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="jobstr">jobstr parameter.</param>
+        /// <param name="custodoc">custodoc parameter.</param>
+        /// <param name="supplier">Supplier code.</param>
+        /// <param name="eta_flg">eta flg parameter.</param>
+        /// <param name="dtsortie">dtsortie parameter.</param>
+        /// <param name="locfrt">locfrt parameter.</param>
+        /// <param name="tinull">tinull parameter.</param>
+        /// <param name="nature">nature parameter.</param>
+        /// <param name="tarifdouane">tarifdouane parameter.</param>
+        /// <param name="fature">fature parameter.</param>
+        /// <param name="colisage">colisage parameter.</param>
+        /// <param name="certificate">certificate parameter.</param>
+        /// <param name="forma">forma parameter.</param>
+        /// <param name="licence">licence parameter.</param>
+        /// <param name="agent">agent parameter.</param>
+        /// <param name="dtrelaese">dtrelaese parameter.</param>
+        /// <param name="nulllbl">nulllbl parameter.</param>
+        /// <param name="transport">transport parameter.</param>
+        /// <param name="Snature">Snature parameter.</param>
+        /// <param name="starifdouane">starifdouane parameter.</param>
+        /// <param name="verbl">verbl parameter.</param>
+        /// <param name="lloyds">lloyds parameter.</param>
+        /// <param name="dt126e">d t126 e parameter.</param>
+        /// <param name="agtcode">agtcode parameter.</param>
+        /// <param name="blnber">blnber parameter.</param>
+        /// <param name="itemnber">itemnber parameter.</param>
+        /// <param name="articlenum">articlenum parameter.</param>
+        /// <param name="ecornum">ecornum parameter.</param>
+        /// <param name="Artnom">Artnom parameter.</param>
+        /// <param name="dt126A">d t126 A parameter.</param>
+        /// <param name="T1numPlcdt">T1 n u m P l c d t parameter.</param>
+        /// <param name="validity">validity parameter.</param>
+        /// <param name="M71No">M71 N o parameter.</param>
+        /// <param name="IM7cust">I M7 c u s t parameter.</param>
+        /// <param name="warAddr">war Addr parameter.</param>
+        /// <param name="laoding">laoding parameter.</param>
+        /// <param name="nullIM4">null IM4 parameter.</param>
+        /// <param name="issued">issued parameter.</param>
+        /// <param name="strtno">strtno parameter.</param>
+        /// <param name="nbrcrt">nbrcrt parameter.</param>
+        /// <param name="weight">weight parameter.</param>
+        /// <param name="nullIM42">null IM42 parameter.</param>
+        /// <param name="issued2">issued2 parameter.</param>
+        /// <param name="strtno2">strtno2 parameter.</param>
+        /// <param name="nbrcrt2">nbrcrt2 parameter.</param>
+        /// <param name="weight2">weight2 parameter.</param>
+        /// <param name="nullIM43">null IM43 parameter.</param>
+        /// <param name="issued3">issued3 parameter.</param>
+        /// <param name="strtno3">strtno3 parameter.</param>
+        /// <param name="nbrcrt3">nbrcrt3 parameter.</param>
+        /// <param name="weight3">weight3 parameter.</param>
+        /// <param name="nullIM44">null IM44 parameter.</param>
+        /// <param name="issued4">issued4 parameter.</param>
+        /// <param name="strtno4">strtno4 parameter.</param>
+        /// <param name="nbrcrt4">nbrcrt4 parameter.</param>
+        /// <param name="weight4">weight4 parameter.</param>
+        /// <param name="dtheure">dtheure parameter.</param>
+        /// <param name="username">username parameter.</param>
+        /// <param name="supaddress">supaddress parameter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage GetConsolePrintCommonview_instructionduone([FromUri] string searchtxt, string searchval, string citycode, Int32 cntimporter, string jobstr, string custodoc, string supplier, string eta_flg, string dtsortie, string locfrt, string tinull, string nature, string tarifdouane, string fature, string colisage, string certificate, string forma, string licence, string agent, string dtrelaese, string nulllbl, string transport, string Snature, string starifdouane, string verbl, string lloyds, string dt126e, string agtcode, string blnber, string itemnber, string articlenum, string ecornum, string Artnom, string dt126A, string T1numPlcdt, string validity, string M71No, string IM7cust, string warAddr, string laoding, string nullIM4, string issued, string strtno, string nbrcrt, string weight, string nullIM42, string issued2, string strtno2, string nbrcrt2, string weight2, string nullIM43, string issued3, string strtno3, string nbrcrt3, string weight3, string nullIM44, string issued4, string strtno4, string nbrcrt4, string weight4, string dtheure, string username, string supaddress, string mode,
             string consoleno, string jobno, string hawbno, string mawbno, string cde, string pol, string pod, string colis, string poids, string volume, string ddmsg,
@@ -809,6 +899,11 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
             return httpResponseMessage;
         }
+        /// <summary>Retrieve print/view data for IMPFRA PRINT COMMON VIEW INSDUANE AIR records.</summary>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="jobno">Job number.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMPFRA_PRINT_COMMON_VIEW_INSDUANE_AIR([FromUri] string citycode, string jobno,string cmpid)
         {
@@ -831,6 +926,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of Fill PendingDelivery records.</summary>
+        /// <param name="type">type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_PendingDelivery_List(string type)
         {
@@ -852,6 +950,8 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve list of Fill Delivery records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Delivery_List()
         {
@@ -873,6 +973,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update FRA IMP INVOICE SEA GRP RATE UPDATE FCL records.</summary>
+        /// <param name="Seafclrate">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult FRA_IMP_INVOICE_SEA_GRP_RATE_UPDATE_FCL([FromBody] ConsoleInvoiceSeaFclRate Seafclrate)
         {
@@ -906,6 +1009,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Populate form with existing data for IMPFRA INVOICE SEA GRP POPULATE FCL records.</summary>
+        /// <param name="pkid">Primary key ID of the record.</param>
+        /// <param name="importer">importer parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMPFRA_INVOICE_SEA_GRP_POPULATE_FCL(string pkid, string importer)
         {
@@ -926,6 +1033,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update FRA IMP INVOICE SEA GRP RATE UPDATE LCL records.</summary>
+        /// <param name="Sealclrate">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult FRA_IMP_INVOICE_SEA_GRP_RATE_UPDATE_LCL([FromBody] ConsoleInvoiceSeaLclRate Sealclrate)
         {
@@ -953,6 +1063,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Populate form with existing data for IMPFRA INVOICE SEA GRP POPULATE LCL records.</summary>
+        /// <param name="pkid">Primary key ID of the record.</param>
+        /// <param name="importer">importer parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMPFRA_INVOICE_SEA_GRP_POPULATE_LCL(string pkid, string importer)
         {
@@ -973,6 +1087,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve dropdown data for IMPFRA INVOICE SEA GRP records.</summary>
+        /// <param name="seaconsoleno">seaconsoleno parameter.</param>
+        /// <param name="code">code parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMPFRA_INVOICE_SEA_GRP_FILL(string seaconsoleno, string code)
         {
@@ -993,6 +1111,13 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsolePrintCommonview withJob records.</summary>
+        /// <param name="searchtxt">Search text value.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="jobno">Job number.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetConsolePrintCommonview_withJob([FromUri] string searchtxt, string searchval, string citycode, string jobno,string makerid)
         {
@@ -1015,6 +1140,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for IMPFRA PRINT INSTRUDOUANE JOBDTLS records.</summary>
+        /// <param name="type">type parameter.</param>
+        /// <param name="mawbcontno">mawbcontno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMPFRA_PRINT_INSTRUDOUANE_JOBDTLS(string type, string mawbcontno)
         {
@@ -1035,6 +1164,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsoleNoView records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetConsoleNoView_NG([FromBody] ConsolidationSearch obj)
         {
@@ -1057,6 +1189,8 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for IMPFRA CONS CONTAINER VIEW DTLS records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMPFRA_CONS_CONTAINER_VIEW_DTLS()
         {
@@ -1077,6 +1211,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform IMPFRA CONSOLEDATA EXCELWORKING records.</summary>
+        /// <param name="FROMDT">Start date for the date range filter.</param>
+        /// <param name="TODT">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMPFRA_CONSOLEDATA_EXCELWORKING(string FROMDT, string TODT)
         {
@@ -1097,6 +1235,12 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform RPT CLIENT CO2EMISSION records.</summary>
+        /// <param name="CONCODE">CONCODE parameter.</param>
+        /// <param name="FROMDT">Start date for the date range filter.</param>
+        /// <param name="TODT">End date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage RPT_CLIENT_CO2EMISSION([FromUri]string CONCODE, string FROMDT, string TODT, string CMPCODE)
         {
@@ -1126,6 +1270,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
 
             return httpResponseMessage;
         }
+        /// <summary>Delete ConsoleRemark records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="CONSOLENO">CONSOLENO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult ConsoleRemark_Delete(string ID, string CONSOLENO)
         {
@@ -1143,6 +1291,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform ConsoleRemarkInsertUpdate records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsoleRemarkInsertUpdate([FromBody]ConsolidationRemarkUpdate obj)
         {
@@ -1165,6 +1316,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PRINT DOSSIER records.</summary>
+        /// <param name="CONSOLENO">CONSOLENO parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage PRINT_DOSSIER([FromUri]string CONSOLENO)
         {
@@ -1197,6 +1351,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Generate SEA CONSOLE GENERATE AUTO records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult SEA_CONSOLE_GENERATE_AUTO([FromBody]CommonEight obj)
         {
@@ -1220,6 +1377,8 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform Impfra ActualarrivalSearchpageload records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Impfra_ActualarrivalSearchpageload()
         {
@@ -1240,6 +1399,13 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform Impfra Actualarrivalpageload records.</summary>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="SMode">Operation mode or filter type.</param>
+        /// <param name="value">Search filter value.</param>
+        /// <param name="vslname">vslname parameter.</param>
+        /// <param name="VSL_VOYNO">VSL VOYNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Impfra_Actualarrivalpageload([FromUri]string mode, string SMode, string value, string vslname, string VSL_VOYNO)
         {
@@ -1260,6 +1426,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update Impfra ActualarrivalSea records.</summary>
+        /// <param name="arr">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Impfra_ActualarrivalSea_IU([FromBody]Importfra arr)
         {
@@ -1280,6 +1449,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update Impfra ActualarrivalAir records.</summary>
+        /// <param name="arr">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Impfra_ActualarrivalAir_IU([FromBody] Importfra arr)
         {
@@ -1302,6 +1474,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Insert or update Impfra ActualarrivalOther records.</summary>
+        /// <param name="arr">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Impfra_ActualarrivalOther_IU([FromBody]Importfra arr)
         {
@@ -1323,6 +1498,13 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Delete Impfra Actualarrival records.</summary>
+        /// <param name="arrivalno">arrivalno parameter.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="destport">destport parameter.</param>
+        /// <param name="arrivalid">arrivalid parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Impfra_Actualarrival_delete([FromUri]string arrivalno, string cmpid, string mode, string destport,string arrivalid)
         {
@@ -1345,6 +1527,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
         }
         //
 
+        /// <summary>Perform Impfra Actualarrival Mailsent records.</summary>
+        /// <param name="arrivalno">arrivalno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Impfra_Actualarrival_Mailsent([FromUri]string arrivalno)
         {
@@ -1441,6 +1626,8 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
         }
         // chargo on hang 
 
+        /// <summary>Retrieve Fill consignee Delivery records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_consignee_Delivery()
         {
@@ -1462,6 +1649,15 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for Fill Delivery records.</summary>
+        /// <param name="concode">concode parameter.</param>
+        /// <param name="searchType">Search type/column identifier.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="userid">userid parameter.</param>
+        /// <param name="vguid">Session GUID for temporary record management.</param>
+        /// <param name="DELIVERYNO">DELIVERYNO parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Delivery_view(string concode, string searchType, string searchval, string mode, string userid, string vguid, string DELIVERYNO)
         {
@@ -1484,6 +1680,16 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve print/view data for Fill Delivery view New records.</summary>
+        /// <param name="concode">concode parameter.</param>
+        /// <param name="searchType">Search type/column identifier.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="userid">userid parameter.</param>
+        /// <param name="vguid">Session GUID for temporary record management.</param>
+        /// <param name="DELIVERYNO">DELIVERYNO parameter.</param>
+        /// <param name="Anotherdelivery">Anotherdelivery parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_Delivery_view_New(string concode, string searchType, string searchval, string mode, string userid, string vguid, string DELIVERYNO,string Anotherdelivery)
         {
@@ -1506,6 +1712,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update Impfra delivery Appoint records.</summary>
+        /// <param name="delap">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Impfra_delivery_Appoint_IU([FromBody]delivery_app delap)
         {
@@ -1526,6 +1735,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Delete Impfra delivery Appoint records.</summary>
+        /// <param name="delap">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Impfra_delivery_Appoint_Delete([FromBody]delivery_app delap)
         {
@@ -1547,6 +1759,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update Impfra delivery records.</summary>
+        /// <param name="del">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Impfra_delivery_IU([FromBody]delivery del)
         {
@@ -1588,6 +1803,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform Delivery rest records.</summary>
+        /// <param name="userid">userid parameter.</param>
+        /// <param name="vguid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Delivery_rest([FromUri] string userid, string vguid)
         {
@@ -1610,6 +1829,11 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform DELIVERY BONMAGASINIER records.</summary>
+        /// <param name="DELIVERYNO">DELIVERYNO parameter.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="SUPPLIER">Supplier code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult DELIVERY_BONMAGASINIER([FromUri]string DELIVERYNO, string CITYCODE, string SUPPLIER)
         {
@@ -1632,6 +1856,15 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Generate DELIVERY BONMAGASINIER records.</summary>
+        /// <param name="DELIVERYNO">DELIVERYNO parameter.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="SUPPLIER">Supplier code.</param>
+        /// <param name="nature">nature parameter.</param>
+        /// <param name="dd">dd parameter.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <param name="makerip">IP address of the record maker.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_DELIVERY_BONMAGASINIER([FromUri]string DELIVERYNO, string CITYCODE, string SUPPLIER, string nature, string dd, string makerid, string makerip)
         {
@@ -1699,6 +1932,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Perform DELIVERY BONDELIVRAISON records.</summary>
+        /// <param name="DELIVERYNO">DELIVERYNO parameter.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult DELIVERY_BONDELIVRAISON([FromUri]string DELIVERYNO, string CITYCODE)
         {
@@ -1721,6 +1958,13 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Generate DELIVERY BONDELIVRAISON records.</summary>
+        /// <param name="DELIVERYNO">DELIVERYNO parameter.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="nature">nature parameter.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <param name="makerip">IP address of the record maker.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_DELIVERY_BONDELIVRAISON([FromUri]string DELIVERYNO, string CITYCODE, string nature, string makerid, string makerip)
         {
@@ -1783,6 +2027,19 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
             return httpResponseMessage;
         }
+        /// <summary>Perform DELIVERY ORDERDETRANSPORT records.</summary>
+        /// <param name="DELIVERYNO">DELIVERYNO parameter.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="DEST">DEST parameter.</param>
+        /// <param name="ETAFLG">ETAFLG parameter.</param>
+        /// <param name="ETADT">ETADT parameter.</param>
+        /// <param name="TRANSPORT">TRANSPORT parameter.</param>
+        /// <param name="STATUT_DUANE">STATUT DUANE parameter.</param>
+        /// <param name="DATE_ENLEVEMENT">DATE ENLEVEMENT parameter.</param>
+        /// <param name="TARIF">TARIF parameter.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult DELIVERY_ORDERDETRANSPORT([FromUri]string DELIVERYNO, string CITYCODE, string DEST, string ETAFLG, string ETADT, string TRANSPORT, string STATUT_DUANE, string DATE_ENLEVEMENT, string TARIF, string MAKERID, string mode)
         {
@@ -1813,6 +2070,20 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform Generate DELIVERY ORDERDETRANSPORT records.</summary>
+        /// <param name="DELIVERYNO">DELIVERYNO parameter.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="DEST">DEST parameter.</param>
+        /// <param name="ETAFLG">ETAFLG parameter.</param>
+        /// <param name="ETADT">ETADT parameter.</param>
+        /// <param name="TRANSPORT">TRANSPORT parameter.</param>
+        /// <param name="STATUT_DUANE">STATUT DUANE parameter.</param>
+        /// <param name="DATE_ENLEVEMENT">DATE ENLEVEMENT parameter.</param>
+        /// <param name="TARIF">TARIF parameter.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <param name="username">username parameter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_DELIVERY_ORDERDETRANSPORT([FromUri]string DELIVERYNO, string CITYCODE, string DEST, string ETAFLG, string ETADT, string TRANSPORT, string STATUT_DUANE, string DATE_ENLEVEMENT, string TARIF, string MAKERID, string username, string mode)
         {
@@ -1948,6 +2219,11 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
 
         }
 
+        /// <summary>Perform DELIVERY CONFIRMATIONDELIVRAISON records.</summary>
+        /// <param name="DELIVERYNO">DELIVERYNO parameter.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult DELIVERY_CONFIRMATIONDELIVRAISON([FromUri]string DELIVERYNO, string CITYCODE, string mode)
         {
@@ -1970,6 +2246,23 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform Generate DELIVERY CONFIRMATIONDELIVRAISON records.</summary>
+        /// <param name="DELIVERYNO">DELIVERYNO parameter.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="MSGTYPE">MSGTYPE parameter.</param>
+        /// <param name="CC">CC parameter.</param>
+        /// <param name="DATE">DATE parameter.</param>
+        /// <param name="ATTN1">ATTN1 parameter.</param>
+        /// <param name="ATTN2">ATTN2 parameter.</param>
+        /// <param name="VOLNO">VOLNO parameter.</param>
+        /// <param name="NATURE">NATURE parameter.</param>
+        /// <param name="T1Ci_JOINTNO">T1 C i J O I N T N O parameter.</param>
+        /// <param name="TRANSPORTER">TRANSPORTER parameter.</param>
+        /// <param name="IMMATRICULATION">IMMATRICULATION parameter.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="makerip">IP address of the record maker.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Generate_DELIVERY_CONFIRMATIONDELIVRAISON([FromUri]string DELIVERYNO, string CITYCODE, string MSGTYPE, string CC, string DATE, string ATTN1, string ATTN2, string VOLNO, string NATURE, string T1Ci_JOINTNO, string TRANSPORTER, string IMMATRICULATION, string MAKERID, string mode, string makerip)
         {
@@ -2084,6 +2377,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
 
         }
         /***************************Consolidation*************************************/
+        /// <summary>Retrieve GetConsoleNoSearch records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetConsoleNoSearch([FromBody]ConsolidationSearch obj)
         {
@@ -2106,6 +2402,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsoleNoList records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetConsoleNoList([FromBody]ConsolidationSearch obj)
         {
@@ -2125,6 +2424,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsoleNoView records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult GetConsoleNoView([FromBody]ConsolidationSearch obj)
         {
@@ -2147,6 +2449,12 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsoleRemark records.</summary>
+        /// <param name="containerno">containerno parameter.</param>
+        /// <param name="consoleno">consoleno parameter.</param>
+        /// <param name="type">type parameter.</param>
+        /// <param name="jobno">Job number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetConsoleRemark([FromUri]string containerno, string consoleno, string type, string jobno)
         {
@@ -2172,6 +2480,8 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetCustomDocType records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetCustomDocType()
         {
@@ -2193,6 +2503,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform PostConsoleNoRemarkUpdate records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult PostConsoleNoRemarkUpdate([FromBody]ConsolidationRemarkUpdate obj)
         {
@@ -2216,6 +2529,8 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetContainerTranshipCityFill records.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetContainerTranshipCityFill()
         {
@@ -2237,6 +2552,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetContainerTranshipVesselFill records.</summary>
+        /// <param name="value">Search filter value.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetContainerTranshipVesselFill([FromUri]string value, string mode)
         {
@@ -2258,6 +2577,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetContainerExchangeRateView records.</summary>
+        /// <param name="containerno">containerno parameter.</param>
+        /// <param name="consoleno">consoleno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetContainerExchangeRateView([FromUri]string containerno, string consoleno)
         {
@@ -2279,6 +2602,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsoleDossierMainView records.</summary>
+        /// <param name="consoleno">consoleno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetConsoleDossierMainView([FromUri]string consoleno)
         {
@@ -2300,6 +2626,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsoleDossierJobView records.</summary>
+        /// <param name="jobno">Job number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetConsoleDossierJobView([FromUri]string jobno)
         {
@@ -2321,6 +2650,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform ConsolidationContainerUpdate records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsolidationContainerUpdate([FromBody]ConsolidationExchangeRate obj)
         {
@@ -2345,6 +2677,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsoleDossierObservationList records.</summary>
+        /// <param name="consoleno">consoleno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetConsoleDossierObservationList([FromUri]string consoleno)
         {
@@ -2366,6 +2701,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform ConsolidationConsoleDossierObservationIu records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsolidationConsoleDossierObservationIu([FromBody]ConsolidationDossierObservartion obj)
         {
@@ -2392,6 +2730,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsoleJobDossierObservationList records.</summary>
+        /// <param name="jobno">Job number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetConsoleJobDossierObservationList([FromUri]string jobno)
         {
@@ -2413,6 +2754,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform ConsolidationConsoleJobDossierObservationIu records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult ConsolidationConsoleJobDossierObservationIu([FromBody]ConsolidationJobDossierObservartion obj)
         {
@@ -2439,6 +2783,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve GetConsolDeliveryView records.</summary>
+        /// <param name="deliveryno">deliveryno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetConsolDeliveryView([FromUri]string deliveryno )
         {
@@ -2484,6 +2831,13 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsoleEditmodeview records.</summary>
+        /// <param name="consoleno">consoleno parameter.</param>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="loginid">loginid parameter.</param>
+        /// <param name="Citycode">City/branch code.</param>
+        /// <param name="vguid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetConsoleEditmodeview([FromUri]string consoleno, string cmpcode, string loginid, string Citycode, string vguid)
         {
@@ -2505,6 +2859,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsolejobPageload records.</summary>
+        /// <param name="consoleno">consoleno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetConsolejobPageload([FromUri]string consoleno)
         {
@@ -2526,6 +2883,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform consoleJobIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult consoleJobIU([FromBody]ManualConsoleJob obj)
         {
@@ -2552,6 +2912,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
 
 
 
+        /// <summary>Perform consoleOrderIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult consoleOrderIU([FromBody]ManualOrder obj)
         {
@@ -2575,6 +2938,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform consoleIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult consoleIU([FromBody]ManualConsoleIU obj)
         {
@@ -2600,6 +2966,12 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
         
+        /// <summary>Retrieve GetsearchConsoleList records.</summary>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="value">Search filter value.</param>
+        /// <param name="frmdt">Start date for the date range filter.</param>
+        /// <param name="todt">End date for the date range filter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetsearchConsoleList([FromUri]string mode, string value, string frmdt, string todt)
         {
@@ -2621,6 +2993,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Reset temporary data for console records.</summary>
+        /// <param name="loginid">loginid parameter.</param>
+        /// <param name="guid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult console_reset([FromUri]string loginid, string guid)
         {
@@ -2645,6 +3021,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
         //------------------End of Manual Console--------------
 
         //--------------- console on vessel
+        /// <summary>Perform console containerview records.</summary>
+        /// <param name="vessel">vessel parameter.</param>
+        /// <param name="port">port parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult console_containerview([FromUri]string vessel, string port)
         {
@@ -2667,6 +3047,11 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Load page reference data for console container records.</summary>
+        /// <param name="vessel">vessel parameter.</param>
+        /// <param name="port">port parameter.</param>
+        /// <param name="consoleno">consoleno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult console_container_pageload([FromUri]string vessel, string port,string consoleno)
         {
@@ -2690,6 +3075,14 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform console container filldata records.</summary>
+        /// <param name="consoleno">consoleno parameter.</param>
+        /// <param name="containerno">containerno parameter.</param>
+        /// <param name="vessel">vessel parameter.</param>
+        /// <param name="port">port parameter.</param>
+        /// <param name="userid">userid parameter.</param>
+        /// <param name="guid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult console_container_filldata([FromUri]string consoleno, string containerno, string vessel, string port, string userid, string guid)
         {
@@ -2712,6 +3105,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update consolecontainer records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult consolecontainer_iu([FromBody]ConsoleContainer obj)
         {
@@ -2744,6 +3140,13 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Perform console containerCLP records.</summary>
+        /// <param name="consoleno">consoleno parameter.</param>
+        /// <param name="containerno">containerno parameter.</param>
+        /// <param name="vessel">vessel parameter.</param>
+        /// <param name="userid">userid parameter.</param>
+        /// <param name="vguid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult console_containerCLP([FromUri]string consoleno, string containerno,string vessel,string userid, string vguid)
         {
@@ -2766,6 +3169,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Insert or update consolecontainerCLP records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult consolecontainerCLP_iu([FromBody]ConsoleContainerCLP obj)
         {
@@ -2789,6 +3195,10 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetContainerjobview records.</summary>
+        /// <param name="containerno">containerno parameter.</param>
+        /// <param name="consoleno">consoleno parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetContainerjobview([FromUri] string containerno, string consoleno)
         {
@@ -2811,6 +3221,11 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve GetConsolePrintCommonview records.</summary>
+        /// <param name="searchtxt">Search text value.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetConsolePrintCommonview([FromUri]string searchtxt, string searchval, string citycode )
         {
@@ -2833,6 +3248,71 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve GetConsolePrintCommonview report records.</summary>
+        /// <param name="searchtxt">Search text value.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="jobstr">jobstr parameter.</param>
+        /// <param name="custodoc">custodoc parameter.</param>
+        /// <param name="supplier">Supplier code.</param>
+        /// <param name="eta_flg">eta flg parameter.</param>
+        /// <param name="dtsortie">dtsortie parameter.</param>
+        /// <param name="locfrt">locfrt parameter.</param>
+        /// <param name="tinull">tinull parameter.</param>
+        /// <param name="nature">nature parameter.</param>
+        /// <param name="tarifdouane">tarifdouane parameter.</param>
+        /// <param name="fature">fature parameter.</param>
+        /// <param name="colisage">colisage parameter.</param>
+        /// <param name="certificate">certificate parameter.</param>
+        /// <param name="forma">forma parameter.</param>
+        /// <param name="licence">licence parameter.</param>
+        /// <param name="agent">agent parameter.</param>
+        /// <param name="dtrelaese">dtrelaese parameter.</param>
+        /// <param name="nulllbl">nulllbl parameter.</param>
+        /// <param name="transport">transport parameter.</param>
+        /// <param name="Snature">Snature parameter.</param>
+        /// <param name="starifdouane">starifdouane parameter.</param>
+        /// <param name="verbl">verbl parameter.</param>
+        /// <param name="lloyds">lloyds parameter.</param>
+        /// <param name="dt126e">d t126 e parameter.</param>
+        /// <param name="agtcode">agtcode parameter.</param>
+        /// <param name="blnber">blnber parameter.</param>
+        /// <param name="itemnber">itemnber parameter.</param>
+        /// <param name="articlenum">articlenum parameter.</param>
+        /// <param name="ecornum">ecornum parameter.</param>
+        /// <param name="Artnom">Artnom parameter.</param>
+        /// <param name="dt126A">d t126 A parameter.</param>
+        /// <param name="T1numPlcdt">T1 n u m P l c d t parameter.</param>
+        /// <param name="validity">validity parameter.</param>
+        /// <param name="M71No">M71 N o parameter.</param>
+        /// <param name="IM7cust">I M7 c u s t parameter.</param>
+        /// <param name="warAddr">war Addr parameter.</param>
+        /// <param name="laoding">laoding parameter.</param>
+        /// <param name="nullIM4">null IM4 parameter.</param>
+        /// <param name="issued">issued parameter.</param>
+        /// <param name="strtno">strtno parameter.</param>
+        /// <param name="nbrcrt">nbrcrt parameter.</param>
+        /// <param name="weight">weight parameter.</param>
+        /// <param name="nullIM42">null IM42 parameter.</param>
+        /// <param name="issued2">issued2 parameter.</param>
+        /// <param name="strtno2">strtno2 parameter.</param>
+        /// <param name="nbrcrt2">nbrcrt2 parameter.</param>
+        /// <param name="weight2">weight2 parameter.</param>
+        /// <param name="nullIM43">null IM43 parameter.</param>
+        /// <param name="issued3">issued3 parameter.</param>
+        /// <param name="strtno3">strtno3 parameter.</param>
+        /// <param name="nbrcrt3">nbrcrt3 parameter.</param>
+        /// <param name="weight3">weight3 parameter.</param>
+        /// <param name="nullIM44">null IM44 parameter.</param>
+        /// <param name="issued4">issued4 parameter.</param>
+        /// <param name="strtno4">strtno4 parameter.</param>
+        /// <param name="nbrcrt4">nbrcrt4 parameter.</param>
+        /// <param name="weight4">weight4 parameter.</param>
+        /// <param name="dtheure">dtheure parameter.</param>
+        /// <param name="username">username parameter.</param>
+        /// <param name="supaddress">supaddress parameter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage GetConsolePrintCommonview_report([FromUri] string searchtxt, string searchval, string citycode, Int32 cntimporter, string jobstr, string custodoc, string supplier, string eta_flg, string dtsortie, string locfrt, string tinull, string nature, string tarifdouane, string fature, string colisage, string certificate, string forma, string licence, string agent, string dtrelaese, string nulllbl, string transport, string Snature, string starifdouane, string verbl, string lloyds, string dt126e, string agtcode, string blnber, string itemnber, string articlenum, string ecornum, string Artnom, string dt126A, string T1numPlcdt, string validity, string M71No, string IM7cust, string warAddr, string laoding, string nullIM4, string issued, string strtno, string nbrcrt, string weight, string nullIM42, string issued2, string strtno2, string nbrcrt2, string weight2, string nullIM43, string issued3, string strtno3, string nbrcrt3, string weight3, string nullIM44, string issued4, string strtno4, string nbrcrt4, string weight4, string dtheure, string username, string supaddress, string mode)
         {
@@ -3104,6 +3584,70 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
             return httpResponseMessage;
         }
+        /// <summary>Retrieve GetConsolePrintCommonview reportold records.</summary>
+        /// <param name="searchtxt">Search text value.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="custodoc">custodoc parameter.</param>
+        /// <param name="supplier">Supplier code.</param>
+        /// <param name="eta_flg">eta flg parameter.</param>
+        /// <param name="dtsortie">dtsortie parameter.</param>
+        /// <param name="locfrt">locfrt parameter.</param>
+        /// <param name="tinull">tinull parameter.</param>
+        /// <param name="nature">nature parameter.</param>
+        /// <param name="tarifdouane">tarifdouane parameter.</param>
+        /// <param name="fature">fature parameter.</param>
+        /// <param name="colisage">colisage parameter.</param>
+        /// <param name="certificate">certificate parameter.</param>
+        /// <param name="forma">forma parameter.</param>
+        /// <param name="licence">licence parameter.</param>
+        /// <param name="agent">agent parameter.</param>
+        /// <param name="dtrelaese">dtrelaese parameter.</param>
+        /// <param name="nulllbl">nulllbl parameter.</param>
+        /// <param name="transport">transport parameter.</param>
+        /// <param name="Snature">Snature parameter.</param>
+        /// <param name="starifdouane">starifdouane parameter.</param>
+        /// <param name="verbl">verbl parameter.</param>
+        /// <param name="lloyds">lloyds parameter.</param>
+        /// <param name="dt126e">d t126 e parameter.</param>
+        /// <param name="agtcode">agtcode parameter.</param>
+        /// <param name="blnber">blnber parameter.</param>
+        /// <param name="itemnber">itemnber parameter.</param>
+        /// <param name="articlenum">articlenum parameter.</param>
+        /// <param name="ecornum">ecornum parameter.</param>
+        /// <param name="Artnom">Artnom parameter.</param>
+        /// <param name="dt126A">d t126 A parameter.</param>
+        /// <param name="T1numPlcdt">T1 n u m P l c d t parameter.</param>
+        /// <param name="validity">validity parameter.</param>
+        /// <param name="M71No">M71 N o parameter.</param>
+        /// <param name="IM7cust">I M7 c u s t parameter.</param>
+        /// <param name="warAddr">war Addr parameter.</param>
+        /// <param name="laoding">laoding parameter.</param>
+        /// <param name="nullIM4">null IM4 parameter.</param>
+        /// <param name="issued">issued parameter.</param>
+        /// <param name="strtno">strtno parameter.</param>
+        /// <param name="nbrcrt">nbrcrt parameter.</param>
+        /// <param name="weight">weight parameter.</param>
+        /// <param name="nullIM42">null IM42 parameter.</param>
+        /// <param name="issued2">issued2 parameter.</param>
+        /// <param name="strtno2">strtno2 parameter.</param>
+        /// <param name="nbrcrt2">nbrcrt2 parameter.</param>
+        /// <param name="weight2">weight2 parameter.</param>
+        /// <param name="nullIM43">null IM43 parameter.</param>
+        /// <param name="issued3">issued3 parameter.</param>
+        /// <param name="strtno3">strtno3 parameter.</param>
+        /// <param name="nbrcrt3">nbrcrt3 parameter.</param>
+        /// <param name="weight3">weight3 parameter.</param>
+        /// <param name="nullIM44">null IM44 parameter.</param>
+        /// <param name="issued4">issued4 parameter.</param>
+        /// <param name="strtno4">strtno4 parameter.</param>
+        /// <param name="nbrcrt4">nbrcrt4 parameter.</param>
+        /// <param name="weight4">weight4 parameter.</param>
+        /// <param name="dtheure">dtheure parameter.</param>
+        /// <param name="username">username parameter.</param>
+        /// <param name="supaddress">supaddress parameter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage GetConsolePrintCommonview_reportold([FromUri]string searchtxt, string searchval, string citycode, string custodoc, string supplier, string eta_flg, string dtsortie, string locfrt, string tinull, string nature, string tarifdouane, string fature, string colisage, string certificate, string forma, string licence, string agent, string dtrelaese, string nulllbl, string transport, string Snature, string starifdouane, string verbl, string lloyds, string dt126e, string agtcode, string blnber, string itemnber, string articlenum, string ecornum, string Artnom, string dt126A, string T1numPlcdt, string validity, string M71No, string IM7cust, string warAddr, string laoding, string nullIM4, string issued, string strtno, string nbrcrt, string weight, string nullIM42, string issued2, string strtno2, string nbrcrt2, string weight2, string nullIM43, string issued3, string strtno3, string nbrcrt3, string weight3, string nullIM44, string issued4, string strtno4, string nbrcrt4, string weight4 , string dtheure, string username,string supaddress,string mode)
         {
@@ -3366,6 +3910,22 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
 
 
 
+        /// <summary>Retrieve GetConsolePrintRelache records.</summary>
+        /// <param name="searchtxt">Search text value.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="supplier">Supplier code.</param>
+        /// <param name="ccsupplier">Supplier code.</param>
+        /// <param name="supaddress">supaddress parameter.</param>
+        /// <param name="ccsupaddress">ccsupaddress parameter.</param>
+        /// <param name="agent">agent parameter.</param>
+        /// <param name="dtrelaese">dtrelaese parameter.</param>
+        /// <param name="merci">merci parameter.</param>
+        /// <param name="bl">bl parameter.</param>
+        /// <param name="dcontract">dcontract parameter.</param>
+        /// <param name="contstatus">contstatus parameter.</param>
+        /// <param name="statusmsg">statusmsg parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage GetConsolePrintRelache([FromUri]string searchtxt, string searchval, string citycode, string supplier, string ccsupplier, string supaddress, string ccsupaddress, string agent, string dtrelaese, string merci, string  bl  , string dcontract, string contstatus, string statusmsg )
         {
@@ -3471,6 +4031,12 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Retrieve Fill deliverylist records.</summary>
+        /// <param name="concode">concode parameter.</param>
+        /// <param name="searchType">Search type/column identifier.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Fill_deliverylist(string concode, string searchType, string searchval, string mode )
         {
@@ -3494,6 +4060,25 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve GetConsolePrint ordredrtrasport records.</summary>
+        /// <param name="searchtxt">Search text value.</param>
+        /// <param name="searchval">Search field/column identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="supplier">Supplier code.</param>
+        /// <param name="supaddrs">supaddrs parameter.</param>
+        /// <param name="warehouse">warehouse parameter.</param>
+        /// <param name="warehouseaddress">warehouseaddress parameter.</param>
+        /// <param name="dtelevnt">dtelevnt parameter.</param>
+        /// <param name="statut">statut parameter.</param>
+        /// <param name="documents">documents parameter.</param>
+        /// <param name="lieu">lieu parameter.</param>
+        /// <param name="dtheure">dtheure parameter.</param>
+        /// <param name="Tderef">Tderef parameter.</param>
+        /// <param name="conteneur">conteneur parameter.</param>
+        /// <param name="tarif">tarif parameter.</param>
+        /// <param name="username">username parameter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage GetConsolePrint_ordredrtrasport([FromUri]string searchtxt, string searchval, string citycode, string supplier, string supaddrs, string warehouse , string warehouseaddress, string dtelevnt, string statut, string documents, string lieu, string dtheure, string Tderef, string conteneur, string tarif ,string username,string mode)
         {
@@ -3614,6 +4199,12 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Perform Impfra transit time rpt records.</summary>
+        /// <param name="concode">concode parameter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="FROMDT">Start date for the date range filter.</param>
+        /// <param name="TODAT">TODAT parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Impfra_transit_time_rpt(string concode, string mode, string FROMDT, string TODAT)
         {
@@ -3637,6 +4228,12 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
         }
 
 
+        /// <summary>Perform Rpt ClientTransitTime records.</summary>
+        /// <param name="client">Client/exporter code.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="frmdt">Start date for the date range filter.</param>
+        /// <param name="todt">End date for the date range filter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage Rpt_ClientTransitTime([FromUri]string client, string mode, string frmdt, string todt)
         {
@@ -3666,6 +4263,13 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return httpResponseMessage;
         }
 
+        /// <summary>Retrieve list of Impfra rpt records.</summary>
+        /// <param name="fromdt">Start date for the date range filter.</param>
+        /// <param name="Todt">End date for the date range filter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="RPT_TYPE">RPT TYPE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult Impfra_rpt_Register(string fromdt, string Todt, string mode, string CITYCODE, string RPT_TYPE)
         {
@@ -3688,6 +4292,11 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform MST EXPORT HAWB VIEWMPCGO records.</summary>
+        /// <param name="Type1">Type1 parameter.</param>
+        /// <param name="Type2">Type2 parameter.</param>
+        /// <param name="Type3">Type3 parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult EXP_MST_EXPORT_HAWB_VIEWMPCGO(string Type1, string Type2, string Type3)
         {
@@ -3712,6 +4321,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             return Ok(ds);
         }
 
+        /// <summary>Perform MST EXPORT HAWB FRT UPDATEMPCGO records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult EXP_MST_EXPORT_HAWB_FRT_UPDATEMPCGO([FromBody]HawbRatingMPCGO obj)
         {
@@ -3761,6 +4373,9 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve print/view data for IMPFRA CONSOLE MULTIJOB records.</summary>
+        /// <param name="fcr_no">fcr no parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult IMPFRA_CONSOLE_MULTIJOB_VIEW(string fcr_no)
         {

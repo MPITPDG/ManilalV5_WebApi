@@ -13,6 +13,8 @@ namespace Manilal_V5NG.Controllers.CommonBLL
 {
     public class CommonController : ApiController
     {
+        /// <summary>Retrieve the application menu list from the JSON configuration file.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetMenuList()
         {
@@ -25,6 +27,9 @@ namespace Manilal_V5NG.Controllers.CommonBLL
             return ResponseMessage(result); 
         }
 
+        /// <summary>Verify user access rights for a given form and company.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult getVerifyRight([FromBody]VerifyRights cd)
         {
@@ -46,6 +51,9 @@ namespace Manilal_V5NG.Controllers.CommonBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve company name and logo image details for the given company code.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult getCompanyName([FromUri]string cmpcode)
         {
@@ -67,6 +75,8 @@ namespace Manilal_V5NG.Controllers.CommonBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve the full list of cities for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult getCityList()
         {
@@ -88,6 +98,8 @@ namespace Manilal_V5NG.Controllers.CommonBLL
             return Ok(ds);
         }
 
+        /// <summary>Retrieve the full list of consignees for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult getConsigneeList()
         {
@@ -108,6 +120,10 @@ namespace Manilal_V5NG.Controllers.CommonBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve the financial year list for the given company and city.</summary>
+        /// <param name="cmpcode">Company code identifier.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetFinancialYear(string cmpcode, string citycode1)
         {
@@ -129,6 +145,8 @@ namespace Manilal_V5NG.Controllers.CommonBLL
             return Ok(ds);
         }
         //
+        /// <summary>Retrieve the common city fill list for dropdown population.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult GetFillcity()
         {
@@ -150,6 +168,8 @@ namespace Manilal_V5NG.Controllers.CommonBLL
             return Ok(ds);
         }
         /* Added for filling company in Supplier Master */
+        /// <summary>Retrieve all companies for the master company dropdown.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult FillCompany()
         {

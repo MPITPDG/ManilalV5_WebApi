@@ -114,6 +114,12 @@ namespace Manilal_V5NG.Controllers.Admin
         //    }
         //    return Ok(ds);
         //}
+        /// <summary>Delete a company branch address record.</summary>
+        /// <param name="id">Primary key ID of the record.</param>
+        /// <param name="guid">Session GUID for temporary record management.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         //public IHttpActionResult Company_Address_delete([FromUri]string id, string guid, string makerid,string ID)
         //{
@@ -171,6 +177,9 @@ namespace Manilal_V5NG.Controllers.Admin
         //    }
         //    return Ok(ds);
         //}
+        /// <summary>Search company master records by company name.</summary>
+        /// <param name="cd">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
         public IHttpActionResult Company_MST_Search1([FromBody]companymain cd)
         {
@@ -192,6 +201,8 @@ namespace Manilal_V5NG.Controllers.Admin
             return Ok(ds);
 
         }
+        /// <summary> operation.</summary>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
 
         public void Put(int id, [FromBody]string value)

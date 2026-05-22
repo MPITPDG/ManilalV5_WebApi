@@ -25,6 +25,8 @@ namespace Manilal_V5NG.Controllers
     public class EdiController : ApiController
     {
 
+        /// <summary>Perform TXT HYC AUTO APPROVAL ORDERS records.</summary>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
         public HttpResponseMessage EDI_TXT_HYC_AUTO_APPROVAL_ORDERS()
         {
@@ -58,6 +60,11 @@ namespace Manilal_V5NG.Controllers
             return httpResponseMessage;
 
         }
+        /// <summary>Search and retrieve HAPPYCHIC SEARCH STATUS records.</summary>
+        /// <param name="SearchType">Search type/column identifier.</param>
+        /// <param name="Value">Search filter value.</param>
+        /// <param name="Value1">Search filter value.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult EDI_HAPPYCHIC_SEARCH_STATUS(string SearchType, string Value, string Value1)
         {
@@ -76,6 +83,9 @@ namespace Manilal_V5NG.Controllers
             return Ok(ds);
         }
 
+        /// <summary>Retrieve list of HAPPYCHIC PENDING records.</summary>
+        /// <param name="Mode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpGet]
         public IHttpActionResult EDI_HAPPYCHIC_PENDING_LIST(string Mode)
         {
