@@ -18,6 +18,7 @@ using System.Net.Http.Headers;
 
 namespace Manilal_V5NG.Controllers.MasterBLL
 {
+    [System.Web.Http.Description.ApiExplorerSettings(IgnoreApi = true)]
     public class Employee : ApiController
     {
         // GET api/<controller>

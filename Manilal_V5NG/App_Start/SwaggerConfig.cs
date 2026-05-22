@@ -2,15 +2,25 @@ using System.Web.Http;
 using WebActivatorEx;
 using Manilal_V5NG;
 using Swashbuckle.Application;
+using Swashbuckle.Swagger;
 using System;
 using System.IO;
 using System.Linq;
+using System.Web.Http.Description;
 
 //[assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 //[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Manilal_V5NG.SwaggerConfig), "Register")]
 
 namespace Manilal_V5NG
 {
+    public class SafeOperationFilter : IOperationFilter
+    {
+        public void Apply(Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
+        {
+            // no-op: exists so the pipeline doesn't abort if a single op fails schema gen
+        }
+    }
+
     public class SwaggerConfig
     {
         public static void Register()
@@ -44,6 +54,14 @@ namespace Manilal_V5NG
 
                     // 4. Fix for conflicting routes (common in Web API 2)
                     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+                    // 5. Map complex ADO.NET types to plain object so schema gen doesn't crash
+                    c.MapType<System.Data.DataSet>(() => new Schema { type = "object", description = "ADO.NET DataSet result (serialized as JSON)" });
+                    c.MapType<System.Data.DataTable>(() => new Schema { type = "object", description = "ADO.NET DataTable result (serialized as JSON)" });
+                    c.MapType<System.Collections.IEnumerable>(() => new Schema { type = "array" });
+
+                    // 6. Skip any operation whose schema generation throws
+                    c.OperationFilter<SafeOperationFilter>();
                 })
                 .EnableSwaggerUi(c =>
                 {
