@@ -815,12 +815,35 @@ namespace Manilal_V5NG.Controllers.ImportBLL
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Job not ready");
             }
 
-            MemoryStream stream = new MemoryStream(job.FileBytes);
+            // This report's XML is large (40MB+ for CONTAINERNO=All) and very repetitive
+            // (thousands of near-identical <Cell> tags), so it gzips down to a fraction of
+            // the size - worth it since the caller may be transferring this across a slow,
+            // distant network link where raw transfer time is the actual bottleneck.
+            bool clientAcceptsGzip = Request.Headers.AcceptEncoding.Any(e => e.Value == "gzip");
+            byte[] responseBytes = job.FileBytes;
+
+            if (clientAcceptsGzip)
+            {
+                using (MemoryStream gzipStream = new MemoryStream())
+                {
+                    using (System.IO.Compression.GZipStream gzip = new System.IO.Compression.GZipStream(gzipStream, System.IO.Compression.CompressionMode.Compress, true))
+                    {
+                        gzip.Write(job.FileBytes, 0, job.FileBytes.Length);
+                    }
+                    responseBytes = gzipStream.ToArray();
+                }
+            }
+
+            MemoryStream stream = new MemoryStream(responseBytes);
             HttpResponseMessage httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK);
             httpResponseMessage.Content = new StreamContent(stream);
             httpResponseMessage.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
             httpResponseMessage.Content.Headers.ContentDisposition.FileName = job.FileName;
             httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+            if (clientAcceptsGzip)
+            {
+                httpResponseMessage.Content.Headers.ContentEncoding.Add("gzip");
+            }
 
             ReportJob removed;
             _reportJobs.TryRemove(jobId, out removed);
