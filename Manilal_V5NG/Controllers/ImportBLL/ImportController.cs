@@ -2126,6 +2126,41 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+        /// <summary>Perform WMS SHIPMENTWISE STOCKSTATUS ALL XL records (all items, no shipment filter).</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ASONDATE">ASONDATE parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
+        /// <remarks>
+        /// New endpoint, added alongside IMP_WMS_SHIPMENTWISE_STOCKSTATUS_XL rather than
+        /// changing it. That endpoint's CONTAINERNO parameter is required by the route
+        /// contract, so its "all items" branch (CONTAINERNO == null) can never be reached
+        /// over HTTP - every caller falls through to the shipment-filtered branch, which
+        /// returns an empty file unless CONTAINERNO happens to match a real shipment. This
+        /// action calls the same all-items stored procedure (Usp_Imp_wms_Stock_Report)
+        /// directly, with no CONTAINERNO param needed.
+        /// </remarks>
+        [HttpGet]
+        public HttpResponseMessage IMP_WMS_SHIPMENTWISE_STOCKSTATUS_ALL_XL(string CMPCODE, string CITYCODE, string ASONDATE)
+        {
+            DAL objDal = new DAL();
+            DataSet ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "Usp_Imp_wms_Stock_Report", ASONDATE, CMPCODE, CITYCODE);
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(ds.GetXml());
+            string myString = CommonFunction.ConvertToExcel_open("Import", "xsl_import_wms_item_stock_report.xsl", xmlDoc);
+
+            byte[] byteArray = Encoding.UTF8.GetBytes(myString);
+            MemoryStream stream = new MemoryStream(byteArray);
+
+            HttpResponseMessage httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK);
+            httpResponseMessage.Content = new StreamContent(stream);
+            httpResponseMessage.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            httpResponseMessage.Content.Headers.ContentDisposition.FileName = "All.xls";
+            httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+            return httpResponseMessage;
+        }
         /// <summary>Perform WMS SHIPMENTWISE ITEMSTATUS XL records.</summary>
         /// <param name="CONTAINERNO">CONTAINERNO parameter.</param>
         /// <param name="CMPCODE">Company code identifier.</param>
