@@ -710,6 +710,124 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             return httpResponseMessage;
 
         }
+
+        /// <summary>In-memory tracker for background report-generation jobs (see IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL_START / _STATUS / _RESULT below). Does not touch the synchronous endpoint above - existing callers (e.g. the ERP) are unaffected.</summary>
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, ReportJob> _reportJobs
+            = new System.Collections.Concurrent.ConcurrentDictionary<string, ReportJob>();
+
+        private class ReportJob
+        {
+            public string Status; // "pending", "done", "error"
+            public byte[] FileBytes;
+            public string FileName;
+            public string ErrorMessage;
+        }
+
+        /// <summary>Same as ConvertToExcel_open, but takes the app root path explicitly instead of reading it off HttpContext.Current - needed because this runs on a background thread (via Task.Run) after the original request's HttpContext has gone away.</summary>
+        private static string ConvertToExcel_open_WithRoot(string appRoot, string folder, string xlsFileName, XmlDocument XMLFILE)
+        {
+            StringBuilder sb = new StringBuilder();
+            XslCompiledTransform xsl = new XslCompiledTransform();
+            xsl.Load(appRoot + "\\include\\xml\\" + folder + "\\" + xlsFileName, new XsltSettings(false, true), new XmlUrlResolver());
+            using (StringWriter sw = new StringWriter(sb))
+            using (XmlTextWriter xtw = new XmlTextWriter(sw))
+            {
+                xsl.Transform(XMLFILE, xtw);
+                xtw.Flush();
+            }
+            return "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + sb.ToString();
+        }
+
+        /// <summary>Starts building the WMS SHIPMENTWISE ITEMSTATUS ALL MRPQTY XL report in the background and returns immediately with a job id. Added for callers (e.g. the Vercel-hosted WMS dashboard) that cannot hold one HTTP request open for as long as this report takes to build; poll IMP_WMS_REPORT_JOB_STATUS with the returned jobId, then fetch IMP_WMS_REPORT_JOB_RESULT once status is "done". Existing IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL endpoint above is untouched and keeps working exactly as before for existing callers.</summary>
+        /// <param name="CONTAINERNO">CONTAINERNO parameter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="ASONDATE">ASONDATE parameter.</param>
+        /// <returns>{ jobId } to poll for completion.</returns>
+        [HttpGet]
+        public IHttpActionResult IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL_START(string CONTAINERNO, string CMPCODE, string CITYCODE, string ASONDATE)
+        {
+            string jobId = Guid.NewGuid().ToString("N");
+            ReportJob job = new ReportJob { Status = "pending" };
+            _reportJobs[jobId] = job;
+
+            string appRoot = HttpContext.Current.Server.MapPath("~");
+
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                try
+                {
+                    DataSet ds;
+                    DAL objDal = new DAL();
+                    string strXslFilename;
+
+                    if (CONTAINERNO == "All")
+                    {
+                        strXslFilename = "xsl_import_shipmentwise_stockstatus_all_mrpqty.xsl";
+                        ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_WMS_SHIPMENTWISE_STOCK_STATUS_ALL_MRPQTY", CMPCODE, CITYCODE, ASONDATE);
+                    }
+                    else
+                    {
+                        strXslFilename = "xsl_import_shipmentwise_stockstatus.xsl";
+                        ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_WMS_SHIPMENTWISE_STOCK_STATUS", CONTAINERNO, CMPCODE, CITYCODE, ASONDATE);
+                    }
+
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(ds.GetXml());
+                    string myString = ConvertToExcel_open_WithRoot(appRoot, "Import", strXslFilename, xmlDoc);
+
+                    job.FileBytes = Encoding.UTF8.GetBytes(myString);
+                    job.FileName = CONTAINERNO + ".xls";
+                    job.Status = "done";
+                }
+                catch (Exception ex)
+                {
+                    job.Status = "error";
+                    job.ErrorMessage = ex.Message;
+                }
+            });
+
+            return Ok(new { jobId = jobId });
+        }
+
+        /// <summary>Checks whether a report job started via IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL_START has finished.</summary>
+        /// <param name="jobId">jobId returned by the _START endpoint.</param>
+        /// <returns>{ status: "pending" | "done" | "error", error }</returns>
+        [HttpGet]
+        public IHttpActionResult IMP_WMS_REPORT_JOB_STATUS(string jobId)
+        {
+            ReportJob job;
+            if (jobId == null || !_reportJobs.TryGetValue(jobId, out job))
+                return NotFound();
+
+            return Ok(new { status = job.Status, error = job.ErrorMessage });
+        }
+
+        /// <summary>Downloads the finished report file for a job started via IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL_START. Call only after IMP_WMS_REPORT_JOB_STATUS reports "done". Removes the job from memory once served.</summary>
+        /// <param name="jobId">jobId returned by the _START endpoint.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
+        [HttpGet]
+        public HttpResponseMessage IMP_WMS_REPORT_JOB_RESULT(string jobId)
+        {
+            ReportJob job;
+            if (jobId == null || !_reportJobs.TryGetValue(jobId, out job) || job.Status != "done")
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Job not ready");
+            }
+
+            MemoryStream stream = new MemoryStream(job.FileBytes);
+            HttpResponseMessage httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK);
+            httpResponseMessage.Content = new StreamContent(stream);
+            httpResponseMessage.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            httpResponseMessage.Content.Headers.ContentDisposition.FileName = job.FileName;
+            httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+            ReportJob removed;
+            _reportJobs.TryRemove(jobId, out removed);
+
+            return httpResponseMessage;
+        }
+
         /// <summary>Insert or update WMS GRN BOXWISE records.</summary>
         /// <param name="GRITEM">Request body model containing the record fields.</param>
         /// <returns>DataSet with the requested data serialized as JSON.</returns>
