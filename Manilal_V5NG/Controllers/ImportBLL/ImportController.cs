@@ -2447,6 +2447,7 @@ namespace Manilal_V5NG.Controllers.ImportBLL
             }
             StringWriter writer = new StringWriter();
 
+            /*
             // Transform the XML with the XSLT
             transformer.Transform(xmlDoc, null, writer);
 
@@ -2457,13 +2458,26 @@ namespace Manilal_V5NG.Controllers.ImportBLL
 
             byte[] byteArray = Encoding.UTF8.GetBytes(Convert.ToString(transformedXml));
             MemoryStream stream = new MemoryStream(byteArray);
-            stream.WriteTo(HttpContext.Current.Response.OutputStream);
+            //stream.WriteTo(HttpContext.Current.Response.OutputStream);
+            */
+
+            MemoryStream stream = new MemoryStream();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = Encoding.UTF8;
+            settings.Indent = false;
+            using (XmlWriter xmlWriter = XmlWriter.Create(stream, settings))
+            {
+                transformer.Transform(xmlDoc, null, xmlWriter);
+            }
+            stream.Position = 0;
 
             HttpResponseMessage httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK);
             httpResponseMessage.Content = new StreamContent(stream);
             httpResponseMessage.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
             httpResponseMessage.Content.Headers.ContentDisposition.FileName = PONO + ".xls";
-            httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+            //httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+            httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.ms-excel");
 
             return httpResponseMessage;
 

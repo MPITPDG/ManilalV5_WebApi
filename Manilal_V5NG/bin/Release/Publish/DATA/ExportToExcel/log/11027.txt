@@ -1,0 +1,174 @@
+4/9/2021 1:41:14 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 1:41:14 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 1:41:40 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 1:41:40 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 1:41:40 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 1:41:41 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 1:41:41 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 1:41:41 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 1:41:47 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 1:42:00 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 1:42:09 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 1:42:10 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 1:42:30 PM ~#~ Description : Log Id:11027 Ziping Excel File Completed ~#~ Function name : ConvertToExcel
+4/9/2021 1:42:31 PM ~#~ Description : Log Id:11027 -------------------------------  END  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 1:45:29 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 1:45:29 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 1:45:39 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 1:45:39 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 1:45:39 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 1:45:39 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 1:45:39 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 1:45:40 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 1:45:42 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 1:45:44 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 1:45:44 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 1:45:44 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 1:45:44 PM ~#~ Description : ERROR:Could not find a part of the path 'E:\ExportToExcel\ExportToExcel\bin\x86\Debug\output\ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.ZIP'. ~#~ Function name : ConvertToExcel
+4/9/2021 1:45:44 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+4/9/2021 1:45:44 PM ~#~ Description : Log Id:11027 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+4/9/2021 1:46:04 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 1:46:04 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 1:46:40 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 1:46:40 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 1:46:40 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 1:46:40 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 1:46:40 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 1:46:40 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 1:46:42 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 1:46:45 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 1:46:45 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 1:46:45 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 1:46:45 PM ~#~ Description : ERROR:Could not find a part of the path 'E:\ExportToExcel\ExportToExcel\bin\x86\Debug\output\ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.ZIP'. ~#~ Function name : ConvertToExcel
+4/9/2021 1:46:45 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+4/9/2021 1:46:45 PM ~#~ Description : Log Id:11027 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+4/9/2021 1:46:51 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 1:46:51 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 1:46:53 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 1:46:53 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 1:46:53 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 1:46:53 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 1:46:53 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 1:46:53 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 1:46:53 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 1:46:55 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 1:46:55 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 1:46:55 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 1:46:55 PM ~#~ Description : ERROR:Could not find a part of the path 'E:\ExportToExcel\ExportToExcel\bin\x86\Debug\output\ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.ZIP'. ~#~ Function name : ConvertToExcel
+4/9/2021 1:46:55 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+4/9/2021 1:46:55 PM ~#~ Description : Log Id:11027 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+4/9/2021 1:47:02 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 1:47:02 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 1:47:11 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 1:47:11 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 1:47:11 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 1:47:11 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 1:47:12 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 1:47:12 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 1:47:17 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 1:47:24 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 1:47:29 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 1:47:29 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:01:47 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 2:01:47 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 2:01:53 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 2:01:53 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:01:53 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:01:53 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 2:01:53 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 2:01:53 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 2:01:55 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 2:01:55 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:01:57 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 2:01:57 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:01:57 PM ~#~ Description : ERROR:The file 'E:\ExportToExcel\ExportToExcel\bin\x86\Debug\output\ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.ZIP' already exists. ~#~ Function name : ConvertToExcel
+4/9/2021 2:01:57 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+4/9/2021 2:01:57 PM ~#~ Description : Log Id:11027 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+4/9/2021 2:02:27 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 2:02:27 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:03:09 PM ~#~ Description : ERROR:The file 'E:\ExportToExcel\ExportToExcel\bin\x86\Debug\output\ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.ZIP' already exists. ~#~ Function name : ConvertToExcel
+4/9/2021 2:03:09 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+4/9/2021 2:03:09 PM ~#~ Description : Log Id:11027 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+4/9/2021 2:03:28 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 2:03:28 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 2:03:28 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 2:03:28 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:03:28 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:03:28 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 2:03:28 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 2:03:28 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 2:03:30 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 2:03:30 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:03:30 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 2:03:30 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:03:35 PM ~#~ Description : ERROR:The file 'E:\ExportToExcel\ExportToExcel\bin\x86\Debug\output\ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.ZIP' already exists. ~#~ Function name : ConvertToExcel
+4/9/2021 2:03:35 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+4/9/2021 2:03:35 PM ~#~ Description : Log Id:11027 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+4/9/2021 2:03:56 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 2:03:56 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 2:03:57 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 2:03:57 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:03:57 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:03:57 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 2:03:57 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 2:03:57 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 2:03:58 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 2:03:58 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:03:58 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 2:03:58 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:06:31 PM ~#~ Description : ERROR:The file 'E:\ExportToExcel\ExportToExcel\bin\x86\Debug\output\ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.ZIP' already exists. ~#~ Function name : ConvertToExcel
+4/9/2021 2:06:31 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+4/9/2021 2:06:31 PM ~#~ Description : Log Id:11027 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+4/9/2021 2:06:52 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 2:06:52 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 2:06:53 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 2:06:53 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:06:53 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:06:53 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 2:06:53 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 2:06:53 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 2:06:54 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 2:06:54 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:06:54 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 2:06:54 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:07:00 PM ~#~ Description : ERROR:The file 'E:\ExportToExcel\ExportToExcel\bin\x86\Debug\output\ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.ZIP' already exists. ~#~ Function name : ConvertToExcel
+4/9/2021 2:07:00 PM ~#~ Description : ERROR:ERROR in ConvertToExcel function ~#~ Function name : Expo
+4/9/2021 2:07:00 PM ~#~ Description : Log Id:11027 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+4/9/2021 2:08:19 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 2:08:19 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 2:08:21 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 2:08:21 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:08:21 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:08:21 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 2:08:21 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 2:08:21 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 2:08:22 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 2:08:22 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:08:22 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 2:08:22 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:09:03 PM ~#~ Description : Log Id:11027 Ziping Excel File Completed ~#~ Function name : ConvertToExcel
+4/9/2021 2:09:03 PM ~#~ Description : Log Id:11027 -------------------------------  END  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 2:10:18 PM ~#~ Description : START ~#~ Function name : OnStart
+4/9/2021 2:10:18 PM ~#~ Description : Log Id:11027 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/9/2021 2:10:19 PM ~#~ Description : Log Id:11027 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+4/9/2021 2:10:19 PM ~#~ Description : Log Id:11027 SQLQUERY_PARA : 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:10:19 PM ~#~ Description : Log Id:11027 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '11027', 'G100216','I100000013','01-Apr-2020','09-Apr-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+4/9/2021 2:10:19 PM ~#~ Description : Log Id:11027 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+4/9/2021 2:10:19 PM ~#~ Description : Log Id:11027 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202104091329_1.XLS ~#~ Function name : Expo
+4/9/2021 2:10:19 PM ~#~ Description : Log Id:11027 Fatching Data form Database Started ~#~ Function name : Expo
+4/9/2021 2:10:22 PM ~#~ Description : Log Id:11027 Fatching Data form Database Completed ~#~ Function name : Expo
+4/9/2021 2:10:22 PM ~#~ Description : Log Id:11027 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:10:22 PM ~#~ Description : Log Id:11027 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/9/2021 2:10:22 PM ~#~ Description : Log Id:11027 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/9/2021 2:10:43 PM ~#~ Description : Log Id:11027 Ziping Excel File Completed ~#~ Function name : ConvertToExcel
+4/9/2021 2:10:43 PM ~#~ Description : Log Id:11027 -------------------------------  END  ------------------------------------------- ~#~ Function name : OnStart

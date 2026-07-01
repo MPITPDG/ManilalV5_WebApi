@@ -10,7 +10,7 @@ using System.Linq;
 using System.Web.Http.Description;
 
 //[assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
-//[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Manilal_V5NG.SwaggerConfig), "Register")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Manilal_V5NG.SwaggerConfig), "Register")]
 
 namespace Manilal_V5NG
 {
@@ -67,7 +67,18 @@ namespace Manilal_V5NG
             GlobalConfiguration.Configuration
                 .EnableSwagger(c =>
                 {
-                    c.SingleApiVersion("v1", "Manilal V5NG - Finance API");
+
+                    // ADD THIS LINE: This helps Swagger find itself when inside a sub-folder/virtual-path
+                    c.RootUrl(req => req.RequestUri.GetLeftPart(UriPartial.Authority) +
+                              System.Web.VirtualPathUtility.ToAbsolute("~/"));
+
+                    c.SingleApiVersion("v1", "Manilal V5NG API");
+
+                    // --- ADD THIS LINE BELOW FOR PROGRAMMER WISE MODULE RIGHTS GIVEN ---
+                    
+                    c.DocumentFilter<SwaggerAccessFilter>();
+                    
+                    // ---------------------------
 
                     var xmlFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "Manilal_V5NG.xml");
                     if (File.Exists(xmlFile))

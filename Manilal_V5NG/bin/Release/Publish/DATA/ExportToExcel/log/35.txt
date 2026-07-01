@@ -1,0 +1,24 @@
+2/1/2021 2:30:34 PM ~#~ Description : START ~#~ Function name : OnStart
+2/1/2021 2:30:34 PM ~#~ Description : Log Id:35 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/1/2021 2:30:40 PM ~#~ Description : Log Id:35 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/1/2021 2:30:40 PM ~#~ Description : Log Id:35 SQLQUERY_PARA : '1/04/2019','01/02/2021','01/04/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/1/2021 2:30:40 PM ~#~ Description : Log Id:35 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '35', '1/04/2019','01/02/2021','01/04/2019','31/03/2021','01','101' ~#~ Function name : Expo
+2/1/2021 2:30:40 PM ~#~ Description : Log Id:35 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/1/2021 2:30:40 PM ~#~ Description : Log Id:35 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102011358_1885.XLS ~#~ Function name : Expo
+2/1/2021 2:30:40 PM ~#~ Description : Log Id:35 Fatching Data form Database Started ~#~ Function name : Expo
+2/1/2021 4:16:45 PM ~#~ Description : START ~#~ Function name : OnStart
+2/1/2021 4:16:45 PM ~#~ Description : Log Id:35 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+24-01-2022 20:07:39 ~#~ Description : START ~#~ Function name : OnStart
+24-01-2022 20:07:39 ~#~ Description : Log Id:35 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 SQLQUERY_SP : USP_ACCT_RPT_OUTSTANDING_CLIENTBILL_35_BRANCH_OVERSEAS_AGENT_LOG ~#~ Function name : Expo
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 SQLQUERY_PARA : 'E109996','02','1885' ~#~ Function name : Expo
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 SQLQUERY_TEXT : USP_ACCT_RPT_OUTSTANDING_CLIENTBILL_35_BRANCH_OVERSEAS_AGENT_LOG '35', 'E109996','02','1885' ~#~ Function name : Expo
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 XSLTRANSFORM : ACC_RPT_REC_OVERSEAS_AGENT_BRANCH ~#~ Function name : Expo
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 FILENAME : ACC_RPT_REC_OVERSEAS_AGENT_BRANCH_202201242001_1885.XLS ~#~ Function name : Expo
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 Fatching Data form Database Started ~#~ Function name : Expo
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 Fatching Data form Database Completed ~#~ Function name : Expo
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 Export to Excel Started ~#~ Function name : ConvertToExcel
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 Export to Excel Completed ~#~ Function name : ConvertToExcel
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+24-01-2022 20:07:40 ~#~ Description : Log Id:35 Ziping Excel File Completed ~#~ Function name : ConvertToExcel
+24-01-2022 20:07:41 ~#~ Description : Log Id:35 -------------------------------  END  ------------------------------------------- ~#~ Function name : OnStart

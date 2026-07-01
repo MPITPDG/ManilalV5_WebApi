@@ -1,0 +1,32 @@
+1/16/2021 3:55:01 PM ~#~ Description : START ~#~ Function name : OnStart
+1/16/2021 3:55:01 PM ~#~ Description : Log Id:38 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+1/16/2021 3:55:07 PM ~#~ Description : ERROR:There is no row at position 0. ~#~ Function name : Expo
+1/16/2021 3:55:07 PM ~#~ Description : Log Id:38 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+1/16/2021 4:26:30 PM ~#~ Description : START ~#~ Function name : OnStart
+1/16/2021 4:26:30 PM ~#~ Description : Log Id:38 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+1/16/2021 4:26:31 PM ~#~ Description : ERROR:There is no row at position 0. ~#~ Function name : Expo
+1/16/2021 4:26:31 PM ~#~ Description : Log Id:38 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+1/16/2021 4:26:53 PM ~#~ Description : START ~#~ Function name : OnStart
+1/16/2021 4:26:59 PM ~#~ Description : Log Id:38 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+1/16/2021 4:27:01 PM ~#~ Description : ERROR:There is no row at position 0. ~#~ Function name : Expo
+1/16/2021 4:27:03 PM ~#~ Description : Log Id:38 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+1/16/2021 4:28:00 PM ~#~ Description : START ~#~ Function name : OnStart
+1/16/2021 4:28:02 PM ~#~ Description : Log Id:38 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+1/16/2021 4:28:33 PM ~#~ Description : ERROR:There is no row at position 0. ~#~ Function name : Expo
+1/16/2021 4:28:33 PM ~#~ Description : Log Id:38 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart
+1/16/2021 4:30:33 PM ~#~ Description : START ~#~ Function name : OnStart
+1/16/2021 4:30:34 PM ~#~ Description : Log Id:38 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/28/2021 9:12:44 PM ~#~ Description : START ~#~ Function name : OnStart
+4/28/2021 9:12:44 PM ~#~ Description : Log Id:38 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+4/28/2021 9:12:45 PM ~#~ Description : Log Id:38 SQLQUERY_SP : USP_ACCT_RPT_TRIALBALANCE_DATEWISE_LOG ~#~ Function name : Expo
+4/28/2021 9:12:45 PM ~#~ Description : Log Id:38 SQLQUERY_PARA : '01/04/2021','31/03/2022','01/04/2021','31/03/2022','01','101' ~#~ Function name : Expo
+4/28/2021 9:12:45 PM ~#~ Description : Log Id:38 SQLQUERY_TEXT : USP_ACCT_RPT_TRIALBALANCE_DATEWISE_LOG '38', '01/04/2021','31/03/2022','01/04/2021','31/03/2022','01','101' ~#~ Function name : Expo
+4/28/2021 9:12:45 PM ~#~ Description : Log Id:38 XSLTRANSFORM : ACC_RPT_TRAILBALANCE_DATEWISE ~#~ Function name : Expo
+4/28/2021 9:12:45 PM ~#~ Description : Log Id:38 FILENAME : ACC_RPT_TRAILBALANCE_DATEWISE_202104282112_1885.XLS ~#~ Function name : Expo
+4/28/2021 9:12:45 PM ~#~ Description : Log Id:38 Fatching Data form Database Started ~#~ Function name : Expo
+4/28/2021 9:13:42 PM ~#~ Description : Log Id:38 Fatching Data form Database Completed ~#~ Function name : Expo
+4/28/2021 9:13:43 PM ~#~ Description : Log Id:38 Export to Excel Started ~#~ Function name : ConvertToExcel
+4/28/2021 9:13:44 PM ~#~ Description : Log Id:38 Export to Excel Completed ~#~ Function name : ConvertToExcel
+4/28/2021 9:13:44 PM ~#~ Description : Log Id:38 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+4/28/2021 9:13:45 PM ~#~ Description : Log Id:38 Ziping Excel File Completed ~#~ Function name : ConvertToExcel
+4/28/2021 9:13:46 PM ~#~ Description : Log Id:38 -------------------------------  END  ------------------------------------------- ~#~ Function name : OnStart

@@ -63,7 +63,7 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -199,6 +199,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Include\xml\Import\xsl_import_wms_item_stock_report__backup_20240118.xsl" />
+    <Content Include="Include\xml\Import\xsl_import_wms_packinglist.xsl" />
     <Content Include="packages\ExcelDataReader.2.1.2\lib\net20\Excel.dll" />
     <Content Include="packages\ExcelDataReader.2.1.2\lib\net20\Excel.pdb" />
     <Content Include="packages\ExcelDataReader.2.1.2\lib\net45\Excel.dll" />
@@ -381,7 +382,6 @@
     <Content Include="xslFiles\Export\xsl_Exp_SP_Receipt_Of_Cargo.xsl" />
     <Content Include="xslFiles\Export\xsl_Exp_SP_Receipt_Of_Cargo_Expt.xsl" />
     <Content Include="xslFiles\ImportFra\xsl_ImpFra_Auchan_France_CarrierSplit.xsl" />
-    <Content Include="xslFiles\ImportFra\xsl_Impfra_clientTransitime.xsl" />
     <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_CONTAINER_VIEW.xsl" />
     <Content Include="xslFiles\ImportFra\xsl_Imp_fra_Console_Custom_Dox.xsl" />
     <Content Include="xslFiles\ImportFra\xsl_IMP_FRA_CONSOLE_DELIVERY_VIEW.xsl" />
@@ -428,6 +428,7 @@
     <Content Include="xslFiles\Report\xsl_Report_Log.xsl" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\SwaggerAccessFilter.cs.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BasicAuth\BasicAuthenticationAttribute.cs" />

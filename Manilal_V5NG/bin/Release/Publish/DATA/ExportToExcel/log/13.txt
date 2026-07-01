@@ -1,0 +1,14 @@
+1/16/2021 4:34:03 PM ~#~ Description : START ~#~ Function name : OnStart
+1/16/2021 4:34:04 PM ~#~ Description : Log Id:13 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+1/16/2021 4:34:28 PM ~#~ Description : Log Id:13 SQLQUERY_SP : USP_ACC_RPT_ITEMSTATEMENT_LOG ~#~ Function name : Expo
+1/16/2021 4:34:28 PM ~#~ Description : Log Id:13 SQLQUERY_PARA : 'G100190','I100000017','01-Apr-2006','11-Jan-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+1/16/2021 4:34:28 PM ~#~ Description : Log Id:13 SQLQUERY_TEXT : USP_ACC_RPT_ITEMSTATEMENT_LOG '13', 'G100190','I100000017','01-Apr-2006','11-Jan-2021','01-Apr-2020','31-Mar-2021','30' ~#~ Function name : Expo
+1/16/2021 4:34:28 PM ~#~ Description : Log Id:13 XSLTRANSFORM : ACC_RPT_ACCT_ITEM_ALLBRANCH ~#~ Function name : Expo
+1/16/2021 4:34:29 PM ~#~ Description : Log Id:13 FILENAME : ACC_RPT_ACCT_ITEM_ALLBRANCH_202101111653_1.XLS ~#~ Function name : Expo
+1/16/2021 4:34:29 PM ~#~ Description : Log Id:13 Fatching Data form Database Started ~#~ Function name : Expo
+1/16/2021 4:34:47 PM ~#~ Description : ERROR:Invalid object name 'TBL_MASTER_010420063103007_ALLGL'. ~#~ Function name : Expo
+1/16/2021 4:41:40 PM ~#~ Description : ERROR:Invalid column name '30110OP'.
+Invalid column name '30110OP'.
+Invalid column name '30110OP'.
+Invalid column name '30110OP'. ~#~ Function name : Expo
+1/16/2021 4:41:40 PM ~#~ Description : Log Id:13 ERROR:ERROR in Execute_Log function ~#~ Function name : OnStart

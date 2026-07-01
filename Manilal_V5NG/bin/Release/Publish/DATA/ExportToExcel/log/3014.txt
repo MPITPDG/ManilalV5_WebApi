@@ -1,0 +1,23 @@
+2/1/2021 4:19:39 PM ~#~ Description : START ~#~ Function name : OnStart
+2/1/2021 4:19:39 PM ~#~ Description : Log Id:3014 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/1/2021 4:19:49 PM ~#~ Description : Log Id:3014 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/1/2021 4:19:50 PM ~#~ Description : Log Id:3014 SQLQUERY_PARA : '01/04/2020','01/02/2021','01/04/2020','31/03/2021','01','101' ~#~ Function name : Expo
+2/1/2021 4:19:51 PM ~#~ Description : Log Id:3014 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '3014', '01/04/2020','01/02/2021','01/04/2020','31/03/2021','01','101' ~#~ Function name : Expo
+2/1/2021 4:19:51 PM ~#~ Description : Log Id:3014 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/1/2021 4:19:51 PM ~#~ Description : Log Id:3014 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102011619_1.XLS ~#~ Function name : Expo
+2/1/2021 4:19:52 PM ~#~ Description : Log Id:3014 Fatching Data form Database Started ~#~ Function name : Expo
+2/1/2021 4:20:01 PM ~#~ Description : Log Id:3014 Fatching Data form Database Completed ~#~ Function name : Expo
+2/1/2021 4:20:54 PM ~#~ Description : Log Id:3014 Export to Excel Started ~#~ Function name : ConvertToExcel
+2/1/2021 4:20:54 PM ~#~ Description : Log Id:3014 Export to Excel Completed ~#~ Function name : ConvertToExcel
+2/1/2021 4:20:54 PM ~#~ Description : Log Id:3014 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+2/1/2021 4:20:55 PM ~#~ Description : Log Id:3014 Ziping Excel File Completed ~#~ Function name : ConvertToExcel
+2/1/2021 4:20:55 PM ~#~ Description : Log Id:3014 -------------------------------  END  ------------------------------------------- ~#~ Function name : OnStart
+2/1/2021 4:21:27 PM ~#~ Description : START ~#~ Function name : OnStart
+2/1/2021 4:21:27 PM ~#~ Description : Log Id:3014 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+2/1/2021 4:21:31 PM ~#~ Description : Log Id:3014 SQLQUERY_SP : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG ~#~ Function name : Expo
+2/1/2021 4:21:32 PM ~#~ Description : Log Id:3014 SQLQUERY_PARA : '01/04/2020','01/02/2021','01/04/2020','31/03/2021','01','101' ~#~ Function name : Expo
+2/1/2021 4:21:32 PM ~#~ Description : Log Id:3014 SQLQUERY_TEXT : USP_ACCT_SERVICETAX_REGISTER_SUPPORTING_LOG '3014', '01/04/2020','01/02/2021','01/04/2020','31/03/2021','01','101' ~#~ Function name : Expo
+2/1/2021 4:21:32 PM ~#~ Description : Log Id:3014 XSLTRANSFORM : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING ~#~ Function name : Expo
+2/1/2021 4:21:32 PM ~#~ Description : Log Id:3014 FILENAME : ACC_RPT_SERVICETAX_REGISTER_SUPPORTING_202102011619_1.XLS ~#~ Function name : Expo
+2/1/2021 4:21:32 PM ~#~ Description : Log Id:3014 Fatching Data form Database Started ~#~ Function name : Expo
+2/1/2021 4:21:38 PM ~#~ Description : Log Id:3014 Fatching Data form Database Completed ~#~ Function name : Expo

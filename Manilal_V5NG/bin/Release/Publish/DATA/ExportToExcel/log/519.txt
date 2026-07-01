@@ -1,0 +1,13 @@
+3/27/2021 3:23:11 PM ~#~ Description : START ~#~ Function name : OnStart
+3/27/2021 3:23:11 PM ~#~ Description : Log Id:519 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+3/27/2021 3:23:47 PM ~#~ Description : Log Id:519 SQLQUERY_SP : USP_ACCT_N_INV_GST_REGISTER_LOG ~#~ Function name : Expo
+3/27/2021 3:23:48 PM ~#~ Description : Log Id:519 SQLQUERY_PARA : '01/03/2020','27/03/2021','01/04/2020','31/03/2021','30','ALL' ~#~ Function name : Expo
+3/27/2021 3:23:48 PM ~#~ Description : Log Id:519 SQLQUERY_TEXT : USP_ACCT_N_INV_GST_REGISTER_LOG '519', '01/03/2020','27/03/2021','01/04/2020','31/03/2021','30','ALL' ~#~ Function name : Expo
+3/27/2021 3:23:49 PM ~#~ Description : Log Id:519 XSLTRANSFORM : XSL_ACC_RPT_GST_REGISTER_LOG ~#~ Function name : Expo
+3/27/2021 3:23:50 PM ~#~ Description : Log Id:519 FILENAME : XSL_ACC_RPT_GST_REGISTER_LOG_202103271521_1.XLS ~#~ Function name : Expo
+3/27/2021 3:23:51 PM ~#~ Description : Log Id:519 Fatching Data form Database Started ~#~ Function name : Expo
+3/27/2021 3:25:12 PM ~#~ Description : Log Id:519 Fatching Data form Database Completed ~#~ Function name : Expo
+3/27/2021 3:25:43 PM ~#~ Description : Log Id:519 Export to Excel Started ~#~ Function name : ConvertToExcel
+3/27/2021 3:26:18 PM ~#~ Description : Log Id:519 Export to Excel Completed ~#~ Function name : ConvertToExcel
+3/27/2021 3:26:19 PM ~#~ Description : Log Id:519 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+3/27/2021 3:27:05 PM ~#~ Description : Log Id:519 Ziping Excel File Completed ~#~ Function name : ConvertToExcel

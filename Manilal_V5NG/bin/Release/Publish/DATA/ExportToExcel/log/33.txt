@@ -1,0 +1,14 @@
+24-01-2022 19:20:31 ~#~ Description : START ~#~ Function name : OnStart
+24-01-2022 19:20:31 ~#~ Description : Log Id:33 -------------------------------  START  ------------------------------------------- ~#~ Function name : OnStart
+24-01-2022 19:20:32 ~#~ Description : Log Id:33 SQLQUERY_SP : USP_ACCT_RPT_OUTSTANDING_CLIENTBILL_35_BRANCH_LOG ~#~ Function name : Expo
+24-01-2022 19:20:32 ~#~ Description : Log Id:33 SQLQUERY_PARA : 'E112334','02' ~#~ Function name : Expo
+24-01-2022 19:20:32 ~#~ Description : Log Id:33 SQLQUERY_TEXT : USP_ACCT_RPT_OUTSTANDING_CLIENTBILL_35_BRANCH_LOG '33', 'E112334','02' ~#~ Function name : Expo
+24-01-2022 19:20:32 ~#~ Description : Log Id:33 XSLTRANSFORM : ACC_RPT_REC_CLIENT_ONE_BRANCH ~#~ Function name : Expo
+24-01-2022 19:20:32 ~#~ Description : Log Id:33 FILENAME : ACC_RPT_REC_CLIENT_ONE_BRANCH_202201241919_1885.XLS ~#~ Function name : Expo
+24-01-2022 19:20:32 ~#~ Description : Log Id:33 Fatching Data form Database Started ~#~ Function name : Expo
+24-01-2022 19:21:20 ~#~ Description : Log Id:33 Fatching Data form Database Completed ~#~ Function name : Expo
+24-01-2022 19:21:20 ~#~ Description : Log Id:33 Export to Excel Started ~#~ Function name : ConvertToExcel
+24-01-2022 19:21:20 ~#~ Description : Log Id:33 Export to Excel Completed ~#~ Function name : ConvertToExcel
+24-01-2022 19:21:20 ~#~ Description : Log Id:33 Ziping Excel File Started ~#~ Function name : ConvertToExcel
+24-01-2022 19:21:22 ~#~ Description : Log Id:33 Ziping Excel File Completed ~#~ Function name : ConvertToExcel
+24-01-2022 19:21:23 ~#~ Description : Log Id:33 -------------------------------  END  ------------------------------------------- ~#~ Function name : OnStart

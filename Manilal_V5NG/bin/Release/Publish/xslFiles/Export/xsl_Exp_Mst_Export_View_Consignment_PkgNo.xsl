@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" ?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+  <xsl:template match="/">
+    <div>
+      <table cellpadding="2" cellspacing="0" border="1" WIDTH="100%">
+        <tr class="FixedHeaderAsp">
+          <td nowrap="1" class="ColumnHead">From.</td>
+          <td nowrap="1" class="ColumnHead">To</td>
+          <td nowrap="1" class="ColumnHead">Alphabet</td>
+        </tr>
+        <xsl:for-each select="//NewDataSet/TblPkg">
+          <tr class="ColumnSummary">
+            <td class="ColumnSummary" NOWRAP="" align="left">
+              <xsl:value-of select="FROM" />
+              <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+            </td>
+            <td class="ColumnSummary" NOWRAP="" align="left">
+              <xsl:value-of select="TO" />
+              <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+            </td>
+            <td class="ColumnSummary" NOWRAP="" align="left">
+              <xsl:value-of select="ALPHABET" />
+              <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+            </td>
+          </tr>
+        </xsl:for-each>
+        <tr valign="top">
+          <td colspan="3" class="foot">
+            <xsl:if test="count(//NewDataSet/TblPkg)!=1">
+              <xsl:value-of select="count(//NewDataSet/TblPkg)"/> Records
+            </xsl:if>
+            <xsl:if test="count(//NewDataSet/TblPkg)=1">
+              1 Record
+            </xsl:if>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </xsl:template>
+</xsl:stylesheet>

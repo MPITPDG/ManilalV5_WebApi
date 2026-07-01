@@ -1,0 +1,324 @@
+﻿BODY {
+    BACKGROUND-COLOR: white;
+    FONT-FAMILY: "Verdana", sans-serif;
+    FONT-SIZE: 100%;
+    MARGIN-LEFT: 0px;
+    MARGIN-TOP: 0px
+}
+
+.cur {
+    cursor: pointer;
+}
+
+.hdheader {
+    visibility: hidden;
+}
+
+P {
+    FONT-FAMILY: "Verdana", sans-serif;
+    FONT-SIZE: 70%;
+    LINE-HEIGHT: 12pt;
+    MARGIN-BOTTOM: 0px;
+    MARGIN-LEFT: 10px;
+    MARGIN-TOP: 10px
+}
+
+.txt {
+    background-color: #ffffff;
+    color: #336699;
+    font-family: "Verdana", sans-serif;
+    font-size: 10pt;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-top: 0px;
+    padding-right: 10px;
+    border-right: #336699 1px solid;
+    border-top: #336699 1px solid;
+    border-left: #336699 1px solid;
+    border-bottom: #336699 1px solid;
+}
+
+.note {
+    background-color: #ffffff;
+    color: #336699;
+    font-family: "Verdana", sans-serif;
+    font-size: 10pt;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-top: 0px;
+    padding-right: 10px;
+    font-weight: bold;
+}
+
+.lbl {
+    BACKGROUND-COLOR: #f0f0e0;
+    COLOR: #000000;
+    FONT-WEIGHT: bold
+}
+
+.infotable {
+    BACKGROUND-COLOR: #f0f0e0;
+    BORDER-BOTTOM: #ffffff 0px solid;
+    BORDER-COLLAPSE: collapse;
+    BORDER-LEFT: #ffffff 0px solid;
+    BORDER-RIGHT: #ffffff 0px solid;
+    BORDER-TOP: #ffffff 0px solid;
+    FONT-SIZE: 70%;
+    MARGIN-LEFT: 0px
+}
+
+.issuetable {
+    BACKGROUND-COLOR: #ffffe8;
+    BORDER-COLLAPSE: collapse;
+    COLOR: #000000;
+    FONT-SIZE: 100%;
+    MARGIN-BOTTOM: 10px;
+    MARGIN-LEFT: 13px;
+    MARGIN-TOP: 0px;
+    font-size: 10px;
+    font-family: verdana;
+}
+
+.issuetitle {
+    BACKGROUND-COLOR: #ffffff;
+    BORDER-BOTTOM: #dcdcdc 1px solid;
+    BORDER-TOP: #dcdcdc 1px;
+    COLOR: #003366;
+    FONT-WEIGHT: normal
+}
+
+.header {
+    background-color: #cecf9c;
+    border-bottom: #ffffff 1px solid;
+    border-left: #ffffff 1px solid;
+    border-right: #ffffff 1px solid;
+    border-top: #ffffff 1px solid;
+    color: #000000;
+    font-weight: bold;
+    font-size: 10px;
+    font-family: verdana;
+}
+
+.headerGridNonIE {
+    background-color: #d7e6f6;
+    border-bottom: #ffffff 1px solid;
+    border-left: #ffffff 1px solid;
+    border-right: #ffffff 1px solid;
+    border-top: #ffffff 1px solid;
+    color: #000000;
+    font-weight: bold;
+    font-size: 10px;
+    font-family: verdana;
+}
+
+.issuehdr {
+    BACKGROUND-COLOR: #E0EBF5;
+    BORDER-BOTTOM: #dcdcdc 1px solid;
+    BORDER-TOP: #dcdcdc 1px solid;
+    COLOR: #000000;
+    FONT-WEIGHT: normal
+}
+
+.issuenone {
+    BACKGROUND-COLOR: #ffffff;
+    BORDER-BOTTOM: 0px;
+    BORDER-LEFT: 0px;
+    BORDER-RIGHT: 0px;
+    BORDER-TOP: 0px;
+    COLOR: #000000;
+    FONT-WEIGHT: normal
+}
+
+.content {
+    background-color: #e7e7ce;
+    border-bottom: #ffffff 1px solid;
+    border-left: #ffffff 1px solid;
+    border-right: #ffffff 1px solid;
+    border-top: #ffffff 1px solid;
+    padding-left: 3px;
+    font-family: verdana;
+    font-size: 10px;
+}
+
+.issuecontent {
+    BACKGROUND-COLOR: #ffffff;
+    BORDER-BOTTOM: #dcdcdc 1px solid;
+    BORDER-TOP: #dcdcdc 1px solid;
+    PADDING-LEFT: 3px
+}
+
+A:link {
+    COLOR: #cc6633;
+    TEXT-DECORATION: underline
+}
+
+A:visited {
+    COLOR: #cc6633;
+}
+
+A:active {
+    COLOR: #cc6633;
+}
+
+A:hover {
+    COLOR: #cc3300;
+    TEXT-DECORATION: underline
+}
+
+H1 {
+    BACKGROUND-COLOR: #003366;
+    BORDER-BOTTOM: #336699 6px solid;
+    COLOR: #ffffff;
+    FONT-SIZE: 130%;
+    FONT-WEIGHT: normal;
+    MARGIN: 0em 0em 0em -20px;
+    PADDING-BOTTOM: 8px;
+    PADDING-LEFT: 30px;
+    PADDING-TOP: 16px
+}
+
+H2 {
+    COLOR: #000000;
+    FONT-SIZE: 80%;
+    FONT-WEIGHT: bold;
+    MARGIN-BOTTOM: 3px;
+    MARGIN-LEFT: 10px;
+    MARGIN-TOP: 20px;
+    PADDING-LEFT: 0px
+}
+
+H3 {
+    COLOR: #000000;
+    FONT-SIZE: 80%;
+    FONT-WEIGHT: bold;
+    MARGIN-BOTTOM: -5px;
+    MARGIN-LEFT: 10px;
+    MARGIN-TOP: 20px
+}
+
+H4 {
+    COLOR: #000000;
+    FONT-SIZE: 70%;
+    FONT-WEIGHT: bold;
+    MARGIN-BOTTOM: 0px;
+    MARGIN-TOP: 15px;
+    PADDING-BOTTOM: 0px
+}
+
+UL {
+    COLOR: #000000;
+    FONT-SIZE: 70%;
+    LIST-STYLE: square;
+    MARGIN-BOTTOM: 0pt;
+    MARGIN-TOP: 0pt
+}
+
+OL {
+    COLOR: #000000;
+    FONT-SIZE: 70%;
+    LIST-STYLE: square;
+    MARGIN-BOTTOM: 0pt;
+    MARGIN-TOP: 0pt
+}
+
+LI {
+    LIST-STYLE: square;
+    MARGIN-LEFT: 0px
+}
+
+.expandable {
+    cursor: pointer;
+}
+
+.expanded {
+    color: black;
+}
+
+.collapsed {
+    DISPLAY: none;
+}
+
+.foot {
+    BACKGROUND-COLOR: #ffffff;
+    BORDER-BOTTOM: #cecf9c 1px solid;
+    BORDER-TOP: #cecf9c 2px solid
+}
+
+.settings {
+    MARGIN-LEFT: 25PX;
+}
+
+.help {
+    TEXT-ALIGN: right;
+    margin-right: 10px;
+}
+
+.yellow {
+    background-color: #FFFF00;
+}
+
+.lightred {
+    background-color: #FCE4D6
+}
+
+.blue {
+    background-color: #0000FF;
+}
+
+.orange {
+    background-color: #FFA500;
+}
+
+.green {
+    background-color: #00FF00;
+}
+
+.aqua {
+    background-color: #00FFFF;
+}
+
+.red {
+    background-color: #FF0000;
+}
+
+.purple {
+    background-color: #800080;
+}
+
+.pink {
+    background-color: #FFC0CB;
+}
+
+.gray {
+    background-color: #808080;
+}
+
+.brown {
+    background-color: #A52A2A;
+}
+
+.teal {
+    background-color: #008080;
+}
+
+.magenta {
+    background-color: #FF00FF;
+}
+
+.lime {
+    background-color: #00FF00;
+}
+
+.cyan {
+    background-color: #00FFFF;
+}
+
+.gold {
+    background-color: #FFD700;
+}
+
+.silver {
+    background-color: #C0C0C0;
+}
+
+
