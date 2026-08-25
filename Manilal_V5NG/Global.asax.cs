@@ -18,6 +18,9 @@ namespace Manilal_V5NG
 
             // 2. Then, manually call the Swagger registration
             //SwaggerConfig.Register();
+
+            // 3. Size the Finance Dashboard response cache before first use.
+            Manilal_V5NG.Utils.DashboardCache.Configure();
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

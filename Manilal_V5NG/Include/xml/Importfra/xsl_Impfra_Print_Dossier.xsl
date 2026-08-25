@@ -8,6 +8,12 @@
     xmlns:o="urn:schemas-microsoft-com:office:office"
     xmlns:x="urn:schemas-microsoft-com:office:excel"
     xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" >
+  
+  <xsl:output
+    method="xml"
+    encoding="utf-8"
+    indent="no"
+    omit-xml-declaration="yes"/>
 
   <!--<link rel="stylesheet" type="text/css" href="xsltStyle.css" />-->
   <xsl:template match="@*|node()">
@@ -15,7 +21,59 @@
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
-  
+
+  <!-- Splits a comma-separated string into one value per line (CR/LF) for use inside a cell with WrapText -->
+  <xsl:template name="SplitToLines">
+    <xsl:param name="text"/>
+    <xsl:choose>
+      <xsl:when test="contains($text, ',')">
+        <xsl:variable name="token" select="normalize-space(substring-before($text, ','))"/>
+        <xsl:variable name="remainder" select="substring-after($text, ',')"/>
+        <xsl:if test="string-length($token) &gt; 0">
+          <xsl:value-of select="$token"/>
+          <xsl:if test="string-length(normalize-space($remainder)) &gt; 0">
+            <xsl:text>&#13;&#10;</xsl:text>
+          </xsl:if>
+        </xsl:if>
+        <xsl:call-template name="SplitToLines">
+          <xsl:with-param name="text" select="$remainder"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="token" select="normalize-space($text)"/>
+        <xsl:if test="string-length($token) &gt; 0">
+          <xsl:value-of select="$token"/>
+        </xsl:if>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  <xsl:template name="JoinLinesWithBreak">
+    <xsl:param name="text"/>
+    <xsl:param name="delim"/>
+    <xsl:choose>
+      <xsl:when test="contains($text, $delim)">
+        <xsl:variable name="token" select="normalize-space(substring-before($text, $delim))"/>
+        <xsl:variable name="remainder" select="substring-after($text, $delim)"/>
+        <xsl:if test="string-length($token) &gt; 0">
+          <xsl:value-of select="$token"/>
+          <xsl:if test="string-length(normalize-space($remainder)) &gt; 0">
+            <!-- CR+LF: the API post-process (CommonFunction.ConvertToExcel) converts "\r\n" to &#10; for Excel -->
+            <xsl:text>&#13;&#10;</xsl:text>
+          </xsl:if>
+        </xsl:if>
+        <xsl:call-template name="JoinLinesWithBreak">
+          <xsl:with-param name="text" select="$remainder"/>
+          <xsl:with-param name="delim" select="$delim"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="token" select="normalize-space($text)"/>
+        <xsl:if test="string-length($token) &gt; 0">
+          <xsl:value-of select="$token"/>
+        </xsl:if>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
   <xsl:template match="NewDataSet">
     <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
 			 xmlns:o="urn:schemas-microsoft-com:office:office"
@@ -315,6 +373,7 @@
 
         <!--<yellow></yellow>-->
         <Style ss:ID="s120">
+          <!-- Ensure Vertical is TOP -->
           <Alignment ss:Vertical="Top" ss:WrapText="1"/>
           <Borders>
             <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -324,7 +383,7 @@
           </Borders>
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
           <Interior ss:Color="#FFFF99" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
         <Style ss:ID="m120">
           <Alignment ss:Vertical="Top" ss:WrapText="1"/>
@@ -337,7 +396,7 @@
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#000000"
 							   ss:Bold="1"/>
           <Interior ss:Color="#FFFF00" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
         <!--<yellow></yellow>-->
 
@@ -352,11 +411,11 @@
           </Borders>
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
           <Interior ss:Color="#FCE4D6" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
 
         <Style ss:ID="m121">
-          <Alignment ss:Vertical="Top"/>
+          <Alignment ss:Vertical="Top" ss:WrapText="1"/>
           <Borders>
             <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
             <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -366,7 +425,7 @@
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#000000"
 					 ss:Bold="1"/>
           <Interior ss:Color="#FCE4D6" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
         <!--<lightred></lightred>-->
 
@@ -381,11 +440,11 @@
           </Borders>
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
           <Interior ss:Color="#DDEBF7" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
 
         <Style ss:ID="m122">
-          <Alignment ss:Vertical="Top"/>
+          <Alignment ss:Vertical="Top" ss:WrapText="1"/>
           <Borders>
             <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
             <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -395,7 +454,7 @@
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#000000"
 					 ss:Bold="1"/>
           <Interior ss:Color="#DDEBF7" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
         <!--<blue Accent></blue Acent>-->
 
@@ -410,11 +469,11 @@
           </Borders>
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
           <Interior ss:Color="#FFA500" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
 
         <Style ss:ID="m123">
-          <Alignment ss:Vertical="Top"/>
+          <Alignment ss:Vertical="Top" ss:WrapText="1"/>
           <Borders>
             <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
             <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -424,7 +483,7 @@
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#000000"
 					 ss:Bold="1"/>
           <Interior ss:Color="#FFA500" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
         <!--<orange></orange>-->
 
@@ -439,11 +498,11 @@
           </Borders>
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
           <Interior ss:Color="#C6E0B4" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0.000"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
 
         <Style ss:ID="m124">
-          <Alignment ss:Vertical="Top"/>
+          <Alignment ss:Vertical="Top" ss:WrapText="1"/>
           <Borders>
             <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
             <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -453,7 +512,7 @@
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#000000"
 					 ss:Bold="1"/>
           <Interior ss:Color="#C6E0B4" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
 
         <!--<green accent></green accent>-->
@@ -469,11 +528,11 @@
           </Borders>
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
           <Interior ss:Color="#FFE699" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0.000"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
 
         <Style ss:ID="m126">
-          <Alignment ss:Vertical="Top"/>
+          <Alignment ss:Vertical="Top" ss:WrapText="1"/>
           <Borders>
             <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
             <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -483,7 +542,7 @@
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#000000"
 					 ss:Bold="1"/>
           <Interior ss:Color="#FFE699" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
         <!--<gold Accent4></gold Accent4>-->
 
@@ -498,11 +557,11 @@
           </Borders>
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
           <Interior ss:Color="#D6BBEB" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0.000"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
 
         <Style ss:ID="m128">
-          <Alignment ss:Vertical="Top"/>
+          <Alignment ss:Vertical="Top" ss:WrapText="1"/>
           <Borders>
             <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
             <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -512,7 +571,7 @@
           <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#000000"
 					 ss:Bold="1"/>
           <Interior ss:Color="#D6BBEB" ss:Pattern="Solid"/>
-          <NumberFormat ss:Format="0"/>
+          <NumberFormat ss:Format="@"/>
         </Style>
         <!--<lavender></lavender>-->
 
@@ -928,6 +987,19 @@
           <!--<Interior ss:Color="#FCE4D6" ss:Pattern="Solid"/>-->
           <NumberFormat/>
         </Style>
+        <Style ss:ID="sOrderText">
+          <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+          <Borders>
+            <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+            <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+            <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+            <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+          </Borders>
+          <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+          <Interior ss:Color="#FFFF99" ss:Pattern="Solid"/>
+          <NumberFormat ss:Format="@"/>
+          <!-- This forces Excel to treat it as Text -->
+        </Style>
       </Styles>
       
       <Worksheet>
@@ -1229,7 +1301,7 @@
               <Cell ss:StyleID="s1304">
                 <Data ss:Type="Number">
                   <xsl:value-of select="VOLUME" disable-output-escaping="yes"/>
-                </Data>2
+                </Data>
               </Cell>
               <Cell ss:MergeAcross="3" ss:StyleID="m2142890316312"/>
             </Row>
@@ -1337,7 +1409,7 @@
             </xsl:variable>
 
             
-            <Row ss:AutoFitHeight="0" ss:Height="30" >
+            <Row ss:AutoFitHeight="1">
               <Cell ss:StyleID="{$rowColor}">
                 <Data ss:Type="String">
                   <xsl:value-of select="JOBNO" disable-output-escaping="yes"/>
@@ -1359,48 +1431,51 @@
                 </Data>
               </Cell>
               <!--<Cell ss:StyleID="{$rowColor}">
-                <Data ss:Type="String">
-                  <xsl:value-of select="ORDERNO" disable-output-escaping="yes"/>
-                </Data>
+                <Data ss:Type="String" xml:space="preserve">
+        <xsl:value-of select="ORDERNO"/>
+    </Data>
               </Cell>-->
-              
-              <Cell ss:StyleID="{$rowColor}">
-                <Data ss:Type="String">
-                   <!--Use xsl:for-each to iterate through each 'order' element--> 
-                  <xsl:for-each select="ORDERNO">
-                    <xsl:value-of select="."/>
-                     <!--Add line break if this is not the last 'order'--> 
-                    <xsl:if test="position() != last()">
-                      <xsl:text>&#13;&#10;</xsl:text>
-                    </xsl:if>
-                  </xsl:for-each>
-                </Data>
-              </Cell>
-                  
+   <!--<Cell ss:StyleID="{$rowColor}"><Data ss:Type="String" xml:space="preserve"><xsl:value-of select="translate(ORDERNO, '&#13;', '&#10;')"/></Data></Cell>-->
               <!--<Cell ss:StyleID="{$rowColor}">
                 <Data ss:Type="String">
-                  <xsl:value-of select="NOOFPCS" disable-output-escaping="yes"/>
+                  <xsl:call-template name="JoinLinesWithBreak">
+                    --><!-- Change 'ORDERNO' to the actual XML tag name for your PO numbers --><!--
+                    <xsl:with-param name="text" select="ORDERNO"/>
+                    --><!-- We use a space ' ' here because your numbers are separated by spaces --><!--
+                    <xsl:with-param name="delim" select="' '"/>
+                  </xsl:call-template>
                 </Data>
               </Cell>-->
-              
               <Cell ss:StyleID="{$rowColor}">
                 <Data ss:Type="String">
-                   <!--Use xsl:for-each to iterate through each 'NOOFPCS' element--> 
-                  <xsl:for-each select="NOOFPCS">
-                    <xsl:value-of select="."/>
-                     <!--Add line break if this is not the last 'NOOFPCS'--> 
-                    <xsl:if test="position() != last()">
-                      <xsl:text>&#13;&#10;</xsl:text>
-                    </xsl:if>
-                  </xsl:for-each>
+                  <xsl:call-template name="JoinLinesWithBreak">
+                    <xsl:with-param name="text" select="normalize-space(ORDERNO)"/>
+                    <xsl:with-param name="delim" select="' '"/>
+                  </xsl:call-template>
                 </Data>
               </Cell>
-              
               <Cell ss:StyleID="{$rowColor}">
                 <Data ss:Type="String">
-                  <xsl:value-of select="NOOFPKG" disable-output-escaping="yes"/>
+                  <xsl:call-template name="JoinLinesWithBreak">
+                    <xsl:with-param name="text" select="normalize-space(NOOFPCS)"/>
+                    <xsl:with-param name="delim" select="' '"/>
+                  </xsl:call-template>
                 </Data>
               </Cell>
+              <Cell ss:StyleID="{$rowColor}">
+                <Data ss:Type="String">
+                  <xsl:call-template name="JoinLinesWithBreak">
+                    <xsl:with-param name="text" select="normalize-space(ORDERPKGS)"/>
+                    <xsl:with-param name="delim" select="' '"/>
+                  </xsl:call-template>
+                </Data>
+              </Cell>
+              <!--<Cell ss:StyleID="{$rowColor}"><Data ss:Type="String">
+                <xsl:variable name="rawNOOFPKG"><xsl:for-each select="NOOFPKG">
+                                <xsl:value-of select="."/>
+                                <xsl:if test="position() != last()"><xsl:text>,
+              </xsl:text></xsl:if></xsl:for-each></xsl:variable><xsl:call-template name="JoinLinesWithBreak"><xsl:with-param name="text" select="$rawNOOFPKG"/>
+                <xsl:with-param name="delim" select="','"/></xsl:call-template></Data></Cell>-->
               <Cell ss:StyleID="{$rowColor}">
                 <Data ss:Type="Number">
                   <xsl:value-of select="WEIGHT" disable-output-escaping="yes"/>

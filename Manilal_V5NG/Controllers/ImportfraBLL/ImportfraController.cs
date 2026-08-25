@@ -1316,11 +1316,11 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
-        /// <summary>Perform PRINT DOSSIER records.</summary>
+        /// <summary>Perform PRINT DOSSIER Old records.</summary>
         /// <param name="CONSOLENO">CONSOLENO parameter.</param>
         /// <returns>File download (Excel or similar) containing the report data.</returns>
         [HttpGet]
-        public HttpResponseMessage PRINT_DOSSIER([FromUri]string CONSOLENO)
+        public HttpResponseMessage PRINT_DOSSIER_OLD([FromUri]string CONSOLENO)
         {
             DataSet ds = new DataSet();
             DAL objDal = new DAL();
@@ -1349,6 +1349,324 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             httpResponseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
 
             return httpResponseMessage;
+        }
+        /// <summary>Perform PRINT DOSSIER records.</summary>
+        /// <param name="CONSOLENO">CONSOLENO parameter.</param>
+        /// <returns>File download (Excel or similar) containing the report data.</returns>
+        [HttpGet]
+        public HttpResponseMessage PRINT_DOSSIER([FromUri] string CONSOLENO)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            string strSpName = string.Empty, strXslFilename = string.Empty;
+            string strData = string.Empty;
+            string strFileNmae = string.Empty;
+
+            strSpName = "USP_IMPFRA_CONSOLE_DOISSER_MAIN_VIEW";
+            strXslFilename = "xsl_Impfra_Print_Dossier.xsl";
+
+            ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, strSpName, CONSOLENO);
+
+            strFileNmae = Convert.ToString(ds.Tables[0].Rows[0]["filename"]);
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(ds.GetXml());
+
+            strData = CommonFunction.ConvertToExcel("Importfra", strXslFilename, xmlDoc);
+
+            byte[] byteArray = Encoding.UTF8.GetBytes(strData);
+            MemoryStream stream = new MemoryStream(byteArray);
+
+            HttpResponseMessage httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK);
+            httpResponseMessage.Content = new StreamContent(stream);
+            httpResponseMessage.Content.Headers.ContentDisposition =
+            new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")  ;
+            httpResponseMessage.Content.Headers.ContentDisposition.FileName = strFileNmae;
+            httpResponseMessage.Content.Headers.ContentType =
+            new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.ms-excel")  ;
+
+            return httpResponseMessage;
+        }
+
+        /// <summary>Perform PRINT DOSSIER RECEPTION records.</summary>
+        /// <remarks>
+        /// Second dossier export. Reuses USP_IMPFRA_CONSOLE_DOISSER_MAIN_VIEW untouched so the
+        /// original PRINT_DOSSIER download is unaffected, then folds in the per-job warehouse
+        /// reception columns from USP_IMPFRA_CONSOLE_JOB_RECEPTION_BYCONSOLE and rebuilds the
+        /// manifest table grouped by delivery site with sous-total / total / ecart rows.
+        /// The grouping is done here rather than in a proc because the manifest SELECT lives
+        /// inside the existing main-view proc, which is deliberately not modified.
+        /// </remarks>
+        /// <param name="CONSOLENO">CONSOLENO parameter.</param>
+        /// <returns>File download (Excel) containing the report data.</returns>
+        [HttpGet]
+        public HttpResponseMessage PRINT_DOSSIER_RECEPTION([FromUri] string CONSOLENO)
+        {
+            DAL objDal = new DAL();
+            DataSet ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                CommandType.StoredProcedure, "USP_IMPFRA_CONSOLE_DOISSER_MAIN_VIEW", CONSOLENO);
+
+            DataSet dsRecep = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                CommandType.StoredProcedure, "USP_IMPFRA_CONSOLE_JOB_RECEPTION_BYCONSOLE", CONSOLENO);
+
+            BuildReceptionManifest(ds, dsRecep, CONSOLENO);
+
+            // Owner-layout header block. Added as TableHdr so the XSL can select it
+            // independently of the main view's Table1.
+            DataSet dsHdr = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                CommandType.StoredProcedure, "USP_IMPFRA_CONSOLE_DOSSIER_RECEPTION_HEADER", CONSOLENO);
+            if (dsHdr.Tables.Count > 0 && dsHdr.Tables[0].Rows.Count > 0)
+            {
+                DataTable hdr = dsHdr.Tables[0].Copy();
+                hdr.TableName = "TableHdr";
+                ds.Tables.Add(hdr);
+            }
+
+            string strFileNmae = Convert.ToString(ds.Tables[0].Rows[0]["filename"]);
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(ds.GetXml());
+
+            string strData = CommonFunction.ConvertToExcel("Importfra", "xsl_Impfra_Print_Dossier_Reception.xsl", xmlDoc);
+
+            byte[] byteArray = Encoding.UTF8.GetBytes(strData);
+            MemoryStream stream = new MemoryStream(byteArray);
+
+            HttpResponseMessage httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK);
+            httpResponseMessage.Content = new StreamContent(stream);
+            httpResponseMessage.Content.Headers.ContentDisposition =
+            new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            httpResponseMessage.Content.Headers.ContentDisposition.FileName = strFileNmae;
+            httpResponseMessage.Content.Headers.ContentType =
+            new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.ms-excel");
+
+            return httpResponseMessage;
+        }
+
+        /// <summary>Columns of the manifest table that carry a running total.</summary>
+        private static readonly string[] ReceptionTotalCols =
+            { "NOOFPCS", "ORDERPKGS", "WEIGHT", "VOLUME", "CHBLWT", "CTNS_RECUS", "PAL" };
+
+        /// <summary>Reception columns grafted onto the manifest table.</summary>
+        private static readonly string[] ReceptionCols =
+            { "CTNS_RECUS", "PAL", "TYPE_PAL", "RESERVES", "BON_MAG_DU", "PACK", "DELIVERY_SITE" };
+
+        /// <summary>
+        /// Replaces Table2 with a site-grouped version carrying the reception columns and a
+        /// ROWTYPE marker the XSL branches on: G group header, D detail, S sous-total,
+        /// T total console, E ecart manifeste / reception.
+        /// </summary>
+        private static void BuildReceptionManifest(DataSet ds, DataSet dsRecep, string CONSOLENO)
+        {
+            if (!ds.Tables.Contains("Table2")) { return; }
+
+            DataTable src = ds.Tables["Table2"];
+
+            // Reception rows keyed on the last 10 digits of the job number, because the console
+            // view passes job numbers both with and without the '2020' prefix.
+            Dictionary<string, DataRow> recep = new Dictionary<string, DataRow>();
+            if (dsRecep.Tables.Count > 0)
+            {
+                foreach (DataRow r in dsRecep.Tables[0].Rows)
+                {
+                    string key = JobKey(Convert.ToString(r["JOBNO"]));
+                    if (key != "" && !recep.ContainsKey(key)) { recep.Add(key, r); }
+                }
+            }
+
+            DataTable dest = src.Clone();
+            foreach (DataColumn c in dest.Columns) { c.DataType = typeof(string); }
+            foreach (string c in ReceptionCols)
+            {
+                if (!dest.Columns.Contains(c)) { dest.Columns.Add(c, typeof(string)); }
+            }
+            dest.Columns.Add("ROWTYPE", typeof(string));
+            dest.Columns.Add("GROUPLABEL", typeof(string));
+            // 1-based delivery-site index; the XSL alternates its palette on this.
+            dest.Columns.Add("GROUPIDX", typeof(string));
+            dest.Columns.Add("ECARTNOTE", typeof(string));
+
+            // Detail rows carrying their site, ordered site-then-original-sequence.
+            List<DataRow> details = new List<DataRow>();
+            List<string> sites = new List<string>();
+            Dictionary<string, List<DataRow>> bySite = new Dictionary<string, List<DataRow>>();
+
+            foreach (DataRow s in src.Rows)
+            {
+                // The main-view proc emits its own per-client 'TOTAL - <client>' rows, which
+                // carry no job number. They must not become details or they double every sum.
+                string jobno = src.Columns.Contains("JOBNO") && !s.IsNull("JOBNO")
+                    ? Convert.ToString(s["JOBNO"]).Trim() : "";
+                if (jobno == "") { continue; }
+
+                DataRow d = dest.NewRow();
+                foreach (DataColumn c in src.Columns)
+                {
+                    d[c.ColumnName] = s.IsNull(c) ? "" : Convert.ToString(s[c]);
+                }
+
+                string key = JobKey(jobno);
+                DataRow rr;
+                if (key != "" && recep.TryGetValue(key, out rr))
+                {
+                    foreach (string c in ReceptionCols)
+                    {
+                        d[c] = rr.Table.Columns.Contains(c) ? Convert.ToString(rr[c]) : "";
+                    }
+                }
+                else
+                {
+                    foreach (string c in ReceptionCols) { d[c] = ""; }
+                }
+
+                d["ROWTYPE"] = "D";
+                string site = Convert.ToString(d["DELIVERY_SITE"]).Trim();
+                if (site == "") { site = "NON AFFECTE"; }
+                d["GROUPLABEL"] = site;
+
+                if (!bySite.ContainsKey(site)) { bySite.Add(site, new List<DataRow>()); sites.Add(site); }
+                bySite[site].Add(d);
+                details.Add(d);
+            }
+
+            // Emit: group header, details, sous-total ... then total console and ecart.
+            int liv = 0;
+            foreach (string site in sites)
+            {
+                liv++;
+                DataRow head = dest.NewRow();
+                head["ROWTYPE"] = "G";
+                // e.g. "LIVRAISON 1  -  ELW LAUWIN-PLANQUE   (commandes SOLID / TC)"
+                string packs = DistinctPacks(bySite[site]);
+                head["GROUPLABEL"] = "LIVRAISON " + liv + "  -  " + site
+                    + (packs == "" ? "" : "   (commandes " + packs + ")");
+                head["GROUPIDX"] = liv.ToString();
+                dest.Rows.Add(head);
+
+                foreach (DataRow d in bySite[site])
+                {
+                    d["GROUPIDX"] = liv.ToString();
+                    dest.Rows.Add(d);
+                }
+
+                DataRow sub = dest.NewRow();
+                sub["ROWTYPE"] = "S";
+                sub["GROUPIDX"] = liv.ToString();
+                sub["GROUPLABEL"] = "SOUS-TOTAL  " + site;
+                AddTotals(sub, bySite[site]);
+                dest.Rows.Add(sub);
+            }
+
+            DataRow tot = dest.NewRow();
+            tot["ROWTYPE"] = "T";
+            tot["GROUPLABEL"] = "TOTAL CONSOLE " + JobKey(CONSOLENO);
+            AddTotals(tot, details);
+            dest.Rows.Add(tot);
+
+            DataRow ecart = dest.NewRow();
+            ecart["ROWTYPE"] = "E";
+            ecart["GROUPLABEL"] = "ECART MANIFESTE / RECEPTION";
+            decimal manifest = SumColumn(details, "ORDERPKGS");
+            decimal received = SumColumn(details, "CTNS_RECUS");
+            if (dest.Columns.Contains("ORDERPKGS"))
+            {
+                // FormatNum blanks a zero, but a zero ecart is the meaningful "all received" case.
+                ecart["ORDERPKGS"] = (manifest - received).ToString(
+                    System.Globalization.CultureInfo.InvariantCulture);
+            }
+            ecart["CTNS_RECUS"] = "";
+
+            int captured = 0;
+            bool anyReserve = false;
+            foreach (DataRow d in details)
+            {
+                if (Convert.ToString(d["CTNS_RECUS"]).Trim() != "") { captured++; }
+                string res = Convert.ToString(d["RESERVES"]).Trim();
+                if (res != "" && res.ToUpperInvariant() != "NEANT") { anyReserve = true; }
+            }
+            if (captured == 0)
+            {
+                ecart["ECARTNOTE"] = "AUCUNE RECEPTION SAISIE";
+            }
+            else
+            {
+                ecart["ECARTNOTE"] = (manifest == received && captured == details.Count
+                        ? "CONSOLE COMPLETE - " : "ECART - ")
+                    + captured + "/" + details.Count + " BONS RECUS, "
+                    + (anyReserve ? "AVEC RESERVES" : "AUCUNE RESERVE");
+            }
+            dest.Rows.Add(ecart);
+
+            // Swap in place so the table keeps the element name the XSL selects on.
+            ds.Tables.Remove(src);
+            dest.TableName = "Table2";
+            ds.Tables.Add(dest);
+        }
+
+        /// <summary>Distinct PACK values of a group, in first-seen order, for the group heading.</summary>
+        private static string DistinctPacks(List<DataRow> rows)
+        {
+            List<string> packs = new List<string>();
+            foreach (DataRow r in rows)
+            {
+                string p = Convert.ToString(r["PACK"]).Trim();
+                if (p != "" && !packs.Contains(p)) { packs.Add(p); }
+            }
+            return string.Join(" / ", packs.ToArray());
+        }
+
+        private static void AddTotals(DataRow target, List<DataRow> rows)
+        {
+            foreach (string c in ReceptionTotalCols)
+            {
+                if (target.Table.Columns.Contains(c))
+                {
+                    target[c] = FormatNum(SumColumn(rows, c));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sums a manifest column. Cells can hold several values separated by spaces or commas
+        /// (multi-order jobs), so every numeric token in the cell counts.
+        /// </summary>
+        private static decimal SumColumn(List<DataRow> rows, string column)
+        {
+            decimal total = 0;
+            foreach (DataRow r in rows)
+            {
+                if (!r.Table.Columns.Contains(column)) { continue; }
+                string raw = Convert.ToString(r[column]);
+                if (string.IsNullOrEmpty(raw)) { continue; }
+
+                string[] parts = raw.Split(new char[] { ' ', ',', '\r', '\n', '\t' },
+                    StringSplitOptions.RemoveEmptyEntries);
+                foreach (string p in parts)
+                {
+                    decimal v;
+                    if (decimal.TryParse(p, System.Globalization.NumberStyles.Any,
+                            System.Globalization.CultureInfo.InvariantCulture, out v))
+                    {
+                        total += v;
+                    }
+                }
+            }
+            return total;
+        }
+
+        private static string FormatNum(decimal value)
+        {
+            if (value == 0) { return ""; }
+            return (value == decimal.Truncate(value))
+                ? decimal.Truncate(value).ToString(System.Globalization.CultureInfo.InvariantCulture)
+                : value.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>Last 10 digits of a job/console number, the form both prefixes share.</summary>
+        private static string JobKey(string value)
+        {
+            string v = (value ?? "").Trim();
+            return v.Length > 10 ? v.Substring(v.Length - 10) : v;
         }
 
         /// <summary>Generate SEA CONSOLE GENERATE AUTO records.</summary>
@@ -2775,6 +3093,57 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             catch (Exception ex)
             {
                 ds = ErrorLog.Error(ex, "ImportFra/ConsolidationConsoleJobDossierObservationIu");
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+            return Ok(ds);
+        }
+        /// <summary>Retrieve GetConsoleJobReceptionList records.</summary>
+        /// <param name="jobno">Job number.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult GetConsoleJobReceptionList([FromUri]string jobno)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure,
+                    "USP_IMPFRA_CONSOLE_JOB_RECEPTION_LIST", jobno);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "ImportFra/GetConsoleJobReceptionList");
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+            return Ok(ds);
+        }
+        /// <summary>Perform ConsolidationConsoleJobReceptionIu records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpPost]
+        public IHttpActionResult ConsolidationConsoleJobReceptionIu([FromBody]ConsolidationJobReception obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure,
+                    "USP_IMPFRA_CONSOLE_JOB_RECEPTION_IU",
+                    obj.PK_ID, obj.JOBNO, obj.CONSOLENO, obj.CTNS_RECUS, obj.PAL,
+                    obj.TYPE_PAL, obj.RESERVES, obj.BON_MAG_DU, obj.PACK, obj.DELIVERY_SITE,
+                    obj.CMPID, obj.CITYCODE, obj.CMPCODE, obj.MAKERIP);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "ImportFra/ConsolidationConsoleJobReceptionIu");
             }
             finally
             {

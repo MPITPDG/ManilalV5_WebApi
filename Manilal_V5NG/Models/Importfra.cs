@@ -240,6 +240,20 @@ namespace Manilal_V5NG.Models
         public string PAYMT_SHPLINE_INVDT { get; set; }
     }
 
+    public class ConsolidationJobReception : UserInfo
+    {
+        public string PK_ID { get; set; }
+        public string JOBNO { get; set; }
+        public string CONSOLENO { get; set; }
+        public string CTNS_RECUS { get; set; }
+        public string PAL { get; set; }
+        public string TYPE_PAL { get; set; }
+        public string RESERVES { get; set; }
+        public string BON_MAG_DU { get; set; }
+        public string PACK { get; set; }
+        public string DELIVERY_SITE { get; set; }
+    }
+
     public class UserInfo
     {
         public string CMPID { get; set; }

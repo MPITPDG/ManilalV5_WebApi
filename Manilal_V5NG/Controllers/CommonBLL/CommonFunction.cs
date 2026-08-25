@@ -85,7 +85,41 @@ namespace Manilal_V5NG.Controllers.CommonBLL
 
             return output;
         }
-     
 
+        internal static string ConvertToExcel(string folder1, string xlsFileName, XmlDocument XMLFILE)
+        {
+            string output = string.Empty;
+            try
+            {
+                XslCompiledTransform xsl = new XslCompiledTransform();
+                xsl.Load(HttpContext.Current.Server.MapPath("~") + "\\include\\xml\\" + folder1 + "\\" + xlsFileName, new XsltSettings(false, true), new XmlUrlResolver());
+
+                XmlWriterSettings settings = new XmlWriterSettings
+                {
+                    Encoding = Encoding.UTF8,
+                    Indent = false, // Keep this false
+                    OmitXmlDeclaration = true,
+                    NewLineHandling = NewLineHandling.None
+                };
+
+                using (StringWriter sw = new StringWriter())
+                {
+                    using (XmlWriter writer = XmlWriter.Create(sw, settings))
+                    {
+                        xsl.Transform(XMLFILE, writer);
+                    }
+
+                    // --- THIS IS THE KEY CHANGE ---
+                    // Manually replace physical new lines with the Excel XML entity
+                    string rawXml = sw.ToString();
+                    rawXml = rawXml.Replace("\r\n", "&#10;".Replace("\n", "&#10;")  );
+
+                    output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + rawXml;
+                }
+            }
+            catch (Exception ex) { throw ex; }
+            return output;
+        }
     }
+        
 }

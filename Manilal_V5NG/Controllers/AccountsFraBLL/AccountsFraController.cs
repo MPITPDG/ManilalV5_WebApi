@@ -21,6 +21,512 @@ namespace Manilal_V5NG.Controllers.AccountsFraBLL
 {
     public class AccountsFraController : ApiController
     {
+        /**************************************Auto (Excel/CSV) Purchase API Start Here****************************************/
+        // Consolidated from AutoPurchaseController. Angular port of
+        // UI/AccountsFra/frm_AccFra_Tran_Purchase_Excel_IU.aspx (+ .vb + js).
+        // Categories: 1 = GENERAL EXCEL (.xls) | 2 = SWISS PORT EXCEL (.xls/.xlsx)
+        //             3/4 = FRANCE HANDLING CSV (.csv)
+        private const string ConsolePurchaseFolder = "~/DATA/CONSOLE_PURCHASE/";
+
+        // 1. Dropdowns (suppliers, supplier addresses, file categories) + the
+        //    purchase-date validation message. Mirrors Fill_DropDown() in the .vb.
+        [HttpGet]
+        public IHttpActionResult FillDropDown([FromUri] string citycode)
+        {
+            DataSet ds = new DataSet();
+            DataSet dsDateValidate = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure,
+                    "USP_ACCFRA_TRAN_PURCHASE_FILL_DROPDOWN_NG",
+                    (citycode == null) ? "" : citycode);
+
+                dsDateValidate = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure,
+                    "USP_ACCFRA_PURCHASE_DATE_VALIDATE", "", 268, 0);
+
+                if (dsDateValidate.Tables.Count > 0)
+                {
+                    dsDateValidate.Tables[0].TableName = "DATE_VALIDATE";
+                    ds.Tables.Add(dsDateValidate.Tables[0].Copy());
+                    dsDateValidate.Clear();
+                }
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "AccountsFra/FillDropDown");
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+            return Ok(ds);
+        }
+
+        // 2. Category 1 - GENERAL EXCEL (.xls). Saves the file, bulk-loads it into
+        //    TBL_ACCFRA_CONSPUR_GENERAL_EXL, stages it (USP_ACCFRA_CONSPUR_EXL_TMP_IU)
+        //    and returns the validated account details.
+        [HttpPost]
+        [Route("api/AccountsFra/UploadGeneralExcel")]
+        public IHttpActionResult UploadGeneralExcel()
+        {
+            var request = HttpContext.Current.Request;
+            var cmpid = request.Params["cmpid"];
+            var vguid = request.Params["vguid"];
+            var postedfile = request.Files["file"];
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                if (postedfile == null || postedfile.ContentLength == 0)
+                    return Ok(StatusDataSet("105", "Please select file."));
+
+                string fileName = Path.GetFileName(postedfile.FileName);
+                if (!string.Equals(Path.GetExtension(fileName), ".xls", StringComparison.OrdinalIgnoreCase))
+                    return Ok(StatusDataSet("105", "Invalid File Selected! Please Select xls File."));
+
+                string filePath = HttpContext.Current.Server.MapPath(ConsolePurchaseFolder) + fileName;
+                if (File.Exists(filePath))
+                    return Ok(StatusDataSet("104", fileName + " File Already Exists - Please Check"));
+
+                postedfile.SaveAs(filePath);
+
+                // Read the sheet and bulk-copy it into the general staging table.
+                BulkLoadGeneralExcel(filePath);
+
+                // Stage the raw rows into the per-session purchase temp.
+                objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_CONSPUR_EXL_TMP_IU", cmpid, vguid);
+
+                // Validate + fetch the account details / totals for the grid.
+                ds = BuildValidationResult(vguid, fileName);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "AccountsFra/UploadGeneralExcel");
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+            return Ok(ds);
+        }
+
+        // 3. Category 2 - SWISS PORT EXCEL (.xls / .xlsx).
+        [HttpPost]
+        [Route("api/AccountsFra/UploadSwissExcel")]
+        public IHttpActionResult UploadSwissExcel()
+        {
+            var request = HttpContext.Current.Request;
+            var cmpid = request.Params["cmpid"];
+            var vguid = request.Params["vguid"];
+            var purchaseDate = request.Params["purchasedate"];
+            var vatAmt = request.Params["vatamt"];
+            var netAmt = request.Params["netamt"];
+            var postedfile = request.Files["file"];
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                if (postedfile == null || postedfile.ContentLength == 0)
+                    return Ok(StatusDataSet("105", "Please select file."));
+
+                string fileName = Path.GetFileName(postedfile.FileName);
+                string ext = Path.GetExtension(fileName);
+                if (!string.Equals(ext, ".xls", StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(ext, ".xlsx", StringComparison.OrdinalIgnoreCase))
+                    return Ok(StatusDataSet("105", "Invalid File Selected! Please Select xls or xlsx File."));
+
+                string filePath = HttpContext.Current.Server.MapPath(ConsolePurchaseFolder) + fileName;
+                if (File.Exists(filePath))
+                    return Ok(StatusDataSet("104", fileName + " File Already Exists - Please Check"));
+
+                postedfile.SaveAs(filePath);
+                BulkLoadSwissExcel(filePath, ext);
+
+                // Stage into the swiss temp.
+                DataSet dsTmp = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_CONSPUR_EXL_SWISS_TMP_IU", cmpid, vguid);
+                if (StatusEquals(dsTmp, "103"))
+                    return Ok(StatusDataSet("103", "IN A ROW PREFIX AND HAWBNO CANNOT BE BLANK !"));
+
+                // Validate the staged swiss rows.
+                DataSet dsChk = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_CONSPUR_EXL_SWISS_VAL_CHK_TMP", vguid);
+                if (StatusEquals(dsChk, "102"))
+                    return Ok(StatusDataSet("102", StatusMessage(dsChk)));
+
+                // Fetch the account details / totals for the grid.
+                DataSet dsDtls = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_CONSPUR_EXL_SWISS_GETDTLS",
+                    vguid, cmpid, purchaseDate, vatAmt, netAmt, fileName);
+                if (StatusEquals(dsDtls, "103"))
+                    return Ok(StatusDataSet("103", StatusMessage(dsDtls)));
+
+                // Normalise to the common { Table, Table1, Table2(details), Table3(totals) } shape.
+                DataTable details = dsDtls.Tables.Count > 1 ? dsDtls.Tables[1].Copy() : new DataTable();
+                DataTable totals = dsDtls.Tables.Count > 2 ? dsDtls.Tables[2].Copy() : new DataTable();
+                ds = ComposeResult("100", "", details, totals, null);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "AccountsFra/UploadSwissExcel");
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+            return Ok(ds);
+        }
+
+        // 4. Category 3 / 4 - FRANCE HANDLING CSV (.csv). Bill no / purchase date /
+        //    to-be-paid date are read out of the CSV and returned in META.
+        [HttpPost]
+        [Route("api/AccountsFra/UploadFranceCsv")]
+        public IHttpActionResult UploadFranceCsv()
+        {
+            var request = HttpContext.Current.Request;
+            var cmpid = request.Params["cmpid"];
+            var vguid = request.Params["vguid"];
+            var categoryid = request.Params["categoryid"];
+            var supplier = request.Params["supplier"];
+            var postedfile = request.Files["file"];
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                if (postedfile == null || postedfile.ContentLength == 0)
+                    return Ok(StatusDataSet("105", "Please select file."));
+
+                string fileName = Path.GetFileName(postedfile.FileName);
+                if (!string.Equals(Path.GetExtension(fileName), ".csv", StringComparison.OrdinalIgnoreCase))
+                    return Ok(StatusDataSet("105", "Invalid File Selected! Please Select csv File."));
+
+                string filePath = HttpContext.Current.Server.MapPath(ConsolePurchaseFolder) + fileName;
+                if (File.Exists(filePath))
+                    return Ok(StatusDataSet("104", fileName + " File Already Exists - Please Check"));
+
+                postedfile.SaveAs(filePath);
+
+                // Parse + stage the CSV. Returns status in Table[0] and the parsed
+                // header values (bill no / purchase date / paid date) in Table[1].
+                DataSet dsFr = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_CONSPUR_CSV_FRAHAND_TMP_IU_NG",
+                    filePath, vguid, cmpid, categoryid);
+
+                if (!StatusEquals(dsFr, "100"))
+                    return Ok(StatusDataSet("102", StatusMessage(dsFr)));
+
+                string billNo = "", purDate = "", paidDate = "";
+                if (dsFr.Tables.Count > 1 && dsFr.Tables[1].Rows.Count > 0)
+                {
+                    DataRow r = dsFr.Tables[1].Rows[0];
+                    billNo = SafeCol(r, "FACTURE", 0);
+                    purDate = SafeCol(r, "PURDATE", 1);
+                    paidDate = SafeCol(r, "PDT", 2);
+                }
+
+                // Log the invoice against the supplier (dupe-check happens in the SP).
+                DataSet dsLog = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_CONSPUR_EXL_LOG_IU",
+                    cmpid, fileName, filePath, supplier, billNo, vguid, categoryid);
+                if (StatusEquals(dsLog, "104"))
+                {
+                    string supName = dsLog.Tables[0].Columns.Contains("SUPPLIERNAME")
+                        ? Convert.ToString(dsLog.Tables[0].Rows[0]["SUPPLIERNAME"]) : "";
+                    string oldEntry = dsLog.Tables[0].Columns.Contains("ENTRYNO")
+                        ? Convert.ToString(dsLog.Tables[0].Rows[0]["ENTRYNO"]) : "";
+                    return Ok(StatusDataSet("104",
+                        "Invoice No " + billNo + " of supplier " + supName +
+                        " already accounted vide Purchase Entry " + oldEntry));
+                }
+
+                // Validate + fetch details, then attach the header meta values.
+                ds = BuildValidationResult(vguid, fileName);
+                DataTable meta = new DataTable("META");
+                meta.Columns.Add("BILLNO");
+                meta.Columns.Add("PURDATE");
+                meta.Columns.Add("PDT");
+                meta.Rows.Add(billNo, purDate, paidDate);
+                ds.Tables.Add(meta);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "AccountsFra/UploadFranceCsv");
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+            return Ok(ds);
+        }
+
+        // 5. Final "Save entry" - generates the purchase entry.
+        [HttpPost]
+        public IHttpActionResult SavePurchase([FromBody] AutoPurchaseSaveRequest obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                // _NG variant (17 params, incl. SUP_ADDRID) - present in live manilal.
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_CONSPUR_EXL_PUR_GENERATE_NG",
+                    obj.ID, obj.ENTRYNO, obj.ENTRYDATE, obj.SUPPLIER, obj.BILLNO, obj.PAIDDT, obj.TOT_EURO,
+                    obj.CMPID, obj.CITYCODE1, obj.CMP_CODE, obj.MAKERIP, obj.GUID, obj.CITYCODE,
+                    obj.StrFilename, obj.CATID, obj.SUPINVDT, obj.SUP_ADDRID);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "AccountsFra/SavePurchase");
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+            return Ok(ds);
+        }
+
+        // 6. Reset - clears the per-session temp rows.
+        [HttpPost]
+        public IHttpActionResult ResetAll([FromBody] AutoPurchaseResetRequest obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_TRAN_CONSPUR_EXL_RESET_ALL",
+                    (obj != null) ? obj.GUID : "");
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "AccountsFra/ResetAll");
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+            return Ok(ds);
+        }
+
+        // 7. Download the comparison-purchase Excel (categories 2 & 4).
+        [HttpGet]
+        [Route("api/AccountsFra/DownloadCompareReport")]
+        public HttpResponseMessage DownloadCompareReport([FromUri] string entryno, [FromUri] string cateid,
+            [FromUri] string cmpid, [FromUri] string guid)
+        {
+            DAL objDal = new DAL();
+            try
+            {
+                DataSet ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_CONSPUR_EXL_SWISS_RPT",
+                    guid, cmpid, cateid);
+
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(ds.GetXml());
+                string excel = CommonFunction.ConvertToExcel_open("AccountsFra",
+                    "XSL_AccFra_Tran_Purchase_Exl_RPT.xsl", xmlDoc);
+
+                byte[] byteArray = Encoding.UTF8.GetBytes(Convert.ToString(excel));
+                MemoryStream stream = new MemoryStream(byteArray);
+                stream.WriteTo(HttpContext.Current.Response.OutputStream);
+
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+                response.Content = new StreamContent(stream);
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = "COMPARE_PURCHASE_" + entryno + ".xls";
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "AccountsFra/DownloadCompareReport");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+        }
+
+        // ---- Auto-purchase helpers ------------------------------------------------
+
+        /// <summary>
+        /// Runs the combined validation-check-and-get-details SPs for the general /
+        /// CSV categories, normalised into { Table(status), Table1, Table2(details), Table3(totals) }.
+        /// </summary>
+        private DataSet BuildValidationResult(string guid, string fileName)
+        {
+            DAL objDal = new DAL();
+            try
+            {
+                DataSet chk = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_CONSPUR_EXL_VAL_CHK_TMP_NG",
+                    guid, fileName);
+
+                if (!StatusEquals(chk, "100"))
+                    return StatusDataSet(FirstStatus(chk), StatusMessage(chk));
+
+                DataSet dtls = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure, "USP_ACCFRA_CONSPUR_EXL_GETDTLS", guid);
+
+                DataTable details = dtls.Tables.Count > 1 ? dtls.Tables[1].Copy() : new DataTable();
+                DataTable totals = dtls.Tables.Count > 2 ? dtls.Tables[2].Copy() : new DataTable();
+                return ComposeResult("100", "", details, totals, null);
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+        }
+
+        /// <summary>Reads + bulk-copies a general purchase .xls into TBL_ACCFRA_CONSPUR_GENERAL_EXL.</summary>
+        private void BulkLoadGeneralExcel(string filePath)
+        {
+            // .xls -> JET (Excel 8.0), .xlsx -> ACE (Excel 12.0). The 32-bit host may
+            // lack ACE but has JET, so .xls (all General uploads) reads via JET. All
+            // destination columns are varchar, so IMEX=1 (read as text) is safe.
+            string ext = Path.GetExtension(filePath);
+            string conn = string.Equals(ext, ".xls", StringComparison.OrdinalIgnoreCase)
+                ? "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=1\";"
+                : "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=1\";";
+            string query = "Select [MAWB_CONTAINER],[HAWB_HBLNO],[JOBNO],[G100052],[G100063],[G100062]," +
+                "[G100059],[G100058],[G100018],[G100068],[G100051],[G100061],[G100049],[G100057],[G100066]," +
+                "[G101633],[G101632],[G100069],[G101635],[G100100],[G100065],[G100053],[G100077],[G100070]," +
+                "[G100032],[G100117],[G100127],[G100094],[G100026],[G102069],[SHORT NARRATION] FROM [Sheet1$]";
+
+            DataSet excelDs = new DataSet();
+            using (OleDbConnection excelConn = new OleDbConnection(conn))
+            using (OleDbDataAdapter oda = new OleDbDataAdapter(query, excelConn))
+            {
+                oda.Fill(excelDs);
+            }
+            DataTable excelDt = excelDs.Tables[0];
+
+            string sqlConn = System.Configuration.ConfigurationManager.AppSettings["conString_Manilal"];
+            using (SqlConnection con = new SqlConnection(sqlConn))
+            using (SqlBulkCopy bulk = new SqlBulkCopy(sqlConn))
+            {
+                bulk.DestinationTableName = "TBL_ACCFRA_CONSPUR_GENERAL_EXL";
+                bulk.ColumnMappings.Add("MAWB_CONTAINER", "MAWBNO");
+                bulk.ColumnMappings.Add("HAWB_HBLNO", "HAWBNO");
+                bulk.ColumnMappings.Add("JOBNO", "jobno");
+                string[] gCols = {
+                    "G100052","G100063","G100062","G100059","G100058","G100018","G100068","G100051",
+                    "G100061","G100049","G100057","G100066","G101633","G101632","G100069","G101635",
+                    "G100100","G100065","G100053","G100077","G100070","G100032","G100117","G100127",
+                    "G100094","G100026","G102069" };
+                foreach (string c in gCols) { bulk.ColumnMappings.Add(c, c); }
+                bulk.ColumnMappings.Add("SHORT NARRATION", "SHORTNARRATION");
+
+                con.Open();
+                bulk.WriteToServer(excelDt);
+                con.Close();
+            }
+        }
+
+        /// <summary>Reads + bulk-copies a swissport .xls/.xlsx into TBL_ACCFRA_CONSPUR_SWISS_PORT_EXL.</summary>
+        private void BulkLoadSwissExcel(string filePath, string extension)
+        {
+            string conn = string.Equals(extension, ".xls", StringComparison.OrdinalIgnoreCase)
+                ? "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=1\";"
+                : "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\";";
+
+            DataSet excelDs = new DataSet();
+            using (OleDbConnection excelConn = new OleDbConnection(conn))
+            using (OleDbDataAdapter oda = new OleDbDataAdapter("SELECT * FROM [Sheet1$]", excelConn))
+            {
+                oda.Fill(excelDs);
+            }
+
+            string sqlConn = System.Configuration.ConfigurationManager.AppSettings["conString_Manilal"];
+            using (SqlBulkCopy bulk = new SqlBulkCopy(sqlConn))
+            {
+                bulk.DestinationTableName = "TBL_ACCFRA_CONSPUR_SWISS_PORT_EXL";
+                bulk.WriteToServer(excelDs.Tables[0]);
+            }
+        }
+
+        /// <summary>Builds a single-row status DataSet: { Table: [ { STATUS, STATUSMSG } ] }.</summary>
+        private DataSet StatusDataSet(string status, string message)
+        {
+            DataSet ds = new DataSet();
+            DataTable t = new DataTable("Table");
+            t.Columns.Add("STATUS");
+            t.Columns.Add("STATUSMSG");
+            t.Rows.Add(status, message);
+            ds.Tables.Add(t);
+            return ds;
+        }
+
+        /// <summary>
+        /// Normalises an upload result into the common shape the Angular grid reads:
+        /// Table (status), Table1 (spacer), Table2 (details), Table3 (totals).
+        /// </summary>
+        private DataSet ComposeResult(string status, string message, DataTable details, DataTable totals, DataTable meta)
+        {
+            DataSet ds = new DataSet();
+
+            DataTable t0 = new DataTable("Table");
+            t0.Columns.Add("STATUS");
+            t0.Columns.Add("STATUSMSG");
+            t0.Rows.Add(status, message);
+            ds.Tables.Add(t0);
+
+            ds.Tables.Add(new DataTable("Table1"));
+
+            details = details ?? new DataTable();
+            details.TableName = "Table2";
+            ds.Tables.Add(details);
+
+            totals = totals ?? new DataTable();
+            totals.TableName = "Table3";
+            ds.Tables.Add(totals);
+
+            if (meta != null)
+            {
+                meta.TableName = "META";
+                ds.Tables.Add(meta);
+            }
+            return ds;
+        }
+
+        /// <summary>True when the first row's STATUS column of table[0] equals the given code.</summary>
+        private bool StatusEquals(DataSet ds, string code)
+        {
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0) return false;
+            DataTable t = ds.Tables[0];
+            object val = t.Columns.Contains("STATUS") ? t.Rows[0]["STATUS"] : t.Rows[0][0];
+            return string.Equals(Convert.ToString(val), code, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>Reads the status code (STATUS, or 1st column) from table[0].</summary>
+        private string FirstStatus(DataSet ds)
+        {
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0) return "";
+            DataTable t = ds.Tables[0];
+            object val = t.Columns.Contains("STATUS") ? t.Rows[0]["STATUS"] : t.Rows[0][0];
+            return Convert.ToString(val);
+        }
+
+        /// <summary>Reads the status message (STATUSMSG, or 2nd column) from table[0].</summary>
+        private string StatusMessage(DataSet ds)
+        {
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0) return "";
+            DataTable t = ds.Tables[0];
+            if (t.Columns.Contains("STATUSMSG")) return Convert.ToString(t.Rows[0]["STATUSMSG"]);
+            return t.Columns.Count > 1 ? Convert.ToString(t.Rows[0][1]) : "";
+        }
+
+        /// <summary>Reads a column by name, falling back to an ordinal index if absent.</summary>
+        private string SafeCol(DataRow r, string name, int ordinalFallback)
+        {
+            if (r.Table.Columns.Contains(name)) return Convert.ToString(r[name]).Trim();
+            return r.Table.Columns.Count > ordinalFallback ? Convert.ToString(r[ordinalFallback]).Trim() : "";
+        }
         /**************************************Master API Start Here****************************************/
         /// <summary>Perform deliverynotinvoiced exporttoxl records.</summary>
         /// <param name="frmdt">Start date for the date range filter.</param>

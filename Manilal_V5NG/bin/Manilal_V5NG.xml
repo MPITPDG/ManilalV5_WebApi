@@ -12,6 +12,9 @@
             This resolver catches that specific crash and safely initialises the array contract manually.
             </summary>
         </member>
+        <member name="T:Manilal_V5NG.Controllers.AccountsBLL.Gstr3bFiling">
+            <summary>Body of a "Mark as Filed" request from the GSTR-3B screen.</summary>
+        </member>
         <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_MIS_INVOICE_PENDING_JOB(System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>Perform MIS INVOICE PENDING JOB records.</summary>
             <param name="FROMDATE">Start date for the date range filter.</param>
@@ -21,6 +24,103 @@
             <param name="CITYCODE">City/branch code.</param>
             <param name="CITYCODE1">Secondary city/branch code.</param>
             <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_RPT_FINANCE_DASHBOARD(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Finance Dashboard - receivables, collection performance, billing mix, unbilled
+            exposure and service-wise margin in a single call.
+            </summary>
+            <param name="FROMDATE">Period start, format dd/MM/yyyy (e.g. 01/04/2025).</param>
+            <param name="TODATE">Period end and "as-on" date, format dd/MM/yyyy (e.g. 31/03/2026).</param>
+            <param name="CMPCODE">Company code, e.g. 01.</param>
+            <param name="CITYCODE">Branch: CITYCODE1 (101), 3-letter code (MUM), or ALL for consolidated.</param>
+            <param name="CLIENTCODE">Client code (E......), blank for all clients.</param>
+            <param name="TOPN">Row count for the top-N chart tables, blank/0 defaults to 10.</param>
+            <param name="SYNCNOW">Optional. "1"/"Y"/"true" bypasses the 2-hour response cache and refreshes it.</param>
+            <returns>
+            DataSet with eight tables:
+            Table  = KPI summary (single row),
+            Table1 = client exposure and risk,
+            Table2 = credit period vs actual recovery days (top N),
+            Table3 = taxable / non-taxable split by currency,
+            Table4 = unbilled ageing buckets,
+            Table5 = unbilled job list,
+            Table6 = receivable ageing, 9 buckets (top N),
+            Table7 = margin by service category.
+            Note: outstanding / ageing / exposure are AS-ON TODATE, while billing mix,
+            collection days, margin and unbilled are bound to FROMDATE..TODATE.
+            </returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_RPT_PAYABLE_DASHBOARD(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Payable Dashboard - the supplier side of the finance dashboard.
+            Cached like the receivable one; the accounts team presses Sync now after a
+            payment run to see the effect immediately.
+            </summary>
+            <param name="FROMDATE">Period start, dd/MM/yyyy.</param>
+            <param name="TODATE">Period end AND the as-on date, dd/MM/yyyy.</param>
+            <param name="CMPCODE">Company code.</param>
+            <param name="CITYCODE">Branch (CITYCODE1, 3-letter, or ALL).</param>
+            <param name="SUPPLIERCODE">Supplier code; blank = all suppliers.</param>
+            <param name="TOPN">Rows for the top-N sets.</param>
+            <param name="LOOKBACK">Months of purchase history to load; blank = 12.</param>
+            <param name="INFLOW">'1' also computes the receivable leg of the cash forecast.</param>
+            <param name="SYNCNOW">'1' bypasses the cache.</param>
+            <returns>
+            Table  = KPI row,           Table1 = supplier exposure,
+            Table2 = supplier ageing,   Table3 = portfolio ageing buckets,
+            Table4 = cash forecast,     Table5 = open bill worklist,
+            Table6 = how fast we pay,   Table7 = unlinked expense,
+            Table8 = discrepancy summary, Table9 = discrepancy rows.
+            </returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_RPT_FINANCE_DASHBOARD_AUDIT(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Finance Dashboard data-quality audit (the AUDIT tab). Deliberately NOT cached:
+            fixing a credit period or matching a receipt should be visible immediately.
+            </summary>
+            <param name="FROMDATE">Period start, dd/MM/yyyy.</param>
+            <param name="TODATE">Period end, dd/MM/yyyy.</param>
+            <param name="CMPCODE">Company code.</param>
+            <param name="CITYCODE">Branch (CITYCODE1, 3-letter, or ALL).</param>
+            <param name="CLIENTCODE">Accepted for interface parity; checks are portfolio level.</param>
+            <param name="TOPN">Unused; interface parity.</param>
+            <returns>Table = one row per check; Table1 = drill rows (top 500 per check).</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_RPT_GSTR3B_BRANCHWISE(System.String,System.String,System.String)">
+            <summary>GSTR-3B working, branch wise - output liability vs input set-off.</summary>
+            <param name="FROMDATE">Period start, format dd-MMM-yyyy (e.g. 01-Jul-2026).</param>
+            <param name="TODATE">Period end, format dd-MMM-yyyy (e.g. 31-Jul-2026).</param>
+            <param name="CMPCODE">Company code, blank for all companies.</param>
+            <returns>
+            DataSet with five tables:
+            Table  = GSTR-3B section-wise summary per branch,
+            Table1 = net position per branch,
+            Table2 = ledger-wise break-up,
+            Table3 = reconciliation warnings,
+            Table4 = reverse-charge ITC deferred to next month.
+            </returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_GSTR3B_FILING_SAVE(Manilal_V5NG.Controllers.AccountsBLL.Gstr3bFiling)">
+            <summary>Archive the GSTR-3B figures for a period as proof of what was filed.</summary>
+            <param name="obj">Period, company, who filed it and any remark.</param>
+            <returns>DataSet with the new filing id and the row counts archived.</returns>
+            <remarks>POST because it writes. The figures are recomputed server-side rather than
+            taken from the browser, so the archive is evidence rather than a client echo.</remarks>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_GSTR3B_FILING_LIST(System.String)">
+            <summary>List the archived GSTR-3B filings for a company.</summary>
+            <param name="CMPCODE">Company code, blank for all.</param>
+            <returns>DataSet of filings, newest first.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_GSTR3B_FILING_VIEW(System.String)">
+            <summary>Open one archived filing next to a live recomputation of the same period.</summary>
+            <param name="FILINGID">Primary key of the filing.</param>
+            <returns>
+            DataSet with three tables: Table = header incl. CHANGED_ROWS,
+            Table1 = ledger statement as filed vs live with a CHANGED flag,
+            Table2 = the GSTR-3B figures as filed.
+            </returns>
         </member>
         <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.DownloadZip(System.String)">
             <summary>Perform DownloadZip records.</summary>
@@ -94,6 +194,17 @@
         <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.UploadBnkReconcilFile">
             <summary>Upload UploadBnkReconcilFile records.</summary>
             <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.UploadBnkReconcilFileV2">
+            <summary>Upload a bank reconciliation statement (V2) and update clearance dates via USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT_V2.</summary>
+            <remarks>
+            Multipart form upload. Expects a single file plus the following form/query fields:
+            cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt.
+            Calls USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT_V2 with a hardcoded @LOOKBACKYEARS=2
+            and @DEBUG=0.
+            Accepts .xlsx, .xls, and .csv statement files.
+            </remarks>
+            <returns>DataSet with the upload/clearance status serialized as JSON.</returns>
         </member>
         <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.MIS_REPORT_CLIENTJOBPROFIT(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>Perform MIS REPORT CLIENTJOBPROFIT records.</summary>
@@ -858,6 +969,38 @@
             <summary>Insert or update JV records.</summary>
             <param name="JVM">Request body model containing the record fields.</param>
             <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.UploadJVRequestExcel">
+             <summary>
+             JV Request Excel upload.
+            
+             Saves the uploaded workbook under ~\DATA\JVRequest\CMPCODE\yyyyMM\ for audit,
+             parses it with ExcelDataReader, then hands the rows to
+             USP_ACC_JV_UPLOAD_VALIDATE_INS which validates and loads them into the same
+             temp table the manual Add button uses. All-or-nothing: a rejected file
+             inserts nothing and comes back with the failing row numbers.
+            
+             Modelled on UploadBnkReconcilFileV2 above.
+             </summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.BuildJvRowsXml(System.String,System.String,System.String@)">
+            <summary>Reads the JVLines sheet into the XML the proc expects.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.JvCode(System.String)">
+            <summary>Template dropdowns read "CODE | Description"; the proc wants the code.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.JvUploadError(System.String)">
+            <summary>Error shaped exactly like the proc's own output so the UI has one code path.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.DownloadJVRequestTemplate(System.String,System.String,System.String)">
+             <summary>
+             Serves the blank JV Request upload template.
+            
+             FIRST CUT: streams the committed template from ~\DATA\JVRequest\_template\.
+             The plan is to generate it per company from USP_ACC_JV_PAGELOAD (ClosedXML)
+             so the account and department lists can never go stale; until then, refresh
+             the file in that folder whenever the masters change.
+             </summary>
         </member>
         <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_JV_TMP_IU(Manilal_V5NG.Models.JournalVoucherDtls)">
             <summary>Insert or update JV TMP records.</summary>
@@ -2229,6 +2372,70 @@
             <param name="CURRENCY">CURRENCY parameter.</param>
             <returns>DataSet with the requested data serialized as JSON.</returns>
         </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_RPT_COMPANY_BRANCH_LIST(System.String)">
+            <summary>Branch list of a company (for the BS / P&amp;L branch selector).</summary>
+            <param name="CMPCODE">Company code identifier.</param>
+            <returns>DataSet with CITYCODE1 and CITYNAME of every branch of the company.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_RPT_PROFIT_AND_LOSS(System.String,System.String,System.String,System.String,System.String)">
+            <summary>Branch-wise Profit and Loss statement (Trading + P&amp;L sections).</summary>
+            <param name="FIN_STARTDATE">Financial year start date, e.g. 1-Apr-2025.</param>
+            <param name="FIN_ENDDATE">Financial year end date, e.g. 31-Mar-2026.</param>
+            <param name="CMPCODE">Company code identifier.</param>
+            <param name="CITYCODE">City/branch code.</param>
+            <param name="USR_ENDDATE">Report as-on date (period end for the statement).</param>
+            <returns>DataSet: Table 0 = P&amp;L summary (Gross/Net profit), Table 1 = section/group totals, Table 2 = ledger detail.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_RPT_BALANCE_SHEET(System.String,System.String,System.String,System.String,System.String)">
+            <summary>Branch-wise Balance Sheet as on the given date.</summary>
+            <param name="FIN_STARTDATE">Financial year start date, e.g. 1-Apr-2025.</param>
+            <param name="FIN_ENDDATE">Financial year end date, e.g. 31-Mar-2026.</param>
+            <param name="CMPCODE">Company code identifier.</param>
+            <param name="CITYCODE">City/branch code.</param>
+            <param name="USR_ENDDATE">Report as-on date.</param>
+            <returns>DataSet: Table 0 = Balance Sheet group level (Liabilities/Assets with totals), Table 1 = summary, Table 2 = ledger detail.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACCT_RPT_FY_DRCR_DIFF_AUDIT(System.String,System.String,System.String,System.String)">
+            <summary>FY-wide debit/credit difference audit — flags vouchers where header/detail totals disagree, credit note allocations exceed the note total, or child rows are orphaned from a missing parent.</summary>
+            <param name="FIN_STARTDATE">Financial year start date, e.g. 1-Apr-2025.</param>
+            <param name="FIN_ENDDATE">Financial year end date, e.g. 31-Mar-2026.</param>
+            <param name="COMPANYCODE">Company code identifier; blank = all companies.</param>
+            <param name="CITYCODE">City/branch code; blank = all branches.</param>
+            <returns>DataSet: Table 0 = per-CHECKTYPE summary (entry count + total diff), Table 1 = voucher-level detail rows.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.BuildValidationResult(System.String,System.String)">
+            <summary>
+            Runs the combined validation-check-and-get-details SPs for the general /
+            CSV categories, normalised into { Table(status), Table1, Table2(details), Table3(totals) }.
+            </summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.BulkLoadGeneralExcel(System.String)">
+            <summary>Reads + bulk-copies a general purchase .xls into TBL_ACCFRA_CONSPUR_GENERAL_EXL.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.BulkLoadSwissExcel(System.String,System.String)">
+            <summary>Reads + bulk-copies a swissport .xls/.xlsx into TBL_ACCFRA_CONSPUR_SWISS_PORT_EXL.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.StatusDataSet(System.String,System.String)">
+            <summary>Builds a single-row status DataSet: { Table: [ { STATUS, STATUSMSG } ] }.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.ComposeResult(System.String,System.String,System.Data.DataTable,System.Data.DataTable,System.Data.DataTable)">
+            <summary>
+            Normalises an upload result into the common shape the Angular grid reads:
+            Table (status), Table1 (spacer), Table2 (details), Table3 (totals).
+            </summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.StatusEquals(System.Data.DataSet,System.String)">
+            <summary>True when the first row's STATUS column of table[0] equals the given code.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.FirstStatus(System.Data.DataSet)">
+            <summary>Reads the status code (STATUS, or 1st column) from table[0].</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.StatusMessage(System.Data.DataSet)">
+            <summary>Reads the status message (STATUSMSG, or 2nd column) from table[0].</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.SafeCol(System.Data.DataRow,System.String,System.Int32)">
+            <summary>Reads a column by name, falling back to an ordinal index if absent.</summary>
+        </member>
         <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.acc_deliverynotinvoiced_exporttoxl(System.String,System.String)">
             <summary>Perform deliverynotinvoiced exporttoxl records.</summary>
             <param name="frmdt">Start date for the date range filter.</param>
@@ -3024,6 +3231,30 @@
             <param name="CMPCODE">Company code identifier.</param>
             <param name="CITYCODE">City/branch code.</param>
             <param name="ASONDATE">ASONDATE parameter.</param>
+            <returns>File download (Excel or similar) containing the report data.</returns>
+        </member>
+        <member name="F:Manilal_V5NG.Controllers.ImportBLL.ImportController._reportJobs">
+            <summary>In-memory tracker for background report-generation jobs (see IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL_START / _STATUS / _RESULT below). Does not touch the synchronous endpoint above - existing callers (e.g. the ERP) are unaffected.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportBLL.ImportController.ConvertToExcel_open_WithRoot(System.String,System.String,System.String,System.Xml.XmlDocument)">
+            <summary>Same as ConvertToExcel_open, but takes the app root path explicitly instead of reading it off HttpContext.Current - needed because this runs on a background thread (via Task.Run) after the original request's HttpContext has gone away.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportBLL.ImportController.IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL_START(System.String,System.String,System.String,System.String)">
+            <summary>Starts building the WMS SHIPMENTWISE ITEMSTATUS ALL MRPQTY XL report in the background and returns immediately with a job id. Added for callers (e.g. the Vercel-hosted WMS dashboard) that cannot hold one HTTP request open for as long as this report takes to build; poll IMP_WMS_REPORT_JOB_STATUS with the returned jobId, then fetch IMP_WMS_REPORT_JOB_RESULT once status is "done". Existing IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL endpoint above is untouched and keeps working exactly as before for existing callers.</summary>
+            <param name="CONTAINERNO">CONTAINERNO parameter.</param>
+            <param name="CMPCODE">Company code identifier.</param>
+            <param name="CITYCODE">City/branch code.</param>
+            <param name="ASONDATE">ASONDATE parameter.</param>
+            <returns>{ jobId } to poll for completion.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportBLL.ImportController.IMP_WMS_REPORT_JOB_STATUS(System.String)">
+            <summary>Checks whether a report job started via IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL_START has finished.</summary>
+            <param name="jobId">jobId returned by the _START endpoint.</param>
+            <returns>{ status: "pending" | "done" | "error", error }</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportBLL.ImportController.IMP_WMS_REPORT_JOB_RESULT(System.String)">
+            <summary>Downloads the finished report file for a job started via IMP_WMS_SHIPMENTWISE_ITEMSTATUS_ALL_MRPQTY_XL_START. Call only after IMP_WMS_REPORT_JOB_STATUS reports "done". Removes the job from memory once served.</summary>
+            <param name="jobId">jobId returned by the _START endpoint.</param>
             <returns>File download (Excel or similar) containing the report data.</returns>
         </member>
         <member name="M:Manilal_V5NG.Controllers.ImportBLL.ImportController.IMP_WMS_GRN_BOXWISE_IU(Manilal_V5NG.Models.GRNITEM)">
@@ -3957,10 +4188,53 @@
             <param name="obj">Request body model containing the record fields.</param>
             <returns>DataSet with the requested data serialized as JSON.</returns>
         </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.PRINT_DOSSIER_OLD(System.String)">
+            <summary>Perform PRINT DOSSIER Old records.</summary>
+            <param name="CONSOLENO">CONSOLENO parameter.</param>
+            <returns>File download (Excel or similar) containing the report data.</returns>
+        </member>
         <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.PRINT_DOSSIER(System.String)">
             <summary>Perform PRINT DOSSIER records.</summary>
             <param name="CONSOLENO">CONSOLENO parameter.</param>
             <returns>File download (Excel or similar) containing the report data.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.PRINT_DOSSIER_RECEPTION(System.String)">
+            <summary>Perform PRINT DOSSIER RECEPTION records.</summary>
+            <remarks>
+            Second dossier export. Reuses USP_IMPFRA_CONSOLE_DOISSER_MAIN_VIEW untouched so the
+            original PRINT_DOSSIER download is unaffected, then folds in the per-job warehouse
+            reception columns from USP_IMPFRA_CONSOLE_JOB_RECEPTION_BYCONSOLE and rebuilds the
+            manifest table grouped by delivery site with sous-total / total / ecart rows.
+            The grouping is done here rather than in a proc because the manifest SELECT lives
+            inside the existing main-view proc, which is deliberately not modified.
+            </remarks>
+            <param name="CONSOLENO">CONSOLENO parameter.</param>
+            <returns>File download (Excel) containing the report data.</returns>
+        </member>
+        <member name="F:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.ReceptionTotalCols">
+            <summary>Columns of the manifest table that carry a running total.</summary>
+        </member>
+        <member name="F:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.ReceptionCols">
+            <summary>Reception columns grafted onto the manifest table.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.BuildReceptionManifest(System.Data.DataSet,System.Data.DataSet,System.String)">
+            <summary>
+            Replaces Table2 with a site-grouped version carrying the reception columns and a
+            ROWTYPE marker the XSL branches on: G group header, D detail, S sous-total,
+            T total console, E ecart manifeste / reception.
+            </summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.DistinctPacks(System.Collections.Generic.List{System.Data.DataRow})">
+            <summary>Distinct PACK values of a group, in first-seen order, for the group heading.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.SumColumn(System.Collections.Generic.List{System.Data.DataRow},System.String)">
+            <summary>
+            Sums a manifest column. Cells can hold several values separated by spaces or commas
+            (multi-order jobs), so every numeric token in the cell counts.
+            </summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.JobKey(System.String)">
+            <summary>Last 10 digits of a job/console number, the form both prefixes share.</summary>
         </member>
         <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.SEA_CONSOLE_GENERATE_AUTO(Manilal_V5NG.Models.CommonEight)">
             <summary>Generate SEA CONSOLE GENERATE AUTO records.</summary>
@@ -4227,6 +4501,16 @@
         </member>
         <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.ConsolidationConsoleJobDossierObservationIu(Manilal_V5NG.Models.ConsolidationJobDossierObservartion)">
             <summary>Perform ConsolidationConsoleJobDossierObservationIu records.</summary>
+            <param name="obj">Request body model containing the record fields.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.GetConsoleJobReceptionList(System.String)">
+            <summary>Retrieve GetConsoleJobReceptionList records.</summary>
+            <param name="jobno">Job number.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.ConsolidationConsoleJobReceptionIu(Manilal_V5NG.Models.ConsolidationJobReception)">
+            <summary>Perform ConsolidationConsoleJobReceptionIu records.</summary>
             <param name="obj">Request body model containing the record fields.</param>
             <returns>DataSet with the requested data serialized as JSON.</returns>
         </member>
@@ -5044,6 +5328,13 @@
             <param name="fg">Request body model containing the record fields.</param>
             <returns>DataSet with the requested data serialized as JSON.</returns>
         </member>
+        <member name="M:Manilal_V5NG.Controllers.ExportBLL.ExportController.EXP_PRNTDOC_FCR_PRINT_CRYPRNT(System.String,System.String,System.String)">
+            <summary>Load the FCR / HBL / MTO final print document details for the HTML print page.</summary>
+            <param name="fcrno">FCR / House B/L / MTO number.</param>
+            <param name="cmpid">Logged in user id, used to key the print staging tables.</param>
+            <param name="printtype">SeaWay Bill flag ("1" seaway bill, "0" or empty otherwise).</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
         <member name="M:Manilal_V5NG.Controllers.ExportBLL.ExportController.Export_FCR_PRINTUPDATE(Manilal_V5NG.Models.FCRPrintview)">
             <summary>Perform Export FCR PRINTUPDATE records.</summary>
             <param name="fp">Request body model containing the record fields.</param>
@@ -5339,6 +5630,12 @@
             <summary>Perform hawbnoprintload records.</summary>
             <param name="hawbno">House airway bill number.</param>
             <param name="cmpid">Primary key of the company.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ExportBLL.ExportController.EXP_PRINTDOC_HAWBNO_PRINT_PAGELOAD(System.String,System.String)">
+            <summary>Load HAWBNO print document details for the print page.</summary>
+            <param name="hawbno">House airway bill number.</param>
+            <param name="userid">userid parameter.</param>
             <returns>DataSet with the requested data serialized as JSON.</returns>
         </member>
         <member name="M:Manilal_V5NG.Controllers.ExportBLL.ExportController.hawbnoprintUpdate(Manilal_V5NG.Models.printupdateHawbno)">
@@ -5982,6 +6279,63 @@
             <param name="newpwd">New password to set.</param>
             <param name="userencode">Encoded user identifier.</param>
             <returns>DataSet with result of password change operation.</returns>
+        </member>
+        <member name="F:Manilal_V5NG.BaseBLL.ErrorLog.LastErrorKey">
+            <summary>HttpContext.Items key under which Error() stashes the last exception message, so a controller can report the real cause instead of an empty DataSet.</summary>
+        </member>
+        <member name="T:Manilal_V5NG.Utils.DashboardCache">
+             <summary>
+             Response cache for the Finance Dashboard.
+            
+             The dashboard proc takes ~27s for a full-year, all-branch run. The underlying
+             figures are accounting balances that move slowly, so serving a cached DataSet for
+             up to two hours turns the second and subsequent views into sub-second responses.
+            
+             Uses a DEDICATED MemoryCache rather than MemoryCache.Default so the memory limits
+             set here cannot be affected by, or affect, anything else in the process.
+             </summary>
+        </member>
+        <member name="F:Manilal_V5NG.Utils.DashboardCache.SchemaVersion">
+            <summary>Bump this when the proc's result-set SHAPE changes, otherwise a redeploy
+            keeps serving old-shaped DataSets to a new front end for up to the TTL.</summary>
+        </member>
+        <member name="T:Manilal_V5NG.Utils.DashboardCache.Entry">
+            <summary>Cached payload plus the moment it was produced.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Utils.DashboardCache.Configure">
+            <summary>Called once from Application_Start.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Utils.DashboardCache.BuildKey(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Builds the cache key. Company and branch are non-negotiable parts of it - a key
+            that omitted branch would serve one branch's numbers to another.
+            </summary>
+        </member>
+        <member name="M:Manilal_V5NG.Utils.DashboardCache.IsCacheable(System.String)">
+            <summary>
+            Single-client runs are never cached: they are already the fast path (~14s) and
+            they are the only thing that can explode the footprint (410 clients x 9 branches
+            would be several GB). Excluding them caps the cache at roughly 85MB.
+            </summary>
+        </member>
+        <member name="M:Manilal_V5NG.Utils.DashboardCache.GetOrAdd(System.String,System.Boolean,System.Boolean,System.Func{System.Data.DataSet},System.DateTime@,System.Boolean@)">
+             <summary>
+             Returns the cached DataSet for <paramref name="key"/>, or runs <paramref name="produce"/>
+             and caches the result.
+            
+             A per-key lock prevents a cache stampede: without it, N users arriving together on
+             a cold key would each start a 27-second proc against the same SQL box.
+             </summary>
+        </member>
+        <member name="M:Manilal_V5NG.Utils.DashboardCache.WithFreshness(System.Data.DataSet,System.DateTime,System.Boolean,System.Boolean)">
+             <summary>
+             Appends a one-row metadata table so the page can show "as of ... (2h ago)".
+            
+             Appended by the API AFTER the proc returns, as the LAST table, so (a) the proc
+             stays cache-agnostic and testable in SSMS and (b) existing table ordinals
+             (Table..Table11) do not shift. Built fresh per response - the cached DataSet is
+             shared by concurrent readers and must never be mutated in place.
+             </summary>
         </member>
     </members>
 </doc>

@@ -26,6 +26,7 @@ D:\Project\Application\Manilal_Projects\Manilal_V5NG_API\Manilal_V5NG\Manilal_V5
 D:\Project\Application\Manilal_Projects\Manilal_V5NG_API\Manilal_V5NG\Manilal_V5NG\bin\System.Web.Http.xml
 D:\Project\Application\Manilal_Projects\Manilal_V5NG_API\Manilal_V5NG\Manilal_V5NG\bin\System.Web.Http.Cors.xml
 D:\Project\Application\Manilal_Projects\Manilal_V5NG_API\Manilal_V5NG\Manilal_V5NG\bin\System.Web.Http.WebHost.xml
+D:\Project\Application\Manilal_Projects\Manilal_V5NG_API\Manilal_V5NG\Manilal_V5NG\obj\Release\Manilal_V5NG.csproj.AssemblyReference.cache
 D:\Project\Application\Manilal_Projects\Manilal_V5NG_API\Manilal_V5NG\Manilal_V5NG\obj\Release\Manilal_V5NG.csproj.CoreCompileInputs.cache
 D:\Project\Application\Manilal_Projects\Manilal_V5NG_API\Manilal_V5NG\Manilal_V5NG\obj\Release\Manilal_V5NG.csproj.CopyComplete
 D:\Project\Application\Manilal_Projects\Manilal_V5NG_API\Manilal_V5NG\Manilal_V5NG\obj\Release\Manilal_V5NG.dll

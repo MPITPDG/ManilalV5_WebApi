@@ -5,6 +5,33 @@ using System.Web;
 
 namespace Manilal_V5NG.Models
 {
+    public class AutoPurchaseResetRequest
+    {
+        public string GUID { get; set; }
+    }
+    public class AutoPurchaseSaveRequest
+    {
+        public string ID { get; set; }
+        public string ENTRYNO { get; set; }
+        public string ENTRYDATE { get; set; }   // dd/mm/yyyy
+        public string SUPPLIER { get; set; }
+        public string BILLNO { get; set; }
+        public string PAIDDT { get; set; }       // dd/mm/yyyy
+        public string TOT_EURO { get; set; }
+        public string StrFilename { get; set; }
+        public string CATID { get; set; }
+        public string SUPINVDT { get; set; }     // dd/mm/yyyy
+        public string SUP_ADDRID { get; set; }
+
+        // Session-equivalent values supplied by the Angular login context.
+        public string CMPID { get; set; }
+        public string CITYCODE1 { get; set; }
+        public string CMP_CODE { get; set; }
+        public string MAKERIP { get; set; }
+        public string GUID { get; set; }
+        public string CITYCODE { get; set; }
+    }
+
     public class Creditubmit
     {
 

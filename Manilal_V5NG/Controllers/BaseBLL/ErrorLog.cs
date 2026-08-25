@@ -9,11 +9,18 @@ namespace Manilal_V5NG.BaseBLL
 {
     public class ErrorLog
     {
+        /// <summary>HttpContext.Items key under which Error() stashes the last exception message, so a controller can report the real cause instead of an empty DataSet.</summary>
+        public const string LastErrorKey = "ErrorLog.LastErrorMessage";
+
         public static DataSet Error(Exception errortype, string url)
         {
             DataSet ds = new DataSet();
             try
             {
+                if (HttpContext.Current != null)
+                {
+                    HttpContext.Current.Items[LastErrorKey] = errortype.Message;
+                }
                 DataTable table = new DataTable();
                 table.Columns.Add("STATUS", typeof(int));
                 table.Columns.Add("STATUSTEXT", typeof(string));

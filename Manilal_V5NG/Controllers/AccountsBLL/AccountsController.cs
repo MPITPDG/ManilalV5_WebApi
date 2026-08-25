@@ -26,7 +26,16 @@ using System.IO.Compression;
 
 namespace Manilal_V5NG.Controllers.AccountsBLL
 {
-   
+    /// <summary>Body of a "Mark as Filed" request from the GSTR-3B screen.</summary>
+    public class Gstr3bFiling
+    {
+        public string FROMDATE { get; set; }
+        public string TODATE { get; set; }
+        public string CMPCODE { get; set; }
+        public string FILEDBY { get; set; }
+        public string REMARKS { get; set; }
+    }
+
     public class AccountsController : ApiController
     {
         /// <summary>Perform MIS INVOICE PENDING JOB records.</summary>
@@ -50,6 +59,254 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             catch (Exception ex)
             {
                 ErrorLog.Error(ex, "Accounts/ACC_MIS_INVOICE_PENDING_JOB");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>
+        /// Finance Dashboard - receivables, collection performance, billing mix, unbilled
+        /// exposure and service-wise margin in a single call.
+        /// </summary>
+        /// <param name="FROMDATE">Period start, format dd/MM/yyyy (e.g. 01/04/2025).</param>
+        /// <param name="TODATE">Period end and "as-on" date, format dd/MM/yyyy (e.g. 31/03/2026).</param>
+        /// <param name="CMPCODE">Company code, e.g. 01.</param>
+        /// <param name="CITYCODE">Branch: CITYCODE1 (101), 3-letter code (MUM), or ALL for consolidated.</param>
+        /// <param name="CLIENTCODE">Client code (E......), blank for all clients.</param>
+        /// <param name="TOPN">Row count for the top-N chart tables, blank/0 defaults to 10.</param>
+        /// <param name="SYNCNOW">Optional. "1"/"Y"/"true" bypasses the 2-hour response cache and refreshes it.</param>
+        /// <returns>
+        /// DataSet with eight tables:
+        /// Table  = KPI summary (single row),
+        /// Table1 = client exposure and risk,
+        /// Table2 = credit period vs actual recovery days (top N),
+        /// Table3 = taxable / non-taxable split by currency,
+        /// Table4 = unbilled ageing buckets,
+        /// Table5 = unbilled job list,
+        /// Table6 = receivable ageing, 9 buckets (top N),
+        /// Table7 = margin by service category.
+        /// Note: outstanding / ageing / exposure are AS-ON TODATE, while billing mix,
+        /// collection days, margin and unbilled are bound to FROMDATE..TODATE.
+        /// </returns>
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_FINANCE_DASHBOARD(String FROMDATE, String TODATE, String CMPCODE, String CITYCODE, String CLIENTCODE, String TOPN, String SYNCNOW = null)
+        {
+            DataSet ds = new DataSet();
+            DateTime storedAt = DateTime.Now;
+            bool wasCached = false;
+            bool cacheable = DashboardCache.IsCacheable(CLIENTCODE);
+
+            try
+            {
+                string key = DashboardCache.BuildKey(CMPCODE, CITYCODE, FROMDATE, TODATE, CLIENTCODE, TOPN);
+
+                ds = DashboardCache.GetOrAdd(key, cacheable, DashboardCache.IsSyncNow(SYNCNOW), () =>
+                {
+                    DAL objDal = new DAL();
+                    // An omitted or empty query-string value binds to null here, and the DAL
+                    // assigns it straight onto the SqlParameter. ADO.NET treats a null Value as
+                    // "not supplied" and the call fails before it reaches SQL. CLIENTCODE is
+                    // blank on the default all-clients view, so coalesce every parameter.
+                    return objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure,
+                                                 "USP_ACC_RPT_FINANCE_DASHBOARD",
+                                                 FROMDATE ?? "", TODATE ?? "", CMPCODE ?? "",
+                                                 CITYCODE ?? "", CLIENTCODE ?? "", TOPN ?? "");
+                }, out storedAt, out wasCached);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_FINANCE_DASHBOARD");
+            }
+
+            // Appends CACHEINFO as the final table; never mutates the cached DataSet.
+            return Ok(DashboardCache.WithFreshness(ds, storedAt, wasCached, cacheable));
+        }
+
+        /// <summary>
+        /// Payable Dashboard - the supplier side of the finance dashboard.
+        /// Cached like the receivable one; the accounts team presses Sync now after a
+        /// payment run to see the effect immediately.
+        /// </summary>
+        /// <param name="FROMDATE">Period start, dd/MM/yyyy.</param>
+        /// <param name="TODATE">Period end AND the as-on date, dd/MM/yyyy.</param>
+        /// <param name="CMPCODE">Company code.</param>
+        /// <param name="CITYCODE">Branch (CITYCODE1, 3-letter, or ALL).</param>
+        /// <param name="SUPPLIERCODE">Supplier code; blank = all suppliers.</param>
+        /// <param name="TOPN">Rows for the top-N sets.</param>
+        /// <param name="LOOKBACK">Months of purchase history to load; blank = 12.</param>
+        /// <param name="INFLOW">'1' also computes the receivable leg of the cash forecast.</param>
+        /// <param name="SYNCNOW">'1' bypasses the cache.</param>
+        /// <returns>
+        /// Table  = KPI row,           Table1 = supplier exposure,
+        /// Table2 = supplier ageing,   Table3 = portfolio ageing buckets,
+        /// Table4 = cash forecast,     Table5 = open bill worklist,
+        /// Table6 = how fast we pay,   Table7 = unlinked expense,
+        /// Table8 = discrepancy summary, Table9 = discrepancy rows.
+        /// </returns>
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_PAYABLE_DASHBOARD(String FROMDATE, String TODATE, String CMPCODE, String CITYCODE, String SUPPLIERCODE, String TOPN, String LOOKBACK = null, String INFLOW = null, String SYNCNOW = null)
+        {
+            DataSet ds = new DataSet();
+            DateTime storedAt = DateTime.Now;
+            bool wasCached = false;
+            bool cacheable = DashboardCache.IsCacheable(SUPPLIERCODE);
+
+            try
+            {
+                // distinct namespace from the receivable dashboard, and the two switches
+                // that change the result set are part of the key
+                string key = "PAYABLE|" + DashboardCache.BuildKey(CMPCODE, CITYCODE, FROMDATE, TODATE, SUPPLIERCODE, TOPN)
+                           + "|" + (LOOKBACK ?? "") + "|" + (INFLOW ?? "");
+
+                ds = DashboardCache.GetOrAdd(key, cacheable, DashboardCache.IsSyncNow(SYNCNOW), () =>
+                {
+                    DAL objDal = new DAL();
+                    // POSITIONAL - the proc signature is
+                    //   @FROMDATE @TODATE @CMPCODE @CITYCODE @SUPPLIERCODE @TOPN
+                    //   @DEFTERM @LOOKBACK @INCDED @INFLOW
+                    // DEFTERM and INCDED are passed blank so the proc's own defaults apply
+                    // (30 days assumed terms; the bill is already net of TDS).
+                    return objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure,
+                                                 "USP_ACC_RPT_PAYABLE_DASHBOARD",
+                                                 FROMDATE ?? "", TODATE ?? "", CMPCODE ?? "",
+                                                 CITYCODE ?? "", SUPPLIERCODE ?? "", TOPN ?? "",
+                                                 "", LOOKBACK ?? "", "", INFLOW ?? "");
+                }, out storedAt, out wasCached);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_PAYABLE_DASHBOARD");
+            }
+
+            return Ok(DashboardCache.WithFreshness(ds, storedAt, wasCached, cacheable));
+        }
+
+        /// <summary>
+        /// Finance Dashboard data-quality audit (the AUDIT tab). Deliberately NOT cached:
+        /// fixing a credit period or matching a receipt should be visible immediately.
+        /// </summary>
+        /// <param name="FROMDATE">Period start, dd/MM/yyyy.</param>
+        /// <param name="TODATE">Period end, dd/MM/yyyy.</param>
+        /// <param name="CMPCODE">Company code.</param>
+        /// <param name="CITYCODE">Branch (CITYCODE1, 3-letter, or ALL).</param>
+        /// <param name="CLIENTCODE">Accepted for interface parity; checks are portfolio level.</param>
+        /// <param name="TOPN">Unused; interface parity.</param>
+        /// <returns>Table = one row per check; Table1 = drill rows (top 500 per check).</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_FINANCE_DASHBOARD_AUDIT(String FROMDATE, String TODATE, String CMPCODE, String CITYCODE, String CLIENTCODE, String TOPN)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure,
+                                           "USP_ACC_RPT_FINANCE_DASHBOARD_AUDIT",
+                                           FROMDATE ?? "", TODATE ?? "", CMPCODE ?? "",
+                                           CITYCODE ?? "", CLIENTCODE ?? "", TOPN ?? "");
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_FINANCE_DASHBOARD_AUDIT");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>GSTR-3B working, branch wise - output liability vs input set-off.</summary>
+        /// <param name="FROMDATE">Period start, format dd-MMM-yyyy (e.g. 01-Jul-2026).</param>
+        /// <param name="TODATE">Period end, format dd-MMM-yyyy (e.g. 31-Jul-2026).</param>
+        /// <param name="CMPCODE">Company code, blank for all companies.</param>
+        /// <returns>
+        /// DataSet with five tables:
+        /// Table  = GSTR-3B section-wise summary per branch,
+        /// Table1 = net position per branch,
+        /// Table2 = ledger-wise break-up,
+        /// Table3 = reconciliation warnings,
+        /// Table4 = reverse-charge ITC deferred to next month.
+        /// </returns>
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_GSTR3B_BRANCHWISE(String FROMDATE, String TODATE, String CMPCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure,
+                                           "USP_ACC_RPT_GSTR3B_BRANCHWISE", FROMDATE, TODATE, CMPCODE);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_GSTR3B_BRANCHWISE");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Archive the GSTR-3B figures for a period as proof of what was filed.</summary>
+        /// <param name="obj">Period, company, who filed it and any remark.</param>
+        /// <returns>DataSet with the new filing id and the row counts archived.</returns>
+        /// <remarks>POST because it writes. The figures are recomputed server-side rather than
+        /// taken from the browser, so the archive is evidence rather than a client echo.</remarks>
+        [HttpPost]
+        public IHttpActionResult ACC_GSTR3B_FILING_SAVE([FromBody] Gstr3bFiling obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure,
+                                           "USP_ACC_GSTR3B_FILING_SAVE",
+                                           obj.FROMDATE, obj.TODATE, obj.CMPCODE, obj.FILEDBY, obj.REMARKS);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_GSTR3B_FILING_SAVE");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>List the archived GSTR-3B filings for a company.</summary>
+        /// <param name="CMPCODE">Company code, blank for all.</param>
+        /// <returns>DataSet of filings, newest first.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_GSTR3B_FILING_LIST(String CMPCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure,
+                                           "USP_ACC_GSTR3B_FILING_LIST", CMPCODE);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_GSTR3B_FILING_LIST");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Open one archived filing next to a live recomputation of the same period.</summary>
+        /// <param name="FILINGID">Primary key of the filing.</param>
+        /// <returns>
+        /// DataSet with three tables: Table = header incl. CHANGED_ROWS,
+        /// Table1 = ledger statement as filed vs live with a CHANGED flag,
+        /// Table2 = the GSTR-3B figures as filed.
+        /// </returns>
+        [HttpGet]
+        public IHttpActionResult ACC_GSTR3B_FILING_VIEW(String FILINGID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure,
+                                           "USP_ACC_GSTR3B_FILING_VIEW", FILINGID);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_GSTR3B_FILING_VIEW");
             }
             return Ok(ds);
         }
@@ -104,8 +361,7 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         /// <param name="obj">Request body model containing the record fields.</param>
         /// <returns>DataSet with the requested data serialized as JSON.</returns>
         [HttpPost]
-        public IHttpActionResult GenerateConsigneeJobProfit([FromBody] consigneejobprofit obj
-      )
+        public IHttpActionResult GenerateConsigneeJobProfit([FromBody] consigneejobprofit obj)
         {
             var sb = new StringBuilder();
             DataSet ds = new DataSet();
@@ -521,7 +777,185 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds1);
 
         }
-        public DataSet UploadBankReconcilFilecsv(string strFileName, string CMPID, string VGUID, string MAKERIP, string CMPCODE, string CITYCODE, string CITYCODE1, string OURBANK, string FROMDT, string TODT)
+
+        /// <summary>Upload a bank reconciliation statement (V2) and update clearance dates via USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT_V2.</summary>
+        /// <remarks>
+        /// Multipart form upload. Expects a single file plus the following form/query fields:
+        /// cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt.
+        /// Calls USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT_V2 with a hardcoded @LOOKBACKYEARS=2
+        /// and @DEBUG=0.
+        /// Accepts .xlsx, .xls, and .csv statement files.
+        /// </remarks>
+        /// <returns>DataSet with the upload/clearance status serialized as JSON.</returns>
+        [HttpPost]
+        public IHttpActionResult UploadBnkReconcilFileV2()
+        {
+            const string SPNAME = "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT_V2";
+
+            DataSet ds1 = new DataSet();
+            DataTable dtbl = new DataTable();
+            DataRow drow = dtbl.NewRow();
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            var cmpid = HttpContext.Current.Request.Params["cmpid"];
+            var vguid = HttpContext.Current.Request.Params["vguid"];
+            var makerip = HttpContext.Current.Request.Params["makerip"];
+            var cmpcode = HttpContext.Current.Request.Params["cmpcode"];
+            var citycode = HttpContext.Current.Request.Params["citycode"];
+            var citycode1 = HttpContext.Current.Request.Params["citycode1"];
+            var ourbank = HttpContext.Current.Request.Params["ourbank"];
+            var fromdt = HttpContext.Current.Request.Params["fromdt"];
+            var todt = HttpContext.Current.Request.Params["todt"];
+            try
+            {
+                // Fail fast with a readable message if the V2 proc has not been
+                // deployed. Without this the SqlException is swallowed by the
+                // handler's own catch (ErrorLog.Error disposes its DataSet in a
+                // finally block and the caller discards the return value), the
+                // handler returns an EMPTY DataSet, and the browser gets an
+                // unexplained "unexpected response from the server".
+                object procId;
+                using (SqlConnection chk = new SqlConnection(ConnectionString.getConnString()))
+                {
+                    chk.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT OBJECT_ID(@p)", chk))
+                    {
+                        cmd.Parameters.AddWithValue("@p", "dbo." + SPNAME);
+                        procId = cmd.ExecuteScalar();
+                    }
+                }
+                if (procId == null || procId == DBNull.Value)
+                {
+                    dtbl.Columns.Add("STATUS", typeof(string));
+                    dtbl.Columns.Add("MSG", typeof(string));
+                    drow = dtbl.NewRow();
+                    drow[0] = "104";
+                    drow[1] = "Stored procedure " + SPNAME + " does not exist on this database. Run the _V2 script, then retry.";
+                    dtbl.Rows.Add(drow);
+                    ds1.Merge(dtbl);
+                    return Ok(ds1);
+                }
+
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = Path.GetFileName(file.FileName);
+                    var filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~") + "\\DATA\\BankReconcil\\", fileName);
+
+                    // DATA\BankReconcil is not in source control and is absent on a
+                    // fresh checkout, so file.SaveAs threw "Could not find a part of
+                    // the path". Create it on demand instead of requiring a manual
+                    // step on every new environment.
+                    string uploadDir = Path.GetDirectoryName(filePath);
+                    if (!Directory.Exists(uploadDir))
+                    {
+                        Directory.CreateDirectory(uploadDir);
+                    }
+
+                    if (File.Exists(filePath) == true)
+                    {
+                        dtbl.Columns.Add("STATUS", typeof(string));
+                        dtbl.Columns.Add("MSG", typeof(string));
+                        drow = dtbl.NewRow();
+                        drow[0] = "104";
+                        drow[1] = fileName + " already exists on the server. Rename the file, or delete it from DATA\\BankReconcil, then retry.";
+                        dtbl.Rows.Add(drow);
+                        ds1.Merge(dtbl);
+                    }
+                    else
+                    {
+                        file.SaveAs(filePath);
+                        string strExtension = Path.GetExtension(fileName);
+
+                        // true = the _V2 proc takes @LOOKBACKYEARS and @DEBUG on top
+                        // of the original four parameters, and the DAL requires every
+                        // one of them to be supplied explicitly.
+                        if (strExtension == ".xlsx")
+                        {
+                            ds1 = UploadBankReconcilFilexlsx(fileName, cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt, SPNAME, true);
+                        }
+                        else if (strExtension == ".xls")
+                        {
+                            ds1 = UploadBankReconcilFilexls(fileName, cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt, SPNAME, true);
+                        }
+                        else if (strExtension == ".csv")
+                        {
+                            ds1 = UploadBankReconcilFilecsv(fileName, cmpid, vguid, makerip, cmpcode, citycode, citycode1, ourbank, fromdt, todt, SPNAME, true);
+                        }
+
+                        if (ds1.Tables.Count > 0 && ds1.Tables[0].Columns.Count > 0)
+                        {
+                            if (ds1.Tables[0].Rows.Count > 0 && ds1.Tables[0].Rows[0][0].ToString() == "104")
+                            {
+                                if (File.Exists(filePath))
+                                {
+                                    File.Delete(filePath);
+                                }
+                            }
+                            else
+                            {
+                                dtbl.Columns.Add("STATUS", typeof(string));
+                                dtbl.Columns.Add("MSG", typeof(string));
+                                drow = dtbl.NewRow();
+                                drow[0] = "100";
+                                drow[1] = fileName + " uploaded successfully";
+                                dtbl.Rows.Add(drow);
+                                ds1.Merge(dtbl);
+                            }
+                        }
+                        else
+                        {
+                            // The handler returned an EMPTY DataSet, which means it
+                            // caught an exception internally. ErrorLog now stashes
+                            // the message in HttpContext.Items, so report the real
+                            // cause instead of a guess.
+                            string detail = HttpContext.Current.Items[ErrorLog.LastErrorKey] as string;
+
+                            // Preserve the file for inspection, then clear the
+                            // original so the retry does not trip "already exists".
+                            try
+                            {
+                                if (File.Exists(filePath))
+                                {
+                                    string failedDir = Path.Combine(uploadDir, "_failed");
+                                    if (!Directory.Exists(failedDir)) Directory.CreateDirectory(failedDir);
+                                    string keep = Path.Combine(failedDir, fileName);
+                                    if (File.Exists(keep)) File.Delete(keep);
+                                    File.Move(filePath, keep);
+                                }
+                            }
+                            catch { /* keeping a copy is best-effort */ }
+
+                            dtbl.Columns.Add("STATUS", typeof(string));
+                            dtbl.Columns.Add("MSG", typeof(string));
+                            drow = dtbl.NewRow();
+                            drow[0] = "104";
+                            drow[1] = string.IsNullOrEmpty(detail)
+                                    ? ("The server could not process " + fileName + ", and no error detail was captured.")
+                                    : ("Could not process " + fileName + ". Server error: " + detail);
+                            dtbl.Rows.Add(drow);
+                            ds1.Merge(dtbl);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/UploadBnkReconcilFileV2");
+
+                // ErrorLog swallows everything (it disposes its own DataSet and
+                // the return value is discarded), so surface the message here or
+                // the caller gets an empty DataSet with no explanation.
+                DataSet dsErr = new DataSet();
+                DataTable terr = new DataTable();
+                terr.Columns.Add("STATUS", typeof(string));
+                terr.Columns.Add("MSG", typeof(string));
+                terr.Rows.Add("104", "Upload failed: " + ex.Message);
+                dsErr.Tables.Add(terr);
+                return Ok(dsErr);
+            }
+            return Ok(ds1);
+        }
+
+        public DataSet UploadBankReconcilFilecsv(string strFileName, string CMPID, string VGUID, string MAKERIP, string CMPCODE, string CITYCODE, string CITYCODE1, string OURBANK, string FROMDT, string TODT, string SPNAME = "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT", bool SPTAKESV2ARGS = false)
         {
             DataSet dsupdate = new DataSet();
             string uploadedfromdate = "";
@@ -789,7 +1223,12 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
                                 command.ExecuteNonQuery();
                             }
                         }
-                        dsupdate = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT", OURBANK, FROMDT, TODT, logid);
+                        // See the note in the xlsx handler: the DAL discovers proc
+                        // parameters from the database and requires an exact count,
+                        // so _V2's @LOOKBACKYEARS and @DEBUG must be passed here.
+                        dsupdate = SPTAKESV2ARGS
+                            ? objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, SPNAME, OURBANK, FROMDT, TODT, logid, 2, 0)
+                            : objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, SPNAME, OURBANK, FROMDT, TODT, logid);
                     }
                     else
                     {
@@ -824,8 +1263,6 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
                     }
                 }
             }
-
-
             // Remaining code for processing and database operations...
 
             catch (Exception ex)
@@ -834,7 +1271,7 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return dsupdate;
         }
-        public DataSet UploadBankReconcilFilexls(string strFileName, string CMPID, string VGUID, string MAKERIP, string CMPCODE, string CITYCODE, string CITYCODE1, string OURBANK, string FROMDT, string TODT)
+        public DataSet UploadBankReconcilFilexls(string strFileName, string CMPID, string VGUID, string MAKERIP, string CMPCODE, string CITYCODE, string CITYCODE1, string OURBANK, string FROMDT, string TODT, string SPNAME = "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT", bool SPTAKESV2ARGS = false)
         {
             DataSet dsupdate = new DataSet();
             string uploadedfromdate = "";
@@ -936,7 +1373,17 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
                                     command.ExecuteNonQuery();
                                 }
                             }
-                            dsupdate = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT", OURBANK, FROMDT, TODT, logid);
+                            // DAL.ExecuteDataset discovers the proc's parameters from
+                            // the DATABASE (GetSpParameterSet) and then throws
+                            // "Parameter count does not match Parameter Value count."
+                            // unless exactly that many values are supplied. Discovery
+                            // includes parameters that have SQL defaults, so the _V2
+                            // proc's @LOOKBACKYEARS and @DEBUG must be passed
+                            // explicitly -- omitting them does NOT fall back to the
+                            // defaults, it throws.
+                            dsupdate = SPTAKESV2ARGS
+                                ? objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, SPNAME, OURBANK, FROMDT, TODT, logid, 2, 0)
+                                : objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, SPNAME, OURBANK, FROMDT, TODT, logid);
                         }
 
                         else
@@ -981,7 +1428,7 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return dsupdate;
         }
-        public DataSet UploadBankReconcilFilexlsx(string strFileName, string CMPID, string VGUID, string MAKERIP, string CMPCODE, string CITYCODE, string CITYCODE1, string OURBANK, string FROMDT, string TODT)
+        public DataSet UploadBankReconcilFilexlsx(string strFileName, string CMPID, string VGUID, string MAKERIP, string CMPCODE, string CITYCODE, string CITYCODE1, string OURBANK, string FROMDT, string TODT, string SPNAME = "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT", bool SPTAKESV2ARGS = false)
         {
             DataSet dsupdate = new DataSet();
             string uploadedfromdate = "";
@@ -1081,7 +1528,17 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
                                     command.ExecuteNonQuery();
                                 }
                             }
-                            dsupdate = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_BANKRECONCIL_UPDATECLEARANCEDT", OURBANK, FROMDT, TODT, logid);
+                            // DAL.ExecuteDataset discovers the proc's parameters from
+                            // the DATABASE (GetSpParameterSet) and then throws
+                            // "Parameter count does not match Parameter Value count."
+                            // unless exactly that many values are supplied. Discovery
+                            // includes parameters that have SQL defaults, so the _V2
+                            // proc's @LOOKBACKYEARS and @DEBUG must be passed
+                            // explicitly -- omitting them does NOT fall back to the
+                            // defaults, it throws.
+                            dsupdate = SPTAKESV2ARGS
+                                ? objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, SPNAME, OURBANK, FROMDT, TODT, logid, 2, 0)
+                                : objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, SPNAME, OURBANK, FROMDT, TODT, logid);
                         }
                         else
                         {
@@ -4925,6 +5382,290 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             return Ok(ds);
         }
 
+
+
+        /// <summary>
+        /// JV Request Excel upload.
+        ///
+        /// Saves the uploaded workbook under ~\DATA\JVRequest\CMPCODE\yyyyMM\ for audit,
+        /// parses it with ExcelDataReader, then hands the rows to
+        /// USP_ACC_JV_UPLOAD_VALIDATE_INS which validates and loads them into the same
+        /// temp table the manual Add button uses. All-or-nothing: a rejected file
+        /// inserts nothing and comes back with the failing row numbers.
+        ///
+        /// Modelled on UploadBnkReconcilFileV2 above.
+        /// </summary>
+        [HttpPost]
+        public IHttpActionResult UploadJVRequestExcel()
+        {
+            const string SPNAME = "USP_ACC_JV_UPLOAD_VALIDATE_INS";
+
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            var vguid = HttpContext.Current.Request.Params["vguid"];
+            var cmpid = HttpContext.Current.Request.Params["cmpid"];
+            var cmpcode = HttpContext.Current.Request.Params["cmpcode"];
+            var citycode = HttpContext.Current.Request.Params["citycode"];
+            var citycode1 = HttpContext.Current.Request.Params["citycode1"];
+            var status = HttpContext.Current.Request.Params["status"];
+            var defEntryType = HttpContext.Current.Request.Params["def_entrytype"] ?? "";
+            var defJobNo = HttpContext.Current.Request.Params["def_jobno"] ?? "";
+            var defBillNo = HttpContext.Current.Request.Params["def_billno"] ?? "";
+            var defDeptId = HttpContext.Current.Request.Params["def_deptid"] ?? "";
+
+            string savedPath = null;
+            try
+            {
+                if (file == null || file.ContentLength == 0)
+                    return Ok(JvUploadError("No file was received."));
+
+                string ext = Path.GetExtension(file.FileName ?? "").ToLowerInvariant();
+                if (ext != ".xlsx" && ext != ".xls")
+                    return Ok(JvUploadError("Only .xlsx and .xls files can be uploaded."));
+
+                // Fail fast with a readable message if the proc has not been deployed,
+                // rather than letting the DAL swallow the SqlException and return empty.
+                object procId;
+                using (SqlConnection chk = new SqlConnection(ConnectionString.getConnString()))
+                {
+                    chk.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT OBJECT_ID(@p)", chk))
+                    {
+                        cmd.Parameters.AddWithValue("@p", "dbo." + SPNAME);
+                        procId = cmd.ExecuteScalar();
+                    }
+                }
+                if (procId == null || procId == DBNull.Value)
+                    return Ok(JvUploadError("Stored procedure " + SPNAME
+                        + " does not exist on this database. Run the script in _DB_FIX, then retry."));
+
+                // ---- archive the file (the audit requirement)
+                string baseDir = System.Configuration.ConfigurationManager.AppSettings["JVUploadPath"];
+                if (string.IsNullOrEmpty(baseDir))
+                    baseDir = HttpContext.Current.Server.MapPath("~") + "\\DATA\\JVRequest\\";
+                string dir = Path.Combine(baseDir, (cmpcode ?? "NA"), DateTime.Now.ToString("yyyyMM"));
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+                // timestamp prefix: never collides, so no "file already exists" rejection
+                string safeName = Path.GetFileName(file.FileName);
+                savedPath = Path.Combine(dir, DateTime.Now.ToString("yyyyMMdd_HHmmss") + "_" + safeName);
+                file.SaveAs(savedPath);
+
+                // ---- parse
+                string parseError;
+                string rowsXml = BuildJvRowsXml(savedPath, ext, out parseError);
+                if (parseError != null)
+                {
+                    MoveJvFileToFailed(savedPath, dir);
+                    return Ok(JvUploadError(parseError));
+                }
+
+                DataSet ds = new DataSet();
+                DAL objDal = new DAL();
+                try
+                {
+                    ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure,
+                        SPNAME, rowsXml, vguid, cmpcode, citycode, citycode1, cmpid, status,
+                        defEntryType, defJobNo, defBillNo, defDeptId);
+                }
+                finally { objDal.Dispose(); }
+
+                // Keep a copy of anything the proc rejected, so the file can be inspected.
+                if (ds != null && ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0
+                    && ds.Tables[1].Rows[0]["STATUS"].ToString().StartsWith("104"))
+                {
+                    MoveJvFileToFailed(savedPath, dir);
+                }
+                return Ok(ds);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/UploadJVRequestExcel");
+                if (savedPath != null)
+                {
+                    try { MoveJvFileToFailed(savedPath, Path.GetDirectoryName(savedPath)); }
+                    catch { /* keeping a copy is best-effort */ }
+                }
+                return Ok(JvUploadError("Upload failed: " + ex.Message));
+            }
+        }
+
+        /// <summary>Reads the JVLines sheet into the XML the proc expects.</summary>
+        private string BuildJvRowsXml(string path, string ext, out string error)
+        {
+            error = null;
+            var sb = new StringBuilder();
+            sb.Append("<ROWS>");
+            int dataRows = 0;
+
+            using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var reader = ext == ".xls"
+                    ? ExcelReaderFactory.CreateBinaryReader(stream)
+                    : ExcelReaderFactory.CreateOpenXmlReader(stream))
+            {
+                var dsRaw = reader.AsDataSet();
+                if (dsRaw == null || dsRaw.Tables.Count == 0)
+                { error = "The workbook is empty."; return null; }
+
+                // the template names it JVLines; fall back to the first sheet
+                DataTable sheet = dsRaw.Tables.Contains("JVLines") ? dsRaw.Tables["JVLines"] : dsRaw.Tables[0];
+                if (sheet.Rows.Count < 2)
+                { error = "The sheet has no data rows."; return null; }
+
+                // Header lookup is trimmed + case-insensitive so column order may drift.
+                var col = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+                DataRow header = sheet.Rows[0];
+                for (int c = 0; c < sheet.Columns.Count; c++)
+                {
+                    string h = (header[c] ?? "").ToString().Trim();
+                    if (h.Length > 0 && !col.ContainsKey(h)) col[h] = c;
+                }
+                if (!col.ContainsKey("Particulars"))
+                { error = "Column 'Particulars' was not found in row 1. Please use the downloaded template."; return null; }
+
+                for (int r = 1; r < sheet.Rows.Count; r++)
+                {
+                    DataRow row = sheet.Rows[r];
+                    string particulars = JvCell(row, col, "Particulars");
+                    string debit = JvCell(row, col, "Debit");
+                    string credit = JvCell(row, col, "Credit");
+
+                    // the first fully blank row ends the data - this is what keeps the
+                    // template's TOTAL row out of the upload
+                    if (particulars.Length == 0 && debit.Length == 0 && credit.Length == 0) break;
+                    if (particulars.Equals("TOTAL", StringComparison.OrdinalIgnoreCase)) break;
+
+                    dataRows++;
+                    sb.Append("<ROW>");
+                    sb.Append("<ROWNO>").Append(r + 1).Append("</ROWNO>");   // Excel row number
+                    // AccountCode wins when present: it is the formula-resolved code.
+                    string acct = JvCell(row, col, "AccountCode");
+                    if (acct.Length == 0 || acct.Equals("NOT FOUND", StringComparison.OrdinalIgnoreCase))
+                        acct = particulars;
+                    sb.Append("<ACCOUNT>").Append(JvXml(acct)).Append("</ACCOUNT>");
+                    sb.Append("<DEBIT>").Append(JvXml(debit)).Append("</DEBIT>");
+                    sb.Append("<CREDIT>").Append(JvXml(credit)).Append("</CREDIT>");
+                    sb.Append("<ENTRYTYPE>").Append(JvXml(JvCode(JvCell(row, col, "EntryType")))).Append("</ENTRYTYPE>");
+                    sb.Append("<JOBNO>").Append(JvXml(JvCell(row, col, "JobNo"))).Append("</JOBNO>");
+                    sb.Append("<BILLNO>").Append(JvXml(JvCell(row, col, "BillNo"))).Append("</BILLNO>");
+                    sb.Append("<DEPARTMENT>").Append(JvXml(JvCell(row, col, "Department"))).Append("</DEPARTMENT>");
+                    sb.Append("<ITEMCODE>").Append(JvXml(JvCode(JvCell(row, col, "ItemCode")))).Append("</ITEMCODE>");
+                    sb.Append("<NARRATION>").Append(JvXml(JvCell(row, col, "LineNarration"))).Append("</NARRATION>");
+                    sb.Append("</ROW>");
+                }
+            }
+            sb.Append("</ROWS>");
+
+            if (dataRows == 0) { error = "No data rows were found in the sheet."; return null; }
+            return sb.ToString();
+        }
+
+        private static string JvCell(DataRow row, Dictionary<string, int> col, string name)
+        {
+            int idx;
+            if (!col.TryGetValue(name, out idx)) return "";
+            if (idx >= row.Table.Columns.Count) return "";
+            object v = row[idx];
+            if (v == null || v == DBNull.Value) return "";
+            if (v is double) return ((double)v).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            if (v is decimal) return ((decimal)v).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            return v.ToString().Trim();
+        }
+
+        /// <summary>Template dropdowns read "CODE | Description"; the proc wants the code.</summary>
+        private static string JvCode(string v)
+        {
+            if (string.IsNullOrEmpty(v)) return "";
+            int p = v.IndexOf('|');
+            return p > 0 ? v.Substring(0, p).Trim() : v.Trim();
+        }
+
+        private static string JvXml(string v)
+        {
+            if (string.IsNullOrEmpty(v)) return "";
+            return v.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+        }
+
+        private static void MoveJvFileToFailed(string savedPath, string dir)
+        {
+            try
+            {
+                if (!File.Exists(savedPath)) return;
+                string failedDir = Path.Combine(dir, "_failed");
+                if (!Directory.Exists(failedDir)) Directory.CreateDirectory(failedDir);
+                string keep = Path.Combine(failedDir, Path.GetFileName(savedPath));
+                if (File.Exists(keep)) File.Delete(keep);
+                File.Move(savedPath, keep);
+            }
+            catch { /* keeping a copy is best-effort */ }
+        }
+
+        /// <summary>Error shaped exactly like the proc's own output so the UI has one code path.</summary>
+        private static DataSet JvUploadError(string message)
+        {
+            DataSet ds = new DataSet();
+            DataTable errs = new DataTable();
+            errs.Columns.Add("ROWNO", typeof(int));
+            errs.Columns.Add("ACCOUNTCODE", typeof(string));
+            errs.Columns.Add("ERRORTEXT", typeof(string));
+            errs.Rows.Add(0, "", message);
+            ds.Tables.Add(errs);
+
+            DataTable st = new DataTable();
+            st.Columns.Add("TOTDEBIT", typeof(string));
+            st.Columns.Add("TOTCREDIT", typeof(string));
+            st.Columns.Add("STATUS", typeof(string));
+            st.Columns.Add("STATUSTEXT", typeof(string));
+            st.Rows.Add("0", "0", "104#" + message, "Upload rejected");
+            ds.Tables.Add(st);
+            return ds;
+        }
+
+        /// <summary>
+        /// Serves the blank JV Request upload template.
+        ///
+        /// FIRST CUT: streams the committed template from ~\DATA\JVRequest\_template\.
+        /// The plan is to generate it per company from USP_ACC_JV_PAGELOAD (ClosedXML)
+        /// so the account and department lists can never go stale; until then, refresh
+        /// the file in that folder whenever the masters change.
+        /// </summary>
+        [HttpGet]
+        public HttpResponseMessage DownloadJVRequestTemplate(string cmpcode = "", string citycode = "", string citycode1 = "")
+        {
+            try
+            {
+                string baseDir = System.Configuration.ConfigurationManager.AppSettings["JVUploadPath"];
+                if (string.IsNullOrEmpty(baseDir))
+                    baseDir = HttpContext.Current.Server.MapPath("~") + "\\DATA\\JVRequest\\";
+                string path = Path.Combine(baseDir, "_template", "JV_Request_Upload_Template.xlsx");
+
+                if (!File.Exists(path))
+                {
+                    var missing = Request.CreateResponse(HttpStatusCode.NotFound);
+                    missing.Content = new StringContent(
+                        "Template not found on the server. Place JV_Request_Upload_Template.xlsx in "
+                        + Path.GetDirectoryName(path));
+                    return missing;
+                }
+
+                var result = Request.CreateResponse(HttpStatusCode.OK);
+                result.Content = new ByteArrayContent(File.ReadAllBytes(path));
+                result.Content.Headers.ContentType =
+                    new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                result.Content.Headers.ContentDisposition =
+                    new ContentDispositionHeaderValue("attachment")
+                    {
+                        FileName = "JV_Request_Template_" + cmpcode + "_" + DateTime.Now.ToString("yyyyMMdd") + ".xlsx"
+                    };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/DownloadJVRequestTemplate");
+                var err = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                err.Content = new StringContent("Could not build the template: " + ex.Message);
+                return err;
+            }
+        }
 
         /// <summary>Insert or update JV TMP records.</summary>
         /// <param name="JVD">Request body model containing the record fields.</param>
@@ -9253,6 +9994,89 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             catch (Exception ex)
             {
                 ErrorLog.Error(ex, "Accounts/ACC_INVOICE_RESET_CHRGCURRENCY");
+            }
+            return Ok(ds);
+        }
+        /// <summary>Branch list of a company (for the BS / P&amp;L branch selector).</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with CITYCODE1 and CITYNAME of every branch of the company.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_COMPANY_BRANCH_LIST(String CMPCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_COMPANY_BRANCHLIST", CMPCODE);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_COMPANY_BRANCH_LIST");
+            }
+            return Ok(ds);
+        }
+        /// <summary>Branch-wise Profit and Loss statement (Trading + P&amp;L sections).</summary>
+        /// <param name="FIN_STARTDATE">Financial year start date, e.g. 1-Apr-2025.</param>
+        /// <param name="FIN_ENDDATE">Financial year end date, e.g. 31-Mar-2026.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="USR_ENDDATE">Report as-on date (period end for the statement).</param>
+        /// <returns>DataSet: Table 0 = P&amp;L summary (Gross/Net profit), Table 1 = section/group totals, Table 2 = ledger detail.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_PROFIT_AND_LOSS(String FIN_STARTDATE, String FIN_ENDDATE, String CMPCODE, String CITYCODE, String USR_ENDDATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_PROFIT_AND_LOSS", FIN_STARTDATE, FIN_ENDDATE, CMPCODE, CITYCODE, USR_ENDDATE);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_PROFIT_AND_LOSS");
+            }
+            return Ok(ds);
+        }
+        /// <summary>Branch-wise Balance Sheet as on the given date.</summary>
+        /// <param name="FIN_STARTDATE">Financial year start date, e.g. 1-Apr-2025.</param>
+        /// <param name="FIN_ENDDATE">Financial year end date, e.g. 31-Mar-2026.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="USR_ENDDATE">Report as-on date.</param>
+        /// <returns>DataSet: Table 0 = Balance Sheet group level (Liabilities/Assets with totals), Table 1 = summary, Table 2 = ledger detail.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_RPT_BALANCE_SHEET(String FIN_STARTDATE, String FIN_ENDDATE, String CMPCODE, String CITYCODE, String USR_ENDDATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_RPT_BALANCE_SHEET", FIN_STARTDATE, FIN_ENDDATE, CMPCODE, CITYCODE, USR_ENDDATE);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_RPT_BALANCE_SHEET");
+            }
+            return Ok(ds);
+        }
+        /// <summary>FY-wide debit/credit difference audit — flags vouchers where header/detail totals disagree, credit note allocations exceed the note total, or child rows are orphaned from a missing parent.</summary>
+        /// <param name="FIN_STARTDATE">Financial year start date, e.g. 1-Apr-2025.</param>
+        /// <param name="FIN_ENDDATE">Financial year end date, e.g. 31-Mar-2026.</param>
+        /// <param name="COMPANYCODE">Company code identifier; blank = all companies.</param>
+        /// <param name="CITYCODE">City/branch code; blank = all branches.</param>
+        /// <returns>DataSet: Table 0 = per-CHECKTYPE summary (entry count + total diff), Table 1 = voucher-level detail rows.</returns>
+        [HttpGet]
+        public IHttpActionResult ACCT_RPT_FY_DRCR_DIFF_AUDIT(String FIN_STARTDATE, String FIN_ENDDATE, String COMPANYCODE, String CITYCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACCT_RPT_FY_DRCR_DIFF_AUDIT", FIN_STARTDATE, FIN_ENDDATE, COMPANYCODE, CITYCODE);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACCT_RPT_FY_DRCR_DIFF_AUDIT");
             }
             return Ok(ds);
         }

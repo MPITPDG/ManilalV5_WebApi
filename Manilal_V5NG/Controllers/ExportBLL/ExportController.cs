@@ -19,7 +19,34 @@ using System.Net.Http.Headers;
 namespace Manilal_V5NG.Controllers.ExportBLL
 {
     public class ExportController : ApiController
+
     {
+        [HttpPost]
+        public IHttpActionResult OrderSizeDetailsSubmitPakingList([FromBody] OrderSizeDeatils obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure,
+                    "USP_EXP_ORDER_SIZE_DET_IU_UPLOADPACKINGLIST",
+                    obj.ExptNo, obj.Concode, obj.OrderNo, obj.StyleNo, obj.TotalPackage, obj.Str, obj.MakerId, obj.MakerIp,
+                    string.IsNullOrEmpty(obj.Source) ? "MANUAL" : obj.Source,
+                    obj.FileName ?? "");
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Export/OrderSizeDetailsSubmitPakingList");
+            }
+            finally
+            {
+                objDal.Dispose();
+                ds.Dispose();
+            }
+            return Ok(ds);
+        }
+
         /// <summary>Retrieve GetExportConsignmentNew records.</summary>
         /// <param name="cd">Request body model containing the record fields.</param>
         /// <returns>DataSet with the requested data serialized as JSON.</returns>
@@ -560,6 +587,33 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             catch (Exception ex)
             {
                 ds = ErrorLog.Error(ex, "Export/Export_FCR_PRINTPREVIEW");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Load the FCR / HBL / MTO final print document details for the HTML print page.</summary>
+        /// <param name="fcrno">FCR / House B/L / MTO number.</param>
+        /// <param name="cmpid">Logged in user id, used to key the print staging tables.</param>
+        /// <param name="printtype">SeaWay Bill flag ("1" seaway bill, "0" or empty otherwise).</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult EXP_PRNTDOC_FCR_PRINT_CRYPRNT(String fcrno, String cmpid, String printtype)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_EXP_PRNTDOC_FCR_PRINTVIEW_CRYPRNT",
+                    fcrno, cmpid, (printtype != null) ? printtype : "");
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Export/EXP_PRNTDOC_FCR_PRINT_CRYPRNT");
             }
             finally
             {
@@ -2285,6 +2339,27 @@ namespace Manilal_V5NG.Controllers.ExportBLL
             {
                 objDal.Dispose();
                 ds.Dispose();
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Load HAWBNO print document details for the print page.</summary>
+        /// <param name="hawbno">House airway bill number.</param>
+        /// <param name="userid">userid parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult EXP_PRINTDOC_HAWBNO_PRINT_PAGELOAD(String hawbno, String userid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_EXP_PRINTDOC_HAWBNO_PRINT_PAGELOAD", hawbno, userid);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Export/EXP_PRINTDOC_HAWBNO_PRINT_PAGELOAD");
             }
             return Ok(ds);
         }

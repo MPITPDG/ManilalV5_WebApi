@@ -5,6 +5,7 @@ using System.Web;
 
 namespace Manilal_V5NG.Models
 {
+    
     public class ConsignmentDetails
     {
         public int cmpid { get; set; }
@@ -1371,6 +1372,8 @@ namespace Manilal_V5NG.Models
         public string Str { get; set; }
         public string MakerId { get; set; }
         public string MakerIp { get; set; }
+        public string Source { get; set; }      // 'MANUAL' | 'PL_UPLOAD' — audit source for the log inside USP_EXP_ORDER_SIZE_DET_IU
+        public string FileName { get; set; }    // uploaded packing-list PDF name when Source = 'PL_UPLOAD'
     }
 
     public class mbl
