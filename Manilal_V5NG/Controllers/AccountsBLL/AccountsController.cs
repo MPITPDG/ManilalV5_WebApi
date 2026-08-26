@@ -7171,7 +7171,34 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
                 ErrorLog.Error(ex, "Accounts/fn_Acc_Rpt_Invoice_Register_XL_Search_Register");
             }
             return Ok(ds);
-        } 
+        }
+
+        /// <summary>EXPWOP register: foreign-currency invoices with receipt details for Excel export.</summary>
+        /// <param name="_FromDt">Start date for the date range filter.</param>
+        /// <param name="_ToDt">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="FINSTARTDATE">Financial year start date.</param>
+        /// <param name="FINENDDATE">Financial year end date.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult fn_Acc_Rpt_EXPWOP_Register_XL(string _FromDt, string _ToDt, string cmp_code, string citycode, string FINSTARTDATE, string FINENDDATE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_Acc_Rpt_EXPWOP_Register", _FromDt, _ToDt, cmp_code, citycode, (FINSTARTDATE != null) ? FINSTARTDATE : "", (FINENDDATE != null) ? FINENDDATE : "");
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/fn_Acc_Rpt_EXPWOP_Register_XL");
+            }
+            return Ok(ds);
+        }
 
         /// <summary>Search and retrieve fn Acc Rpt Invoice Register ActDetail XL Search Acct details records.</summary>
         /// <param name="_FromDt">Start date for the date range filter.</param>
@@ -10080,5 +10107,466 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
             }
             return Ok(ds);
         }
+
+        #region 26AS TDS Reconciliation
+
+        /// <summary>Upload a TRACES Form 26AS statement (.txt native download or .xlsx conversion), parse PART-I, auto-match deductors to clients and return the reconciliation summary.</summary>
+        /// <remarks>
+        /// Multipart form upload. Fields: file, cmpid, vguid, makerip, cmpcode, citycode, citycode1,
+        /// finyear (e.g. 2025-26; blank = accept the file's FY), expectedpan (blank = accept the file's PAN).
+        /// Re-uploading the same PAN + FY replaces the previous batch (USP_ACC_TDS26AS_UPLOADLOG);
+        /// the TAN-&gt;client map is preserved. Only PART-I is read; parsing stops at PART-II.
+        /// </remarks>
+        /// <returns>DataSet: Table = per-deductor summary, Table1 = client dropdown, Table2 = batch header, plus a STATUS/MSG/LOGID table ("100" ok / "104" error).</returns>
+        [HttpPost]
+        public IHttpActionResult Upload26ASFile()
+        {
+            const string SPNAME = "USP_ACC_TDS26AS_UPLOADLOG";
+
+            DataSet ds1 = new DataSet();
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            var cmpid = HttpContext.Current.Request.Params["cmpid"];
+            var vguid = HttpContext.Current.Request.Params["vguid"];
+            var makerip = HttpContext.Current.Request.Params["makerip"];
+            var cmpcode = HttpContext.Current.Request.Params["cmpcode"];
+            var citycode = HttpContext.Current.Request.Params["citycode"];
+            var citycode1 = HttpContext.Current.Request.Params["citycode1"];
+            var finyear = HttpContext.Current.Request.Params["finyear"];
+            var expectedpan = HttpContext.Current.Request.Params["expectedpan"];
+            string filePath = "";
+            try
+            {
+                // Fail fast with a readable message if the feature's DB objects have
+                // not been deployed (same guard as UploadBnkReconcilFileV2).
+                object procId;
+                using (SqlConnection chk = new SqlConnection(ConnectionString.getConnString()))
+                {
+                    chk.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT OBJECT_ID(@p)", chk))
+                    {
+                        cmd.Parameters.AddWithValue("@p", "dbo." + SPNAME);
+                        procId = cmd.ExecuteScalar();
+                    }
+                }
+                if (procId == null || procId == DBNull.Value)
+                {
+                    return Ok(Tds26ASStatus("104", "Stored procedure " + SPNAME + " does not exist on this database. Run the TDS26AS_TABLES_AND_SPS script, then retry."));
+                }
+
+                if (file == null || file.ContentLength == 0)
+                {
+                    return Ok(Tds26ASStatus("104", "No file was received by the server."));
+                }
+
+                string fileName = Path.GetFileName(file.FileName);
+                string strExtension = Path.GetExtension(fileName).ToLower();
+                if (strExtension != ".txt" && strExtension != ".xlsx")
+                {
+                    return Ok(Tds26ASStatus("104", "Only the native 26AS .txt download or an .xlsx conversion is supported (got " + strExtension + ")."));
+                }
+
+                string uploadDir = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~"), "DATA", "TDS26AS");
+                if (!Directory.Exists(uploadDir))
+                {
+                    Directory.CreateDirectory(uploadDir);
+                }
+                filePath = Path.Combine(uploadDir, fileName);
+                // Re-upload of the same statement is expected (the SP replaces the
+                // batch), so overwrite instead of rejecting like the bank upload does.
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                file.SaveAs(filePath);
+
+                // ---- parse PART-I into memory ----
+                string pan, fy, assessee;
+                List<string[]> deductors;               // per deductor: SRNO, NAME, TAN, TOTAMT, TOTTAX, TOTTDS
+                List<List<string[]>> details;           // parallel list: SRNO, SECTION, TXNDATE, BOOKSTATUS, BOOKDATE, REMARKS, AMT, TAX, TDS
+                if (strExtension == ".txt")
+                {
+                    ParseTds26ASTxt(filePath, out pan, out fy, out assessee, out deductors, out details);
+                }
+                else
+                {
+                    ParseTds26ASXlsx(filePath, out pan, out fy, out assessee, out deductors, out details);
+                }
+
+                if (deductors.Count == 0)
+                {
+                    Tds26ASPreserveFailed(uploadDir, filePath, fileName);
+                    return Ok(Tds26ASStatus("104", "No PART-I deductor rows could be read from " + fileName + ". Is this a Form 26AS statement?"));
+                }
+                if (!string.IsNullOrEmpty(expectedpan) && !string.IsNullOrEmpty(pan) &&
+                    !string.Equals(expectedpan.Trim(), pan.Trim(), StringComparison.OrdinalIgnoreCase))
+                {
+                    return Ok(Tds26ASStatus("104", "The statement belongs to PAN " + pan + ", not the company's PAN " + expectedpan + "."));
+                }
+                if (!string.IsNullOrEmpty(finyear) && !string.IsNullOrEmpty(fy) &&
+                    !string.Equals(finyear.Trim(), fy.Trim(), StringComparison.OrdinalIgnoreCase))
+                {
+                    return Ok(Tds26ASStatus("104", "The statement is for FY " + fy + ", but FY " + finyear + " was selected."));
+                }
+
+                // ---- create batch ----
+                DAL objDal = new DAL();
+                DataSet dslog = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, SPNAME,
+                    cmpid, makerip, vguid, fileName, filePath, pan, fy, assessee);
+                if (dslog.Tables.Count == 0 || dslog.Tables[0].Rows.Count == 0 || dslog.Tables[0].Rows[0]["STATUS"].ToString() != "100")
+                {
+                    string msg = (dslog.Tables.Count > 0 && dslog.Tables[0].Rows.Count > 0 && dslog.Tables[0].Columns.Contains("STATUSTEXT"))
+                        ? dslog.Tables[0].Rows[0]["STATUSTEXT"].ToString() : "Could not create the upload log.";
+                    return Ok(Tds26ASStatus("104", msg));
+                }
+                string logid = dslog.Tables[0].Rows[0]["LOGID"].ToString();
+
+                // ---- inserts: deductors row-by-row (need SCOPE_IDENTITY), details
+                //      via one SqlBulkCopy - 4,000+ single INSERTs over the WAN to
+                //      the DB server took minutes and left the batch half-visible ----
+                DataTable dtDetail = new DataTable();
+                dtDetail.Columns.Add("FK_DEDID", typeof(int));
+                dtDetail.Columns.Add("FK_LOGID", typeof(int));
+                dtDetail.Columns.Add("SRNO", typeof(int));
+                dtDetail.Columns.Add("SECTION", typeof(string));
+                dtDetail.Columns.Add("TXNDATE", typeof(DateTime));
+                dtDetail.Columns.Add("BOOKINGSTATUS", typeof(string));
+                dtDetail.Columns.Add("BOOKINGDATE", typeof(DateTime));
+                dtDetail.Columns.Add("REMARKS", typeof(string));
+                dtDetail.Columns.Add("AMTCREDITED", typeof(decimal));
+                dtDetail.Columns.Add("TAXDEDUCTED", typeof(decimal));
+                dtDetail.Columns.Add("TDSDEPOSITED", typeof(decimal));
+
+                using (SqlConnection connection = new SqlConnection(ConnectionString.getConnString()))
+                {
+                    connection.Open();
+                    int logidInt = int.Parse(logid);
+                    for (int d = 0; d < deductors.Count; d++)
+                    {
+                        string[] ded = deductors[d];
+                        int dedid;
+                        using (SqlCommand command = new SqlCommand(
+                            "INSERT INTO ACC_TDS26AS_DEDUCTOR (FK_LOGID, SRNO, DEDUCTOR_NAME, TAN, TOT_AMTCREDITED, TOT_TAXDEDUCTED, TOT_TDSDEPOSITED) " +
+                            "VALUES (@logid, @srno, @name, @tan, @amt, @tax, @tds); SELECT CAST(SCOPE_IDENTITY() AS INT)", connection))
+                        {
+                            command.Parameters.AddWithValue("@logid", logid);
+                            command.Parameters.AddWithValue("@srno", Tds26ASInt(ded[0]));
+                            command.Parameters.AddWithValue("@name", ded[1]);
+                            command.Parameters.AddWithValue("@tan", ded[2]);
+                            command.Parameters.AddWithValue("@amt", Tds26ASAmt(ded[3]));
+                            command.Parameters.AddWithValue("@tax", Tds26ASAmt(ded[4]));
+                            command.Parameters.AddWithValue("@tds", Tds26ASAmt(ded[5]));
+                            dedid = (int)command.ExecuteScalar();
+                        }
+                        foreach (string[] det in details[d])
+                        {
+                            dtDetail.Rows.Add(dedid, logidInt, Tds26ASInt(det[0]), det[1], Tds26ASDate(det[2]),
+                                det[3], Tds26ASDate(det[4]), det[5], Tds26ASAmt(det[6]), Tds26ASAmt(det[7]), Tds26ASAmt(det[8]));
+                        }
+                    }
+                    using (SqlBulkCopy bulk = new SqlBulkCopy(connection))
+                    {
+                        bulk.DestinationTableName = "dbo.ACC_TDS26AS_DETAIL";
+                        foreach (DataColumn col in dtDetail.Columns)
+                        {
+                            bulk.ColumnMappings.Add(col.ColumnName, col.ColumnName);
+                        }
+                        bulk.BulkCopyTimeout = 300;
+                        bulk.WriteToServer(dtDetail);
+                    }
+                }
+
+                // ---- auto-match, then return the summary + status ----
+                objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_TDS26AS_MATCH", logid);
+                ds1 = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_TDS26AS_GETSUMMARY", logid, cmpcode, citycode, citycode1);
+
+                DataTable dtbl = new DataTable();
+                dtbl.Columns.Add("STATUS", typeof(string));
+                dtbl.Columns.Add("MSG", typeof(string));
+                dtbl.Columns.Add("LOGID", typeof(string));
+                dtbl.Rows.Add("100", fileName + " uploaded: " + deductors.Count + " deductors parsed.", logid);
+                ds1.Merge(dtbl);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/Upload26ASFile");
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    Tds26ASPreserveFailed(Path.GetDirectoryName(filePath), filePath, Path.GetFileName(filePath));
+                }
+                return Ok(Tds26ASStatus("104", "Upload failed: " + ex.Message));
+            }
+            return Ok(ds1);
+        }
+
+        /// <summary>Reconciliation summary of a parsed 26AS batch (per-deductor 26AS totals vs FY invoiced totals).</summary>
+        [HttpGet]
+        public IHttpActionResult TDS26AS_GetSummary(String LOGID, String CMPCODE, String CITYCODE, String CITYCODE1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_TDS26AS_GETSUMMARY", LOGID, CMPCODE, CITYCODE, CITYCODE1);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/TDS26AS_GetSummary");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>26AS transaction rows of one deductor plus the matched client's FY invoices.</summary>
+        [HttpGet]
+        public IHttpActionResult TDS26AS_GetDetail(String DEDID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_TDS26AS_GETDETAIL", DEDID);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/TDS26AS_GetDetail");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Delete one uploaded 26AS batch (LOGID 0 = latest). Saved TAN-client mappings are kept.</summary>
+        [HttpGet]
+        public IHttpActionResult TDS26AS_ClearStatement(String LOGID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_TDS26AS_CLEARSTATEMENT", LOGID);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/TDS26AS_ClearStatement");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Persist a manual TAN-to-client mapping so future uploads auto-match this deductor.</summary>
+        [HttpGet]
+        public IHttpActionResult TDS26AS_SaveMapping(String TAN, String EXPCODE, String CMPID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_TDS26AS_SAVEMAPPING", TAN, EXPCODE, CMPID);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/TDS26AS_SaveMapping");
+            }
+            return Ok(ds);
+        }
+
+        /* ---- 26AS parsing helpers ------------------------------------------------ */
+
+        // TAN looks like AGRA11531C. Used to tell a deductor summary line apart from
+        // anything else that begins with a number.
+        private static readonly System.Text.RegularExpressions.Regex Tds26ASTanRegex =
+            new System.Text.RegularExpressions.Regex(@"^[A-Z]{4}\d{5}[A-Z]$");
+
+        /// <summary>Parse the native TRACES ^-delimited text download. PART-I only.</summary>
+        private void ParseTds26ASTxt(string path, out string pan, out string fy, out string assessee,
+            out List<string[]> deductors, out List<List<string[]>> details)
+        {
+            pan = ""; fy = ""; assessee = "";
+            deductors = new List<string[]>();
+            details = new List<List<string[]>>();
+
+            string[] lines = File.ReadAllLines(path);
+            bool inPart1 = false;
+            bool headerNext = false;
+            foreach (string raw in lines)
+            {
+                string line = raw ?? "";
+                if (headerNext)
+                {
+                    // File Creation Date ^ PAN ^ Status ^ FY ^ AY ^ Name ^ address...
+                    string[] h = line.Split('^');
+                    if (h.Length > 5) { pan = h[1].Trim(); fy = h[3].Trim(); assessee = h[5].Trim(); }
+                    headerNext = false;
+                    continue;
+                }
+                if (line.IndexOf("Permanent Account Number (PAN)", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    headerNext = true;
+                    continue;
+                }
+                if (line.IndexOf("PART-I ", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    line.IndexOf("PART-I -", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    inPart1 = true;
+                    continue;
+                }
+                if (inPart1 && line.IndexOf("PART-II", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    break;                              // PART-I is over - ignore the rest
+                }
+                if (!inPart1 || line.Trim().Length == 0)
+                {
+                    continue;
+                }
+
+                string[] f = line.Split('^');
+                if (f.Length > 9 && f[0].Trim().Length > 0 && Tds26ASIsInt(f[0]) && Tds26ASTanRegex.IsMatch(f[2].Trim()))
+                {
+                    // deductor summary: SrNo ^ Name ^ TAN ^^^^^ TotAmt ^ TotTax ^ TotTDS
+                    deductors.Add(new string[] { f[0].Trim(), f[1].Trim(), f[2].Trim(), f[7].Trim(), f[8].Trim(), f[9].Trim() });
+                    details.Add(new List<string[]>());
+                }
+                else if (f.Length > 9 && f[0].Trim().Length == 0 && Tds26ASIsInt(f[1]) && deductors.Count > 0)
+                {
+                    // detail: ^ SrNo ^ Section ^ TxnDate ^ BookStatus ^ BookDate ^ Remarks ^ Amt ^ Tax ^ TDS
+                    details[details.Count - 1].Add(new string[] { f[1].Trim(), f[2].Trim(), f[3].Trim(), f[4].Trim(), f[5].Trim(), f[6].Trim(), f[7].Trim(), f[8].Trim(), f[9].Trim() });
+                }
+                // anything else (column headers, "Sr. No." sub-headers) is skipped
+            }
+        }
+
+        /// <summary>Parse an .xlsx conversion of the 26AS statement (Sheet1, same row shapes as the txt).</summary>
+        private void ParseTds26ASXlsx(string path, out string pan, out string fy, out string assessee,
+            out List<string[]> deductors, out List<List<string[]>> details)
+        {
+            pan = ""; fy = ""; assessee = "";
+            deductors = new List<string[]>();
+            details = new List<List<string[]>>();
+
+            using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
+            using (var reader = ExcelReaderFactory.CreateOpenXmlReader(stream))
+            {
+                DataTable sheet = reader.AsDataSet().Tables[0];
+                bool inPart1 = false;
+                bool headerNext = false;
+                for (int r = 0; r < sheet.Rows.Count; r++)
+                {
+                    DataRow row = sheet.Rows[r];
+                    int cols = sheet.Columns.Count;
+                    // Date cells come back as real DateTimes from ExcelDataReader;
+                    // render them invariant so Tds26ASDate never has to guess
+                    // dd-MM vs MM-dd from a culture-dependent string.
+                    Func<int, string> cell = i =>
+                    {
+                        if (i >= cols || row[i] == DBNull.Value) return "";
+                        if (row[i] is DateTime) return ((DateTime)row[i]).ToString("dd-MMM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                        return Convert.ToString(row[i]).Trim();
+                    };
+
+                    string joined = "";
+                    for (int i = 0; i < Math.Min(cols, 3); i++) joined += cell(i) + "|";
+
+                    if (headerNext)
+                    {
+                        pan = cell(1); fy = cell(3); assessee = cell(5);
+                        headerNext = false;
+                        continue;
+                    }
+                    if (joined.IndexOf("Permanent Account Number (PAN)", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        headerNext = true;
+                        continue;
+                    }
+                    if (joined.IndexOf("PART-I ", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        joined.IndexOf("PART-I -", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        inPart1 = true;
+                        continue;
+                    }
+                    if (inPart1 && joined.IndexOf("PART-II", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        break;
+                    }
+                    if (!inPart1)
+                    {
+                        continue;
+                    }
+
+                    // xlsx layout: deductor = SrNo(0) Name(1) TAN(2) ... TotAmt(7) TotTax(8) TotTDS(9)
+                    //              detail   = blank(0) SrNo(1) Section(2) TxnDate(3) BookStatus(4) BookDate(5) Remarks(6) Amt(7) Tax(8) TDS(9)
+                    if (cell(0).Length > 0 && Tds26ASIsInt(cell(0)) && Tds26ASTanRegex.IsMatch(cell(2)))
+                    {
+                        deductors.Add(new string[] { cell(0), cell(1), cell(2), cell(7), cell(8), cell(9) });
+                        details.Add(new List<string[]>());
+                    }
+                    else if (cell(0).Length == 0 && Tds26ASIsInt(cell(1)) && deductors.Count > 0)
+                    {
+                        details[details.Count - 1].Add(new string[] { cell(1), cell(2), cell(3), cell(4), cell(5), cell(6), cell(7), cell(8), cell(9) });
+                    }
+                }
+            }
+        }
+
+        private static bool Tds26ASIsInt(string s)
+        {
+            int n;
+            return int.TryParse((s ?? "").Trim(), out n);
+        }
+
+        private static object Tds26ASInt(string s)
+        {
+            int n;
+            return int.TryParse((s ?? "").Trim(), out n) ? (object)n : DBNull.Value;
+        }
+
+        private static object Tds26ASAmt(string s)
+        {
+            decimal d;
+            return decimal.TryParse((s ?? "").Trim().Replace(",", ""), System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out d) ? (object)d : DBNull.Value;
+        }
+
+        // Dates arrive as dd-MMM-yyyy in the txt, and as either that string or a real
+        // datetime rendering in an xlsx conversion.
+        private static object Tds26ASDate(string s)
+        {
+            s = (s ?? "").Trim();
+            if (s.Length == 0 || s == "-") return DBNull.Value;
+            DateTime dt;
+            if (DateTime.TryParseExact(s, new string[] { "dd-MMM-yyyy", "dd-MM-yyyy", "yyyy-MM-dd" },
+                System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out dt))
+                return dt;
+            if (DateTime.TryParse(s, System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out dt))
+                return dt;
+            return DBNull.Value;
+        }
+
+        private static DataSet Tds26ASStatus(string status, string msg)
+        {
+            DataSet ds = new DataSet();
+            DataTable dtbl = new DataTable();
+            dtbl.Columns.Add("STATUS", typeof(string));
+            dtbl.Columns.Add("MSG", typeof(string));
+            dtbl.Rows.Add(status, msg);
+            ds.Tables.Add(dtbl);
+            return ds;
+        }
+
+        // Keep an unprocessable file for inspection under _failed, and clear the
+        // original so a retry does not collide (same convention as the bank upload).
+        private static void Tds26ASPreserveFailed(string uploadDir, string filePath, string fileName)
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    string failedDir = Path.Combine(uploadDir, "_failed");
+                    if (!Directory.Exists(failedDir)) Directory.CreateDirectory(failedDir);
+                    string keep = Path.Combine(failedDir, fileName);
+                    if (File.Exists(keep)) File.Delete(keep);
+                    File.Move(filePath, keep);
+                }
+            }
+            catch { /* keeping a copy is best-effort */ }
+        }
+
+        #endregion
     }
 }
