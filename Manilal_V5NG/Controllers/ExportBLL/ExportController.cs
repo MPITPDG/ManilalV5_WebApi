@@ -7815,6 +7815,50 @@ namespace Manilal_V5NG.Controllers.ExportBLL
         }
 
 
+
+        /// <summary>Perform EXPT EXPORT DASHBOARD Board records.</summary>
+        /// <param name="CmpCode">Company code.</param>
+        /// <param name="CityCode">City/branch code.</param>
+        /// <param name="Days">Rolling window in days. Defaults to 90, clamped to 1095 by the SP.</param>
+        /// <param name="Mode">ALL, SEA or AIR. Defaults to ALL.</param>
+        /// <param name="PerColumn">Cards returned per stage. Defaults to 50, capped at 50 by the SP.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        /// <remarks>
+        /// Argument order below MUST match the parameter order declared by
+        /// USP_EXPT_EXPORT_DASHBOARD_BOARD (@CMPCODE, @CITYCODE, @DAYS, @MODE, @PERCOLUMN).
+        /// DAL.ExecuteDataset binds its params object[] positionally via
+        /// SqlCommandBuilder.DeriveParameters - there is no matching by name, so
+        /// reordering either side silently binds the wrong values.
+        /// </remarks>
+        [HttpGet]
+        public IHttpActionResult EXPT_EXPORT_DASHBOARD_Board(
+            [FromUri]string CmpCode,
+            [FromUri]string CityCode,
+            [FromUri]int Days = 90,
+            [FromUri]string Mode = "ALL",
+            [FromUri]int PerColumn = 50)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure,
+                    "USP_EXPT_EXPORT_DASHBOARD_BOARD",
+                    CmpCode, CityCode, Days, Mode, PerColumn);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Export/EXPT_EXPORT_DASHBOARD_Board");
+            }
+            finally
+            {
+                objDal.Dispose();
+                ds.Dispose();
+            }
+            return Ok(ds);
+        }
+
     }
 
 }
