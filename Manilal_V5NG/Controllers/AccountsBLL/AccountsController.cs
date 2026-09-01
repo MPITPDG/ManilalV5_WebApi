@@ -10568,5 +10568,570 @@ namespace Manilal_V5NG.Controllers.AccountsBLL
         }
 
         #endregion
+    
+        #region Proforma Invoice
+
+        /// <summary>Perform INVOICE PAGE LOAD records.</summary>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="type">type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_PAGE_LOAD(string CMPCODE, string CITYCODE,string CITYCODE1,string cmpid,string INVNO,string type)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_PAGE_LOAD", CMPCODE, CITYCODE, CITYCODE1, cmpid, (INVNO == null) ? "" : INVNO, type);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_PAGE_LOAD");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Retrieve list of INVOICE LIST JOB records.</summary>
+        /// <param name="frmdt">Start date for the date range filter.</param>
+        /// <param name="todt">End date for the date range filter.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <param name="CITYCODE">City/branch code.</param>
+        /// <param name="CITYCODE1">Secondary city/branch code.</param>
+        /// <param name="Type">Type parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_LIST_JOB(string frmdt,string todt ,string CMPCODE, string CITYCODE, string CITYCODE1 ,string Type )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_LIST_JOB",frmdt,todt, CMPCODE, CITYCODE, CITYCODE1, Type);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_LIST_JOB");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Populate form with existing data for INVOICE JOB records.</summary>
+        /// <param name="JOBSTR">JOBSTR parameter.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="INVNO">Invoice number.</param>
+        /// <param name="CMPCODE">Company code identifier.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_JOB_POPULATE(string JOBSTR, string TYPE, string CMPID,string GUID, string INVNO,string CMPCODE )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_JOB_POPULATE", JOBSTR, TYPE, CMPID, GUID, (INVNO == null) ? "" : INVNO, CMPCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_JOB_POPULATE");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Perform INVOICE PAYBYDATE GET records.</summary>
+        /// <param name="clientcode">Client/exporter code.</param>
+        /// <param name="invdt">invdt parameter.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <param name="ISPAYBYDT_AIR">ISPAYBYDT AIR parameter.</param>
+        /// <param name="ISPAYBYDT_SEA">ISPAYBYDT SEA parameter.</param>
+        /// <param name="CREDITPERIOD_SEA">CREDITPERIOD SEA parameter.</param>
+        /// <param name="CREDITPERIOD_AIR">CREDITPERIOD AIR parameter.</param>
+        /// <param name="HAWBDT">HAWBDT parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_PAYBYDATE_GET(string clientcode, string invdt, string mode, string ISPAYBYDT_AIR, string ISPAYBYDT_SEA,string CREDITPERIOD_SEA,string CREDITPERIOD_AIR, string HAWBDT)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_INV_PAYBYDATE_GET", clientcode,invdt, (mode==null) ? "" : mode, ISPAYBYDT_AIR, ISPAYBYDT_SEA, CREDITPERIOD_SEA, CREDITPERIOD_AIR, (HAWBDT == null)? "" : HAWBDT);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_PAYBYDATE_GET");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Perform invoice Job TMP records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpPost]
+        public IHttpActionResult ACC_PROFORMA_Job_TMP([FromBody]InvJobDtls obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_JOBNODTLS_TMP_IU", obj.ID, (obj.INV_NO == null) ? "" : obj.INV_NO, obj.INV_JOBNO, (obj.INV_PKGS == null) ? "" : obj.INV_PKGS, (obj.INV_GRWT == null) ? "" : obj.INV_GRWT, obj.VGUID, obj.ACC_JOBDTLS_ID, obj.CMPID);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_Job_TMP");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Perform invoice Charge TMP records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpPost]
+        public IHttpActionResult ACC_PROFORMA_Charge_TMP([FromBody]InvChrgeDtls obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_STEP3_CHARGES_DTLS_TMP_IU", obj.ID,(obj.INV_NO==null)?"": obj.INV_NO, obj.INV_CHRGCODE,obj.INV_ACCOUNT,obj.ACCOUNT_NAME,(obj.INV_DESC_CHRG==null)?"": obj.INV_DESC_CHRG, (obj.INV_DESC1_CHRG1==null)?"": obj.INV_DESC1_CHRG1, (obj.INV_DESC2_CHRG1==null)?"": obj.INV_DESC2_CHRG1, obj.INV_TAXABLE,obj.INV_AMOUNT,obj.INV_INRAMT,obj.INV_TAXABLE_AMOUNT,obj.INV_TAXABLE_INRAMT,obj.USERNAME,obj.VGUID,obj.ACC_CHARGDTLS_ID,obj.CMPID,obj.CMPCODE,obj.CITYCODE1,obj.CITYCODE,obj.INV_QTY,obj.INV_RATE,obj.INV_CURRENCY,obj.INV_EXRATE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_Charge_TMP");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Delete INVOICE JOB records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_JOBDTLS_ID">ACC JOBDTLS ID parameter.</param>
+        /// <param name="MAKERID">User code of the record maker.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_JOB_DELETE(string ID ,string  GUID, string   ACC_JOBDTLS_ID,string MAKERID )
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_JOBNODTLS_TMP_DEL", ID , GUID, ACC_JOBDTLS_ID, MAKERID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_JOB_DELETE");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Delete INVOICE CHARGES records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_CHARGS_ID">ACC CHARGS ID parameter.</param>
+        /// <param name="INV_CHRGCODE">INV CHRGCODE parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_CHARGES_DELETE(string ID, string GUID, string ACC_CHARGS_ID,string INV_CHRGCODE)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_STEP3_CHRGDTLS_TMP_DEL", ID, GUID, ACC_CHARGS_ID, INV_CHRGCODE);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_CHARGES_DELETE");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Perform invoice enclosure TMPIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpPost]
+        public IHttpActionResult ACC_PROFORMA_enclosure_TMPIU([FromBody]InvEnclosure obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_STEP4_ENCLOSURE_DTLS_TMP_IU", (obj.ID==null)?"0": obj.ID, obj.INV_NO, obj.INV_ENCLCODE, obj.INV_DESC, obj.INV_NUMBER, obj.USERNAME, obj.VGUID, (obj.ACC_ENCLDTLS_ID==null)?"0": obj.ACC_ENCLDTLS_ID, obj.CMPID, obj.CMPCODE, obj.CITYCODE1, obj.CITYCODE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_enclosure_TMPIU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Delete INVOICE ENCLOSURE records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_ENCLDTLS_ID">ACC ENCLDTLS ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_ENCLOSURE_DELETE(string ID, string GUID, string ACC_ENCLDTLS_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_STEP4_ENCLOSURE_DTLS_TMP_DEL", ID, GUID, ACC_ENCLDTLS_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_ENCLOSURE_DELETE");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Perform invoice Dispatch TMPIU records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpPost]
+        public IHttpActionResult ACC_PROFORMA_Dispatch_TMPIU([FromBody]InvDispatch obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_STEP5_DESPATCH_DTLS_TMP_IU", (obj.ID==null)?"0": obj.ID, obj.INV_NO, obj.INV_DESPCODE, obj.INV_DESC, obj.INV_NUMBER, obj.USERNAME, obj.VGUID, (obj.ACC_DESPDTLS_ID==null)?"0": obj.ACC_DESPDTLS_ID, obj.CMPID, obj.CMPCODE, obj.CITYCODE1, obj.CITYCODE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_Dispatch_TMPIU");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Delete INVOICE dispatch records.</summary>
+        /// <param name="ID">Primary key ID of the record.</param>
+        /// <param name="GUID">Session GUID for temporary record management.</param>
+        /// <param name="ACC_DESPDTLS_ID">ACC DESPDTLS ID parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_dispatch_DELETE(string ID, string GUID, string ACC_DESPDTLS_ID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_STEP5_DESPATCH_DTLS_TMP_DEL", ID, GUID, ACC_DESPDTLS_ID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_dispatch_DELETE");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Insert or update invoice records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpPost]
+        public IHttpActionResult ACC_PROFORMA_INSERT([FromBody]InvoiceMain obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_MAINDTLS_INSERT", obj.CMPID, obj.CMPCODE, obj.CITYCODE1, obj.CITYCODE, (obj.INV_NO == null) ? "" : obj.INV_NO, (obj.INV_DATE == null) ? "" : obj.INV_DATE, obj.INV_CLIENT, (obj.INV_CLIENT_NM == null) ? "" : obj.INV_CLIENT_NM, obj.INV_SHIPPER, obj.INV_BILLTYPE, (obj.INV_PKGS == null) ? "" : obj.INV_PKGS, (obj.INV_TYPEOFPKG == null) ? "" : obj.INV_TYPEOFPKG, (obj.INV_NOOFPCS == null) ? "" : obj.INV_NOOFPCS, (obj.INV_TYPEOFPCS == null) ? "" : obj.INV_TYPEOFPCS, (obj.INV_CLIENTREF == null) ? "" : obj.INV_CLIENTREF, (obj.INV_WT == null) ? "" : obj.INV_WT, (obj.INV_VOL == null) ? "" : obj.INV_VOL, (obj.INV_HAWBNO == null) ? "" : obj.INV_HAWBNO, (obj.INV_HAWBDT == null) ? "" : obj.INV_HAWBDT, (obj.INV_CARRIER == null) ? "" : obj.INV_CARRIER, (obj.INV_GOODS == null) ? "" : obj.INV_GOODS, obj.INV_CUR, obj.INV_CURINR, obj.INV_CURRATE, obj.INV_CURRATE1, (obj.INV_TAX == null) ? "" : obj.INV_TAX, (obj.INV_ADVANCE == null) ? "" : obj.INV_ADVANCE, obj.NARRATIONDESC, obj.VGUID, obj.MAKER_ID, obj.MAKER_IP, (obj.SHIPINGBILLNO == null) ? "" : obj.SHIPINGBILLNO, (obj.SHIPBILLDT == null) ? "" : obj.SHIPBILLDT, obj.paydt, obj.INV_TYPE, obj.CLIENTCONT,obj.INVSTARTDATE);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_INSERT");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        } 
+
+        /// <summary>Insert or update invoice records.</summary>
+        /// <param name="obj">Request body model containing the record fields.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpPost]
+        public IHttpActionResult ACC_PROFORMA_UPDATE([FromBody]InvoiceMain obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_MAINDTLS_UPDATE", obj.CMPID, obj.CMPCODE, obj.CITYCODE1, obj.CITYCODE, (obj.INV_NO == null) ? "" : obj.INV_NO, (obj.INV_DATE == null) ? "" : obj.INV_DATE, obj.INV_CLIENT, (obj.INV_CLIENT_NM == null) ? "" : obj.INV_CLIENT_NM, obj.INV_SHIPPER, obj.INV_BILLTYPE, (obj.INV_PKGS == null) ? "" : obj.INV_PKGS, (obj.INV_TYPEOFPKG == null) ? "" : obj.INV_TYPEOFPKG, (obj.INV_NOOFPCS == null) ? "" : obj.INV_NOOFPCS, (obj.INV_TYPEOFPCS == null) ? "" : obj.INV_TYPEOFPCS, (obj.INV_CLIENTREF == null) ? "" : obj.INV_CLIENTREF, (obj.INV_WT == null) ? "" : obj.INV_WT, (obj.INV_VOL == null) ? "" : obj.INV_VOL, (obj.INV_HAWBNO == null) ? "" : obj.INV_HAWBNO, (obj.INV_HAWBDT == null) ? "" : obj.INV_HAWBDT, (obj.INV_CARRIER == null) ? "" : obj.INV_CARRIER, (obj.INV_GOODS == null) ? "" : obj.INV_GOODS, obj.INV_CUR, obj.INV_CURINR, obj.INV_CURRATE, obj.INV_CURRATE1, (obj.INV_TAX == null) ? "" : obj.INV_TAX, (obj.INV_ADVANCE == null) ? "" : obj.INV_ADVANCE, obj.NARRATIONDESC, obj.VGUID, obj.MAKER_ID, obj.MAKER_IP, (obj.SHIPINGBILLNO == null) ? "" : obj.SHIPINGBILLNO, (obj.SHIPBILLDT == null) ? "" : obj.SHIPBILLDT, obj.paydt, obj.INV_TYPE, obj.CLIENTCONT);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_UPDATE");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Search and retrieve INVOICE Search Pageloag records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="citycode1">Secondary city/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_Search_Pageloag(string cmp_code,string citycode,string citycode1)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_CMP_FillExpoterCity",cmp_code,citycode,citycode1);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_Search_Pageloag");
+            }
+            return Ok(ds);
+        } 
+
+        /// <summary>Search and retrieve INVOICE Search records.</summary>
+        /// <param name="InvoiceNo">Invoice No parameter.</param>
+        /// <param name="Client">Client/exporter code.</param>
+        /// <param name="JobNo">Job number.</param>
+        /// <param name="Amount">Amount parameter.</param>
+        /// <param name="FromDate">Start date for the date range filter.</param>
+        /// <param name="ToDate">End date for the date range filter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="TYPE">TYPE parameter.</param>
+        /// <param name="Fin_StartDate">Start date for the date range filter.</param>
+        /// <param name="Fin_EndDate">End date for the date range filter.</param>
+        /// <param name="cmpid">Primary key of the company.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_Search_List(string InvoiceNo, string Client, string JobNo, string Amount, string FromDate, string ToDate, string cmp_code, string citycode, string TYPE, string Fin_StartDate, string Fin_EndDate, string cmpid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_SEARCH_LIST", (InvoiceNo == null) ? "" : InvoiceNo, (Client == null) ? "" : Client, (JobNo == null) ? "" : JobNo, (Amount == null) ? "" : Amount, (FromDate == null) ? "" : FromDate, (ToDate == null) ? "" : ToDate, cmp_code, citycode, TYPE, Fin_StartDate, Fin_EndDate, cmpid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_Search_List");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Populate form with existing data for INVOICE Edit records.</summary>
+        /// <param name="InvoiceNo">Invoice No parameter.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="makerid">User code of the record maker.</param>
+        /// <param name="vguid">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_Edit_Populate(string InvoiceNo, string cmp_code, string citycode,string makerid,string vguid)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_EDITPOPULATE", InvoiceNo, cmp_code, citycode,makerid,vguid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_Edit_Populate");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Search and retrieve INVOICE SEARCH PERDAY records.</summary>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <param name="FIN_STARTDATE">Start date for the date range filter.</param>
+        /// <param name="FIN_ENDDATE">End date for the date range filter.</param>
+        /// <param name="DAY">DAY parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet] 
+        public IHttpActionResult ACC_PROFORMA_SEARCH_PERDAY(string cmp_code, string citycode, string FIN_STARTDATE, string FIN_ENDDATE, string DAY)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_LIST_DAY", cmp_code, citycode, FIN_STARTDATE, FIN_ENDDATE, DAY);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_SEARCH_PERDAY");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Reset temporary data for INVOICE NG records.</summary>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_NG_RESET(string VGUID)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_RESET_NG", VGUID);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_NG_RESET");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Reset temporary data for INVOICE RESET CHRGCURRENCY records.</summary>
+        /// <param name="CMPID">Primary key of the company.</param>
+        /// <param name="VGUID">Session GUID for temporary record management.</param>
+        /// <param name="CURRENCY">CURRENCY parameter.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_RESET_CHRGCURRENCY(string CMPID, string VGUID, string CURRENCY)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_RESET_CURCHARGES", CMPID, VGUID, CURRENCY);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_RESET_CHRGCURRENCY");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Retrieve print/view data for invoice records.</summary>
+        /// <param name="invno">Invoice number.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_Print(string invno, string cmp_code, string citycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_PRINT", invno, cmp_code, citycode);
+                            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_Print");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Perform invoice Chk Inv NONINR records.</summary>
+        /// <param name="invno">Invoice number.</param>
+        /// <param name="cmp_code">Company code identifier.</param>
+        /// <param name="citycode">City/branch code.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult ACC_PROFORMA_Chk_Inv_NONINR(string invno, string cmp_code,string citycode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_CHK_NONINR", invno, cmp_code,citycode);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_Chk_Inv_NONINR");
+            }
+            return Ok(ds);
+        }
+
+        /// <summary>Convert a Proforma Invoice into a regular Invoice by staging its rows into the invoice temp tables.</summary>
+        /// <param name="obj">Request body model containing PROF_NO, CMPID and VGUID.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpPost]
+        public IHttpActionResult ACC_PROFORMA_CONVERT_TO_INVOICE([FromBody]ProformaConvert obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_ACC_PROFORMA_CONVERT_TO_INVOICE", obj.PROF_NO, obj.CMPID, obj.VGUID);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Accounts/ACC_PROFORMA_CONVERT_TO_INVOICE");
+            }
+            finally
+            {
+                objDal.Dispose();
+            }
+            return Ok(ds);
+        }
+
+        #endregion Proforma Invoice
     }
 }

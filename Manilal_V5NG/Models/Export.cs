@@ -5,7 +5,34 @@ using System.Web;
 
 namespace Manilal_V5NG.Models
 {
-    
+    // One staged order line of an uploaded packing list (TBL_EXP_PL_UPLOAD).
+    public class PlUploadLine
+    {
+        public string Mode { get; set; }        // 'S' upsert line | 'D' delete whole file
+        public string ExptNo { get; set; }
+        public string OrderNo { get; set; }
+        public string StyleNo { get; set; }
+        public string Concode { get; set; }
+        public string FileName { get; set; }
+        public string OrderJson { get; set; }
+        public string SubmitState { get; set; }
+        public string MakerId { get; set; }
+    }
+    // The uploaded packing-list PDF itself (TBL_EXP_PL_UPLOAD_FILE), base64 in transit.
+    public class PlUploadFile
+    {
+        public string FileName { get; set; }
+        public string FileBase64 { get; set; }
+        public string MakerId { get; set; }
+    }
+    public class Bookingauthorisation
+    {
+        public string OrdStylestr { get; set; }
+        public string cmp_code { get; set; }
+        public string citycode { get; set; }
+        public string CHKAuthorityFlag { get; set; }
+        public string cmpid { get; set; }
+    }
     public class ConsignmentDetails
     {
         public int cmpid { get; set; }

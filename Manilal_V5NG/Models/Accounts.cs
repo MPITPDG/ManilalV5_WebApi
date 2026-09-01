@@ -523,4 +523,11 @@ namespace Manilal_V5NG.Models
 
     }
 
+
+    public class ProformaConvert
+    {
+        public string PROF_NO { get; set; }
+        public string CMPID { get; set; }
+        public string VGUID { get; set; }
+    }
 }

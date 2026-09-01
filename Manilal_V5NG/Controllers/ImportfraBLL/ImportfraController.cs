@@ -973,6 +973,31 @@ namespace Manilal_V5NG.Controllers.ImportfraBLL
             }
             return Ok(ds);
         }
+        /// <summary>Retrieve pending delivery jobs across all masters for one consignee (multi-master delivery).</summary>
+        /// <param name="concode">Consignee code.</param>
+        /// <param name="mode">Operation mode or filter type.</param>
+        /// <returns>DataSet with the requested data serialized as JSON.</returns>
+        [HttpGet]
+        public IHttpActionResult Fill_Delivery_List_ByConsignee(string concode, string mode)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_IMPFRA_DELIVERY_GETDYNAMIC_DELIVERY_LIST", concode, mode);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Import/Fill_Delivery_List_ByConsignee");
+            }
+            finally
+            {
+                objDal.Dispose();
+
+            }
+            return Ok(ds);
+        }
         /// <summary>Insert or update FRA IMP INVOICE SEA GRP RATE UPDATE FCL records.</summary>
         /// <param name="Seafclrate">Request body model containing the record fields.</param>
         /// <returns>DataSet with the requested data serialized as JSON.</returns>

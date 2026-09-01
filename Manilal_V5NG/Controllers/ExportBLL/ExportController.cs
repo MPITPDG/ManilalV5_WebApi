@@ -21,6 +21,141 @@ namespace Manilal_V5NG.Controllers.ExportBLL
     public class ExportController : ApiController
 
     {
+        // upload (parsed order lines + submit state) when the popup is reopened.
+        [HttpGet]
+        public IHttpActionResult PackingListUploadGet([FromUri] string exptno)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure,
+                    "USP_EXP_PL_UPLOAD_GET",
+                    exptno);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Export/PackingListUploadGet");
+            }
+            finally
+            {
+                objDal.Dispose();
+                ds.Dispose();
+            }
+            return Ok(ds);
+        }
+
+        [HttpPost]
+        public IHttpActionResult PackingListUploadSave([FromBody] PlUploadLine obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure,
+                    "USP_EXP_PL_UPLOAD_SAVE",
+                    string.IsNullOrEmpty(obj.Mode) ? "S" : obj.Mode,
+                    obj.ExptNo ?? "", obj.OrderNo ?? "", obj.StyleNo ?? "", obj.Concode ?? "",
+                    obj.FileName ?? "", obj.OrderJson ?? "", obj.SubmitState ?? "pending", obj.MakerId);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Export/PackingListUploadSave");
+            }
+            finally
+            {
+                objDal.Dispose();
+                ds.Dispose();
+            }
+            return Ok(ds);
+        }
+
+        // Store / fetch the uploaded packing-list PDF so "View PDF" also works in
+        // a restored session. FILEDATA (varbinary) serialises to base64 in JSON.
+        [HttpPost]
+        public IHttpActionResult PackingListUploadFileSave([FromBody] PlUploadFile obj)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                byte[] bytes = Convert.FromBase64String(obj.FileBase64 ?? "");
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure,
+                    "USP_EXP_PL_UPLOAD_FILE_IU",
+                    obj.FileName ?? "", bytes, obj.MakerId);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Export/PackingListUploadFileSave");
+            }
+            finally
+            {
+                objDal.Dispose();
+                ds.Dispose();
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult Exp_Booking_OrderNo_Authorisation(string cmpid, string cmp_code, string RoleType)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_EXP_MST_EXPORT_ORDERNO_BOOKING_AUTHORISATION", cmpid, cmp_code, RoleType);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Export/Exp_Booking_OrderNo_Authorisation");
+            }
+            return Ok(ds);
+        }
+
+        [HttpPost]
+        public IHttpActionResult Exp_Booking_OrderNo_Authorisation_SaveUpdate([FromBody] Bookingauthorisation ba)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(), CommandType.StoredProcedure, "USP_EXP_MST_EXPORT_ORDERNO_BOOKING_AUTHORISATION_ASSIGN", ba.cmp_code, ba.citycode, ba.OrdStylestr, ba.CHKAuthorityFlag, ba.cmpid);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Error(ex, "Export/Exp_Booking_OrderNo_Authorisation_SaveUpdate");
+            }
+            return Ok(ds);
+        }
+        [HttpGet]
+        public IHttpActionResult PackingListUploadFileGet([FromUri] string filename)
+        {
+            DataSet ds = new DataSet();
+            DAL objDal = new DAL();
+            try
+            {
+                ds = objDal.ExecuteDataset(ConnectionString.getConnString(),
+                    CommandType.StoredProcedure,
+                    "USP_EXP_PL_UPLOAD_FILE_GET",
+                    filename);
+            }
+            catch (Exception ex)
+            {
+                ds = ErrorLog.Error(ex, "Export/PackingListUploadFileGet");
+            }
+            finally
+            {
+                objDal.Dispose();
+                ds.Dispose();
+            }
+            return Ok(ds);
+        }
         [HttpPost]
         public IHttpActionResult OrderSizeDetailsSubmitPakingList([FromBody] OrderSizeDeatils obj)
         {

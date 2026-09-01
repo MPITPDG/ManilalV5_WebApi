@@ -1504,6 +1504,16 @@
             <param name="FINENDDATE">End date for the date range filter.</param>
             <returns>DataSet with the requested data serialized as JSON.</returns>
         </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.fn_Acc_Rpt_EXPWOP_Register_XL(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>EXPWOP register: foreign-currency invoices with receipt details for Excel export.</summary>
+            <param name="_FromDt">Start date for the date range filter.</param>
+            <param name="_ToDt">End date for the date range filter.</param>
+            <param name="cmp_code">Company code identifier.</param>
+            <param name="citycode">City/branch code.</param>
+            <param name="FINSTARTDATE">Financial year start date.</param>
+            <param name="FINENDDATE">Financial year end date.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
         <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.fn_Acc_Rpt_Invoice_Register_ActDetail_XL_Search_Acct_details(System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>Search and retrieve fn Acc Rpt Invoice Register ActDetail XL Search Acct details records.</summary>
             <param name="_FromDt">Start date for the date range filter.</param>
@@ -2402,6 +2412,208 @@
             <param name="COMPANYCODE">Company code identifier; blank = all companies.</param>
             <param name="CITYCODE">City/branch code; blank = all branches.</param>
             <returns>DataSet: Table 0 = per-CHECKTYPE summary (entry count + total diff), Table 1 = voucher-level detail rows.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.Upload26ASFile">
+            <summary>Upload a TRACES Form 26AS statement (.txt native download or .xlsx conversion), parse PART-I, auto-match deductors to clients and return the reconciliation summary.</summary>
+            <remarks>
+            Multipart form upload. Fields: file, cmpid, vguid, makerip, cmpcode, citycode, citycode1,
+            finyear (e.g. 2025-26; blank = accept the file's FY), expectedpan (blank = accept the file's PAN).
+            Re-uploading the same PAN + FY replaces the previous batch (USP_ACC_TDS26AS_UPLOADLOG);
+            the TAN-&gt;client map is preserved. Only PART-I is read; parsing stops at PART-II.
+            </remarks>
+            <returns>DataSet: Table = per-deductor summary, Table1 = client dropdown, Table2 = batch header, plus a STATUS/MSG/LOGID table ("100" ok / "104" error).</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.TDS26AS_GetSummary(System.String,System.String,System.String,System.String)">
+            <summary>Reconciliation summary of a parsed 26AS batch (per-deductor 26AS totals vs FY invoiced totals).</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.TDS26AS_GetDetail(System.String)">
+            <summary>26AS transaction rows of one deductor plus the matched client's FY invoices.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.TDS26AS_ClearStatement(System.String)">
+            <summary>Delete one uploaded 26AS batch (LOGID 0 = latest). Saved TAN-client mappings are kept.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.TDS26AS_SaveMapping(System.String,System.String,System.String)">
+            <summary>Persist a manual TAN-to-client mapping so future uploads auto-match this deductor.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ParseTds26ASTxt(System.String,System.String@,System.String@,System.String@,System.Collections.Generic.List{System.String[]}@,System.Collections.Generic.List{System.Collections.Generic.List{System.String[]}}@)">
+            <summary>Parse the native TRACES ^-delimited text download. PART-I only.</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ParseTds26ASXlsx(System.String,System.String@,System.String@,System.String@,System.Collections.Generic.List{System.String[]}@,System.Collections.Generic.List{System.Collections.Generic.List{System.String[]}}@)">
+            <summary>Parse an .xlsx conversion of the 26AS statement (Sheet1, same row shapes as the txt).</summary>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_PAGE_LOAD(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>Perform INVOICE PAGE LOAD records.</summary>
+            <param name="CMPCODE">Company code identifier.</param>
+            <param name="CITYCODE">City/branch code.</param>
+            <param name="CITYCODE1">Secondary city/branch code.</param>
+            <param name="cmpid">Primary key of the company.</param>
+            <param name="INVNO">Invoice number.</param>
+            <param name="type">type parameter.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_LIST_JOB(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>Retrieve list of INVOICE LIST JOB records.</summary>
+            <param name="frmdt">Start date for the date range filter.</param>
+            <param name="todt">End date for the date range filter.</param>
+            <param name="CMPCODE">Company code identifier.</param>
+            <param name="CITYCODE">City/branch code.</param>
+            <param name="CITYCODE1">Secondary city/branch code.</param>
+            <param name="Type">Type parameter.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_JOB_POPULATE(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>Populate form with existing data for INVOICE JOB records.</summary>
+            <param name="JOBSTR">JOBSTR parameter.</param>
+            <param name="TYPE">TYPE parameter.</param>
+            <param name="CMPID">Primary key of the company.</param>
+            <param name="GUID">Session GUID for temporary record management.</param>
+            <param name="INVNO">Invoice number.</param>
+            <param name="CMPCODE">Company code identifier.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_PAYBYDATE_GET(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>Perform INVOICE PAYBYDATE GET records.</summary>
+            <param name="clientcode">Client/exporter code.</param>
+            <param name="invdt">invdt parameter.</param>
+            <param name="mode">Operation mode or filter type.</param>
+            <param name="ISPAYBYDT_AIR">ISPAYBYDT AIR parameter.</param>
+            <param name="ISPAYBYDT_SEA">ISPAYBYDT SEA parameter.</param>
+            <param name="CREDITPERIOD_SEA">CREDITPERIOD SEA parameter.</param>
+            <param name="CREDITPERIOD_AIR">CREDITPERIOD AIR parameter.</param>
+            <param name="HAWBDT">HAWBDT parameter.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_Job_TMP(Manilal_V5NG.Models.InvJobDtls)">
+            <summary>Perform invoice Job TMP records.</summary>
+            <param name="obj">Request body model containing the record fields.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_Charge_TMP(Manilal_V5NG.Models.InvChrgeDtls)">
+            <summary>Perform invoice Charge TMP records.</summary>
+            <param name="obj">Request body model containing the record fields.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_JOB_DELETE(System.String,System.String,System.String,System.String)">
+            <summary>Delete INVOICE JOB records.</summary>
+            <param name="ID">Primary key ID of the record.</param>
+            <param name="GUID">Session GUID for temporary record management.</param>
+            <param name="ACC_JOBDTLS_ID">ACC JOBDTLS ID parameter.</param>
+            <param name="MAKERID">User code of the record maker.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_CHARGES_DELETE(System.String,System.String,System.String,System.String)">
+            <summary>Delete INVOICE CHARGES records.</summary>
+            <param name="ID">Primary key ID of the record.</param>
+            <param name="GUID">Session GUID for temporary record management.</param>
+            <param name="ACC_CHARGS_ID">ACC CHARGS ID parameter.</param>
+            <param name="INV_CHRGCODE">INV CHRGCODE parameter.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_enclosure_TMPIU(Manilal_V5NG.Models.InvEnclosure)">
+            <summary>Perform invoice enclosure TMPIU records.</summary>
+            <param name="obj">Request body model containing the record fields.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_ENCLOSURE_DELETE(System.String,System.String,System.String)">
+            <summary>Delete INVOICE ENCLOSURE records.</summary>
+            <param name="ID">Primary key ID of the record.</param>
+            <param name="GUID">Session GUID for temporary record management.</param>
+            <param name="ACC_ENCLDTLS_ID">ACC ENCLDTLS ID parameter.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_Dispatch_TMPIU(Manilal_V5NG.Models.InvDispatch)">
+            <summary>Perform invoice Dispatch TMPIU records.</summary>
+            <param name="obj">Request body model containing the record fields.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_dispatch_DELETE(System.String,System.String,System.String)">
+            <summary>Delete INVOICE dispatch records.</summary>
+            <param name="ID">Primary key ID of the record.</param>
+            <param name="GUID">Session GUID for temporary record management.</param>
+            <param name="ACC_DESPDTLS_ID">ACC DESPDTLS ID parameter.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_INSERT(Manilal_V5NG.Models.InvoiceMain)">
+            <summary>Insert or update invoice records.</summary>
+            <param name="obj">Request body model containing the record fields.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_UPDATE(Manilal_V5NG.Models.InvoiceMain)">
+            <summary>Insert or update invoice records.</summary>
+            <param name="obj">Request body model containing the record fields.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_Search_Pageloag(System.String,System.String,System.String)">
+            <summary>Search and retrieve INVOICE Search Pageloag records.</summary>
+            <param name="cmp_code">Company code identifier.</param>
+            <param name="citycode">City/branch code.</param>
+            <param name="citycode1">Secondary city/branch code.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_Search_List(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>Search and retrieve INVOICE Search records.</summary>
+            <param name="InvoiceNo">Invoice No parameter.</param>
+            <param name="Client">Client/exporter code.</param>
+            <param name="JobNo">Job number.</param>
+            <param name="Amount">Amount parameter.</param>
+            <param name="FromDate">Start date for the date range filter.</param>
+            <param name="ToDate">End date for the date range filter.</param>
+            <param name="cmp_code">Company code identifier.</param>
+            <param name="citycode">City/branch code.</param>
+            <param name="TYPE">TYPE parameter.</param>
+            <param name="Fin_StartDate">Start date for the date range filter.</param>
+            <param name="Fin_EndDate">End date for the date range filter.</param>
+            <param name="cmpid">Primary key of the company.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_Edit_Populate(System.String,System.String,System.String,System.String,System.String)">
+            <summary>Populate form with existing data for INVOICE Edit records.</summary>
+            <param name="InvoiceNo">Invoice No parameter.</param>
+            <param name="cmp_code">Company code identifier.</param>
+            <param name="citycode">City/branch code.</param>
+            <param name="makerid">User code of the record maker.</param>
+            <param name="vguid">Session GUID for temporary record management.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_SEARCH_PERDAY(System.String,System.String,System.String,System.String,System.String)">
+            <summary>Search and retrieve INVOICE SEARCH PERDAY records.</summary>
+            <param name="cmp_code">Company code identifier.</param>
+            <param name="citycode">City/branch code.</param>
+            <param name="FIN_STARTDATE">Start date for the date range filter.</param>
+            <param name="FIN_ENDDATE">End date for the date range filter.</param>
+            <param name="DAY">DAY parameter.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_NG_RESET(System.String)">
+            <summary>Reset temporary data for INVOICE NG records.</summary>
+            <param name="VGUID">Session GUID for temporary record management.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_RESET_CHRGCURRENCY(System.String,System.String,System.String)">
+            <summary>Reset temporary data for INVOICE RESET CHRGCURRENCY records.</summary>
+            <param name="CMPID">Primary key of the company.</param>
+            <param name="VGUID">Session GUID for temporary record management.</param>
+            <param name="CURRENCY">CURRENCY parameter.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_Print(System.String,System.String,System.String)">
+            <summary>Retrieve print/view data for invoice records.</summary>
+            <param name="invno">Invoice number.</param>
+            <param name="cmp_code">Company code identifier.</param>
+            <param name="citycode">City/branch code.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_Chk_Inv_NONINR(System.String,System.String,System.String)">
+            <summary>Perform invoice Chk Inv NONINR records.</summary>
+            <param name="invno">Invoice number.</param>
+            <param name="cmp_code">Company code identifier.</param>
+            <param name="citycode">City/branch code.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.AccountsBLL.AccountsController.ACC_PROFORMA_CONVERT_TO_INVOICE(Manilal_V5NG.Models.ProformaConvert)">
+            <summary>Convert a Proforma Invoice into a regular Invoice by staging its rows into the invoice temp tables.</summary>
+            <param name="obj">Request body model containing PROF_NO, CMPID and VGUID.</param>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
         </member>
         <member name="M:Manilal_V5NG.Controllers.AccountsFraBLL.AccountsFraController.BuildValidationResult(System.String,System.String)">
             <summary>
@@ -4109,6 +4321,12 @@
         </member>
         <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.Fill_Delivery_List">
             <summary>Retrieve list of Fill Delivery records.</summary>
+            <returns>DataSet with the requested data serialized as JSON.</returns>
+        </member>
+        <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.Fill_Delivery_List_ByConsignee(System.String,System.String)">
+            <summary>Retrieve pending delivery jobs across all masters for one consignee (multi-master delivery).</summary>
+            <param name="concode">Consignee code.</param>
+            <param name="mode">Operation mode or filter type.</param>
             <returns>DataSet with the requested data serialized as JSON.</returns>
         </member>
         <member name="M:Manilal_V5NG.Controllers.ImportfraBLL.ImportfraController.FRA_IMP_INVOICE_SEA_GRP_RATE_UPDATE_FCL(Manilal_V5NG.Models.ConsoleInvoiceSeaFclRate)">
